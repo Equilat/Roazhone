@@ -7,4 +7,15 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="roazhone_blue">#003A75</color>
+    <color name="roazhone_yellow">#FBBA07</color>
+    <color name="roazhone_red">#DB1F1F</color>
+    <color name="roazhone_orange">#FF8800</color>
+    <color name="roazhone_green">#3c9111</color>
+    <color name="roazhone_grey_1">#F2F2F2</color>
+    <color name="roazhone_grey_2">#DBDBDB</color>
+    <color name="roazhone_grey_3">#B5B5B5</color>
+    <color name="roazhone_grey_4">#878787</color>
+    <color name="roazhone_grey_5">#545454</color>
+
 </resources>
