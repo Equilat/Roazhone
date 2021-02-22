@@ -5,4 +5,9 @@
     <string name="bottom_navigation_menu_park_and_ride">Parc Relais</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="nom">Nom</string>
+    <string name="nombre_de_places">Nombre de places</string>
+    <string name="adresse">Adresse</string>
+    <string name="horaires">Horaires</string>
+    <string name="vers_google_maps">Vers Google Maps</string>
 </resources>
