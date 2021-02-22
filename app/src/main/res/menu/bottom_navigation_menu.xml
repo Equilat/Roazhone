@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_android"
+        android:enabled="true"
+        android:icon="@drawable/ic_p"
+        android:title="@string/bottom_navigation_menu_parking"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_logo"
+        android:enabled="true"
+        android:icon="@drawable/ic_p_m_b"
+        android:title="@string/bottom_navigation_menu_park_and_ride"
+        app:showAsAction="ifRoom" />
+</menu>
