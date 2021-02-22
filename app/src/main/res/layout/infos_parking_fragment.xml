@@ -1,14 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".InfosParkingFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:id="@+id/ifp_main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
 
+        <LinearLayout
+            android:id="@+id/ifp_name_n_nav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/ifp_name"
+                android:layout_width="320dp"
+                android:layout_height="55dp"
+                android:gravity="bottom|start"
+                android:paddingStart="10dp"
+                android:text="Nom"
+                android:textSize="30sp" />
+
+            <ImageButton
+                android:id="@+id/ifp_google_map_button"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/white"
+                android:padding="20dp"
+                android:src="@drawable/ic_baseline_assistant_direction_24"
+                android:tint="@color/roazhone_blue" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/ifp_nb_places"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="bottom|start"
+            android:paddingStart="10dp"
+            android:text="Nombre de places"
+            android:textSize="24sp" />
+
+        <View
+            android:id="@+id/ifp_carte_parking"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:padding="20dp" />
+
+        <TextView
+            android:id="@+id/ifp_adresse"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="bottom|start"
+            android:paddingStart="10dp"
+            android:text="Adresse"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/ifp_horaires"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="bottom|start"
+            android:paddingStart="10dp"
+            android:text="Horaires"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/ifp_tarifs"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="bottom|start"
+            android:paddingStart="10dp"
+            android:text="Tarifs"
+            android:textSize="18sp" />
+
+    </LinearLayout>
 </FrameLayout>
