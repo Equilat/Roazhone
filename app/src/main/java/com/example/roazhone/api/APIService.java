@@ -23,7 +23,9 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
-
+/**
+ * Service using Retrofit to calls the remote API.
+ */
 public interface APIService {
     String TAG = APIService.class.getName();
     Gson gson =

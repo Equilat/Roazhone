@@ -3,6 +3,9 @@ package com.example.roazhone.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Class to map information about relay parking's dataset that come from remote API.
+ */
 public class RelayParkingRecord {
 
     private final static long serialVersionUID = -5991800116026056414L;

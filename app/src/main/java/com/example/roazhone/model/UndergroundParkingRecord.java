@@ -6,9 +6,12 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+/**
+ * Class to map information about underground parking's dataset that come from remote API.
+ */
 public class UndergroundParkingRecord implements Serializable {
 
-    private final static long serialVersionUID = -5991800116026056414L;
+    private final static long serialVersionUID = -5991800548026056414L;
     @SerializedName("datasetid")
     @Expose
     private String datasetid;

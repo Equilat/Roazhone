@@ -8,16 +8,18 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
+/**
+ * Custom deserializer.
+ *
+ * @param <T>
+ */
 public class Deserializer<T> implements JsonDeserializer<T> {
     @Override
     public T deserialize(JsonElement je, Type type, JsonDeserializationContext jdc)
             throws JsonParseException {
         // Get the "records" element from the parsed JSON
         JsonElement content = je.getAsJsonObject().get("records").getAsJsonArray();
-//        System.out.println("content : "+content);
-
-        // Deserialize it. You use a new instance of Gson to avoid infinite recursion
-        // to this deserializer
+        // Deserialize it. New instance of Gson to avoid infinite recursion to this deserializer
         return new Gson().fromJson(content, type);
     }
 }

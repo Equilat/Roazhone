@@ -26,7 +26,9 @@ public class APICalls {
     private final MutableLiveData<List<UndergroundParkingRecord>> undergroundParkingLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<RelayParkingRecord>> relayParkingLiveData = new MutableLiveData<>();
 
-
+    /**
+     * Call the API to get all the undergroung parking of Rennes.
+     */
     public void searchUndergroundParkingRecords() {
         APIService apiService = APIService.retrofit.create(APIService.class);
         Call<List<UndergroundParkingRecord>> call = apiService.getUndergroundParkingRecords();
@@ -48,6 +50,9 @@ public class APICalls {
         });
     }
 
+    /**
+     * Call the API to get all the relay parking of Rennes.
+     */
     public void searchRelayParkingRecords() {
         APIService apiService = APIService.retrofit.create(APIService.class);
         Call<List<RelayParkingRecord>> call = apiService.getRelayParkingRecords();

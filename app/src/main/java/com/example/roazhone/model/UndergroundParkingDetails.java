@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Class to map details about underground parkings that come from remote API.
+ */
 public class UndergroundParkingDetails implements Serializable {
     private final static long serialVersionUID = -4000423003554111796L;
     @SerializedName("status")

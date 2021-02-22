@@ -12,7 +12,6 @@ import com.example.roazhone.model.UndergroundParkingRecord;
 
 import java.util.List;
 
-
 public class TestViewModel extends AndroidViewModel {
     private APICalls apiCalls;
     private LiveData<List<UndergroundParkingRecord>> undergroundParkingsResponseLiveData;
