@@ -10,5 +10,10 @@
         tools:layout="@layout/home_fragment"
         >
     </fragment>
+    <fragment
+        android:id="@+id/infosParkingFragment"
+        android:name="com.example.roazhone.InfosParkingFragment"
+        android:label="infos_parking_fragment"
+        tools:layout="@layout/infos_parking_fragment" />
 
 </navigation>

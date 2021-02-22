@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".InfosParkingFragment" >
+
+    <TextView
+        android:id="@+id/ipf_nom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="Nom"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColorHint="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/ipf_maps_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="32dp"
+        android:clickable="true"
+        android:src="@drawable/ic_baseline_directions_24"
+        app:backgroundTint="@color/roazhone_blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
+
+    <TextView
+        android:id="@+id/ipf_nb_places"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="Nombre de places"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColorHint="@color/roazhone_grey_5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ipf_nom" />
+
+    <TextView
+        android:id="@+id/ipf_adresse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:text="Adresse"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColorHint="@color/roazhone_grey_4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ipf_nb_places" />
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/ipf_adresse_map"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/ipf_horaires"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ipf_adresse" />
+
+    <TextView
+        android:id="@+id/ipf_horaires"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:text="Horaires"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColorHint="@color/roazhone_grey_4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ipf_adresse_map" />
+
+    <TextView
+        android:id="@+id/ipf_tarifs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:text="Tarifs"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColorHint="@color/roazhone_grey_4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ipf_horaires" />
+</androidx.constraintlayout.widget.ConstraintLayout>
