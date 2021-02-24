@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_android"
+        android:id="@+id/parkingLogo"
         android:enabled="true"
-        android:visible="true"
         android:icon="@drawable/ic_p"
         android:title="@string/bottom_navigation_menu_parking"
+        android:visible="true"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_logo"
+        android:id="@+id/parkAndRideLogo"
         android:enabled="true"
-        android:visible="true"
         android:icon="@drawable/ic_p_m_b"
         android:title="@string/bottom_navigation_menu_park_and_ride"
+        android:visible="true"
         app:showAsAction="ifRoom" />
 </menu>
