@@ -1,10 +1,12 @@
 package com.example.roazhone;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.text.style.StyleSpan;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +34,6 @@ public class InfosParkingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -66,13 +67,14 @@ public class InfosParkingFragment extends Fragment {
             tv1 = new TextView(getContext());
             tv1.setText(tarif.getKey() + " : ");
             tv1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-            tv1.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_grey_4));
-
+            tv1.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_grey_5));
+            tv1.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
 
             tv2 = new TextView(getContext());
             tv2.setText(tarif.getValue() + "€");
             tv2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-            tv2.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_grey_4));
+            tv2.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_grey_5));
+            tv2.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
 
             row.addView(tv1);
             row.addView(tv2);
