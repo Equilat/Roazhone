@@ -7,12 +7,12 @@
         android:icon="@drawable/ic_p"
         android:title="@string/bottom_navigation_menu_parking"
         android:visible="true"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/parkAndRideLogo"
         android:enabled="true"
         android:icon="@drawable/ic_p_m_b"
         android:title="@string/bottom_navigation_menu_park_and_ride"
         android:visible="true"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"/>
 </menu>

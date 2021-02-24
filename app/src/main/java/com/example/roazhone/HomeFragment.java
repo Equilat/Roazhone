@@ -2,18 +2,20 @@ package com.example.roazhone;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.appcompat.widget.TooltipCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.roazhone.viewModel.HomeViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import java.util.concurrent.Flow.Subscription;
 
 public class HomeFragment extends Fragment implements View.OnLongClickListener {
 
     private BottomNavigationView bottomNavigationView;
+    private HomeViewModel homeViewModel;
+    private Subscription loader;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -22,8 +24,18 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener {
         View myView = inflater.inflate(R.layout.home_fragment, container, false);
         bottomNavigationView = myView.findViewById(R.id.activity_main_bottom_navigation);
         disableMenuTooltip();
+        setupViewModel(savedInstanceState);
 
         return myView;
+    }
+
+    private void setupViewModel(Bundle savedInstanceState) {
+        homeViewModel = new HomeViewModel();
+        if(savedInstanceState == null) {
+        }
+        else {
+        }
+
     }
 
     private void disableMenuTooltip(){
@@ -36,7 +48,6 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener {
 
     @Override
     public boolean onLongClick(View v) {
-
         return true;
     }
 }
