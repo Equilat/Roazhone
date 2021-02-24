@@ -14,108 +14,112 @@ public class RelayParkingDetails implements Serializable {
     private final static long serialVersionUID = 1307429908633312002L;
     @SerializedName("etat")
     @Expose
-    private String etat;
+    private String status;
     @SerializedName("lastupdate")
     @Expose
-    private String lastupdate;
+    private String lastUpdate;
     @SerializedName("nombreplacesdisponibles")
     @Expose
-    private Integer nombreplacesdisponibles;
+    private Integer placesLibres;
     @SerializedName("idparc")
     @Expose
-    private String idparc;
+    private String id;
     @SerializedName("nom")
     @Expose
-    private String nom;
+    private String nomParking;
     @SerializedName("nombreplacesoccupees")
     @Expose
-    private Integer nombreplacesoccupees;
+    private Integer placesOccupees;
     @SerializedName("nombreplacesdisponiblespmr")
     @Expose
-    private Integer nombreplacesdisponiblespmr;
+    private Integer nombreLibresPMR;
     @SerializedName("capaciteactuelle")
     @Expose
-    private Integer capaciteactuelle;
+    private Integer capaciteActuelle;
     @SerializedName("nombreplacesoccupeespmr")
     @Expose
-    private Integer nombreplacesoccupeespmr;
+    private Integer placesOccupeesPMR;
     @SerializedName("coordonnees")
     @Expose
     private List<Double> coordonnees = null;
     @SerializedName("capaciteactuellepmr")
     @Expose
-    private Integer capaciteactuellepmr;
+    private Integer capaciteActuellePMR;
 
-    public String getEtat() {
-        return etat;
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
-    public void setEtat(String etat) {
-        this.etat = etat;
+    public String getStatus() {
+        return status;
     }
 
-    public String getLastupdate() {
-        return lastupdate;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public void setLastupdate(String lastupdate) {
-        this.lastupdate = lastupdate;
+    public String getLastUpdate() {
+        return lastUpdate;
     }
 
-    public Integer getNombreplacesdisponibles() {
-        return nombreplacesdisponibles;
+    public void setLastUpdate(String lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
-    public void setNombreplacesdisponibles(Integer nombreplacesdisponibles) {
-        this.nombreplacesdisponibles = nombreplacesdisponibles;
+    public Integer getPlacesLibres() {
+        return placesLibres;
     }
 
-    public String getIdparc() {
-        return idparc;
+    public void setPlacesLibres(Integer placesLibres) {
+        this.placesLibres = placesLibres;
     }
 
-    public void setIdparc(String idparc) {
-        this.idparc = idparc;
+    public String getId() {
+        return id;
     }
 
-    public String getNom() {
-        return nom;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public String getNomParking() {
+        return nomParking;
     }
 
-    public Integer getNombreplacesoccupees() {
-        return nombreplacesoccupees;
+    public void setNomParking(String nomParking) {
+        this.nomParking = nomParking;
     }
 
-    public void setNombreplacesoccupees(Integer nombreplacesoccupees) {
-        this.nombreplacesoccupees = nombreplacesoccupees;
+    public Integer getPlacesOccupees() {
+        return placesOccupees;
     }
 
-    public Integer getNombreplacesdisponiblespmr() {
-        return nombreplacesdisponiblespmr;
+    public void setPlacesOccupees(Integer placesOccupees) {
+        this.placesOccupees = placesOccupees;
     }
 
-    public void setNombreplacesdisponiblespmr(Integer nombreplacesdisponiblespmr) {
-        this.nombreplacesdisponiblespmr = nombreplacesdisponiblespmr;
+    public Integer getNombreLibresPMR() {
+        return nombreLibresPMR;
     }
 
-    public Integer getCapaciteactuelle() {
-        return capaciteactuelle;
+    public void setNombreLibresPMR(Integer nombreLibresPMR) {
+        this.nombreLibresPMR = nombreLibresPMR;
     }
 
-    public void setCapaciteactuelle(Integer capaciteactuelle) {
-        this.capaciteactuelle = capaciteactuelle;
+    public Integer getCapaciteActuelle() {
+        return capaciteActuelle;
     }
 
-    public Integer getNombreplacesoccupeespmr() {
-        return nombreplacesoccupeespmr;
+    public void setCapaciteActuelle(Integer capaciteActuelle) {
+        this.capaciteActuelle = capaciteActuelle;
     }
 
-    public void setNombreplacesoccupeespmr(Integer nombreplacesoccupeespmr) {
-        this.nombreplacesoccupeespmr = nombreplacesoccupeespmr;
+    public Integer getPlacesOccupeesPMR() {
+        return placesOccupeesPMR;
+    }
+
+    public void setPlacesOccupeesPMR(Integer placesOccupeesPMR) {
+        this.placesOccupeesPMR = placesOccupeesPMR;
     }
 
     public List<Double> getCoordonnees() {
@@ -126,11 +130,11 @@ public class RelayParkingDetails implements Serializable {
         this.coordonnees = coordonnees;
     }
 
-    public Integer getCapaciteactuellepmr() {
-        return capaciteactuellepmr;
+    public Integer getCapaciteActuellePMR() {
+        return capaciteActuellePMR;
     }
 
-    public void setCapaciteactuellepmr(Integer capaciteactuellepmr) {
-        this.capaciteactuellepmr = capaciteactuellepmr;
+    public void setCapaciteActuellePMR(Integer capaciteActuellePMR) {
+        this.capaciteActuellePMR = capaciteActuellePMR;
     }
 }

@@ -4,9 +4,7 @@ import android.net.TrafficStats;
 import android.util.Log;
 
 import com.example.roazhone.model.RelayParkingDetails;
-import com.example.roazhone.model.RelayParkingRecord;
 import com.example.roazhone.model.UndergroundParkingDetails;
-import com.example.roazhone.model.UndergroundParkingRecord;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -23,21 +21,18 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+
 /**
  * Service using Retrofit to calls the remote API.
  */
 public interface APIService {
     String TAG = APIService.class.getName();
-    Gson gson =
-            new GsonBuilder()
-                    .registerTypeAdapter(List.class, new Deserializer<List<UndergroundParkingRecord>>())
-                    .registerTypeAdapter(List.class, new Deserializer<List<RelayParkingRecord>>())
-                    .registerTypeAdapter(UndergroundParkingDetails.class, new Deserializer<UndergroundParkingDetails>())
-                    .registerTypeAdapter(RelayParkingDetails.class, new Deserializer<RelayParkingDetails>())
-                    .create();
+    Gson gson = new GsonBuilder()
+            .registerTypeAdapter(List.class, new Deserializer<List<UndergroundParkingDetails>>())
+            .registerTypeAdapter(List.class, new Deserializer<List<RelayParkingDetails>>())
+            .create();
 
     OkHttpClient okHttpClient = new OkHttpClient.Builder()
-//            .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .addInterceptor(new LoggingInterceptor())
             .build();
 
@@ -50,10 +45,10 @@ public interface APIService {
 
 
     @GET("records/1.0/search/?dataset=export-api-parking-citedia&q=")
-    Call<List<UndergroundParkingRecord>> getUndergroundParkingRecords();
+    Call<List<UndergroundParkingDetails>> getUndergroundParkingDetails();
 
     @GET("records/1.0/search/?dataset=etat-des-parcs-relais-du-reseau-star-en-temps-reel&q=&sort=idparc&facet=nom&facet=etat ")
-    Call<List<RelayParkingRecord>> getRelayParkingRecords();
+    Call<List<RelayParkingDetails>> getRelayParkingDetails();
 
     /**
      * Custom Interceptor.
