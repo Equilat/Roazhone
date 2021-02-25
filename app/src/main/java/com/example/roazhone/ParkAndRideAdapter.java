@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.roazhone.model.ParkAndRideDetails;
-import com.example.roazhone.model.UndergroundParkingDetails;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,10 +39,10 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
         ParkAndRideDetails upd = parkingList.get(i);
         vh.vName.setText(upd.getNomParking());
         if(upd.getStatus().equals("FERME")) {
-            vh.vRoom.setText(R.string.parking_ferme);
+            vh.vRoom.setText(R.string.parking_ferme_short);
         }
         else if(upd.getPlacesLibres() == 0) {
-            vh.vRoom.setText(R.string.parking_complet);
+            vh.vRoom.setText(R.string.parking_complet_short);
         }
         else {
             vh.vRoom.setText(upd.getPlacesLibres().toString());

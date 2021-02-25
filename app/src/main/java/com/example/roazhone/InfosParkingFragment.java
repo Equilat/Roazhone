@@ -3,13 +3,11 @@ package com.example.roazhone;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
-import android.media.Image;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import android.text.style.StyleSpan;
 import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
@@ -113,12 +111,12 @@ public class InfosParkingFragment extends Fragment {
             placesPMR = myView.findViewById(R.id.ipf_nb_places_pmr);
             placesPMR.setVisibility(View.VISIBLE);
 
-            if(relayParkingDetails.getStatus().equals(getString(R.string.ferme))){
-                places.setText(getString(R.string.parking_ferme));
+            if(relayParkingDetails.getStatus().equals(getString(R.string.parking_complet_long))){
+                places.setText(getString(R.string.parking_ferme_long));
                 places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_red));
             }
-            else if (relayParkingDetails.getStatus().equals(getString(R.string.complet))){
-                places.setText(getString(R.string.parking_ferme));
+            else if (relayParkingDetails.getStatus().equals(getString(R.string.parking_complet_long))){
+                places.setText(getString(R.string.parking_ferme_long));
                 places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_red));
             }
             else {
@@ -158,12 +156,12 @@ public class InfosParkingFragment extends Fragment {
             //Place dans le Parking
             places = myView.findViewById(R.id.ipf_nb_places);
 
-            if(undergroundParkingDetails.getStatus().equals(getString(R.string.ferme))){
-                places.setText(getString(R.string.parking_ferme));
+            if(undergroundParkingDetails.getStatus().equals(getString(R.string.parking_ferme_long))){
+                places.setText(getString(R.string.parking_ferme_long));
                 places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_red));
             }
-            else if (undergroundParkingDetails.getStatus().equals(getString(R.string.complet))){
-                places.setText(getString(R.string.parking_complet));
+            else if (undergroundParkingDetails.getStatus().equals(getString(R.string.parking_ferme_long))){
+                places.setText(getString(R.string.parking_complet_long));
                 places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_red));
             }
             else {
