@@ -33,12 +33,10 @@ public class InfosParkingFragment extends Fragment {
     private TextView placesPMR;
     private TextView adresse;
     private TextView horaires;
-    private TableLayout tarifs;
-    private ArrayList<Pair<String, String>> tarifsPairs;
-    private TableRow row;
-    private TextView tv1;
     private View divider;
     private TextView tarifsTexte;
+    private TableLayout tarifs;
+    private ArrayList<Pair<String, String>> tarifsPairs;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -204,15 +202,15 @@ public class InfosParkingFragment extends Fragment {
 
             for (Pair<String, String> tarif : tarifsPairs
                  ) {
-                    row = new TableRow(getContext());
+                    TableRow row = new TableRow(getContext());
 
-                    tv1 = new TextView(getContext());
-                    tv1.setText(tarif.first + tarif.second + "€");
-                    tv1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                    tv1.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_grey_5));
-                    tv1.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
+                    TextView tv = new TextView(getContext());
+                    tv.setText(tarif.first + tarif.second + "€");
+                    tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                    tv.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_grey_5));
+                    tv.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
 
-                    row.addView(tv1);
+                    row.addView(tv);
 
                     tarifs.addView(row);
             }
