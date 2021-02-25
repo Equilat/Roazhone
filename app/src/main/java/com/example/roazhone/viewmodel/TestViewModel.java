@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.roazhone.api.APICalls;
-import com.example.roazhone.model.RelayParkingDetails;
+import com.example.roazhone.model.ParkAndRideDetails;
 import com.example.roazhone.model.UndergroundParkingDetails;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
 public class TestViewModel extends AndroidViewModel {
     private APICalls apiCalls;
     private LiveData<List<UndergroundParkingDetails>> undergroundParkingsResponseLiveData;
-    private MutableLiveData<List<RelayParkingDetails>> relayParkingsResponseLiveData;
+    private MutableLiveData<List<ParkAndRideDetails>> relayParkingsResponseLiveData;
 
     public TestViewModel(@NonNull Application application) {
         super(application);
@@ -25,7 +25,7 @@ public class TestViewModel extends AndroidViewModel {
     public void init() {
         apiCalls = new APICalls();
         undergroundParkingsResponseLiveData = apiCalls.getUndergroundParkingDetailsLiveData();
-        relayParkingsResponseLiveData = apiCalls.getRelayParkingDetailsLiveData();
+        relayParkingsResponseLiveData = apiCalls.getParkAndRideLiveData();
     }
 
     public void searchUndergroundParkings() {
@@ -40,7 +40,7 @@ public class TestViewModel extends AndroidViewModel {
         return undergroundParkingsResponseLiveData;
     }
 
-    public MutableLiveData<List<RelayParkingDetails>> getRelayParkingsResponseLiveData() {
+    public MutableLiveData<List<ParkAndRideDetails>> getRelayParkingsResponseLiveData() {
         return relayParkingsResponseLiveData;
     }
 }

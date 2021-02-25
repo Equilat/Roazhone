@@ -3,7 +3,7 @@ package com.example.roazhone.api;
 import android.net.TrafficStats;
 import android.util.Log;
 
-import com.example.roazhone.model.RelayParkingDetails;
+import com.example.roazhone.model.ParkAndRideDetails;
 import com.example.roazhone.model.UndergroundParkingDetails;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,7 +29,7 @@ public interface APIService {
     String TAG = APIService.class.getName();
     Gson gson = new GsonBuilder()
             .registerTypeAdapter(List.class, new Deserializer<List<UndergroundParkingDetails>>())
-            .registerTypeAdapter(List.class, new Deserializer<List<RelayParkingDetails>>())
+            .registerTypeAdapter(List.class, new Deserializer<List<ParkAndRideDetails>>())
             .create();
 
     OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -48,7 +48,7 @@ public interface APIService {
     Call<List<UndergroundParkingDetails>> getUndergroundParkingDetails();
 
     @GET("records/1.0/search/?dataset=etat-des-parcs-relais-du-reseau-star-en-temps-reel&q=&sort=idparc&facet=nom&facet=etat ")
-    Call<List<RelayParkingDetails>> getRelayParkingDetails();
+    Call<List<ParkAndRideDetails>> getRelayParkingDetails();
 
     /**
      * Custom Interceptor.

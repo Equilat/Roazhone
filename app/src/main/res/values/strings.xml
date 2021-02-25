@@ -10,4 +10,7 @@
     <string name="adresse">Adresse</string>
     <string name="horaires">Horaires</string>
     <string name="vers_google_maps">Vers Google Maps</string>
+    <string name="parking_complet">COMPLET</string>
+    <string name="parking_ferme">FERME</string>
+    <string name="str_places_disponibles">places disponibles</string>
 </resources>
