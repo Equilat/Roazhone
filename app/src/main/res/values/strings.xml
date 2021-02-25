@@ -26,6 +26,7 @@
     <string name="tarif_3h">3h00 :&#160;</string>
     <string name="tarif_4h">4h00 :&#160;</string>
     <string name="tarifs">Tarifs :</string>
+    <string name="horaires_pr">Ouvert du lundi au mercredi de 5h à 1h, du jeudi au samedi de 5h à 2h (en période estivale de 5h à 1h) et fermé les dimanches et jours fériés.</string>
 
 
 </resources>
