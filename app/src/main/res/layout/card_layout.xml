@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="4dp"
+    android:layout_margin="5dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/parkingName"
@@ -15,22 +19,15 @@
             android:background="@color/white"
             android:gravity="center_vertical"
             android:textColor="@android:color/black"
-            android:textSize="14dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            android:textSize="14dp"/>
         <TextView
             android:id="@+id/parkingRoom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/parkingName"
+            android:layout_height="20dp"
+            android:background="@color/white"
             android:gravity="center_vertical"
-            android:textColor="@color/black"
-            android:textSize="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/parkingName" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:textColor="@android:color/black"
+            android:textSize="14dp"/>
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>

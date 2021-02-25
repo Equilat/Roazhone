@@ -2,6 +2,7 @@ package com.example.roazhone;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -18,14 +19,18 @@ import com.example.roazhone.model.ParkAndRideDetails;
 import com.example.roazhone.model.UndergroundParkingDetails;
 import com.example.roazhone.viewmodel.ListViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
-public class HomeFragment extends Fragment implements View.OnLongClickListener {
+public class HomeFragment extends Fragment implements View.OnLongClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private BottomNavigationView bottomNavigationView;
     private ListViewModel listViewModel;
+    private RecyclerView recyclerView;
     private APICalls apiCalls;
+    private UndergroundParkingAdapter undergroundParkingAdapter;
+    private ParkAndRideAdapter parkAndRideAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,6 +38,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener {
         // Inflate the layout for this fragment
         View myView = inflater.inflate(R.layout.home_fragment, container, false);
         bottomNavigationView = myView.findViewById(R.id.activity_main_bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
         disableMenuTooltip();
 
         return myView;
@@ -40,12 +46,12 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        RecyclerView recyclerView = view.findViewById(R.id.cardList);
+        recyclerView = view.findViewById(R.id.cardList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
 
-        final UndergroundParkingAdapter undergroundParkingAdapter = new UndergroundParkingAdapter();
-        final ParkAndRideAdapter parkAndRideAdapter = new ParkAndRideAdapter();
+        undergroundParkingAdapter = new UndergroundParkingAdapter();
+        parkAndRideAdapter = new ParkAndRideAdapter();
         recyclerView.setAdapter(undergroundParkingAdapter);
 
         listViewModel = new ViewModelProvider(requireActivity()).get(ListViewModel.class);
@@ -55,12 +61,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener {
             public void onChanged(@Nullable List<UndergroundParkingDetails> undergroundParkingDetails) { undergroundParkingAdapter.setParkings(undergroundParkingDetails);
             }
         });
-        /**listViewModel.getUndergroundParkingDetails().observe(getViewLifecycleOwner(), new Observer<List<UndergroundParkingDetails>>() {
-        @Override
-        public void onChanged(@Nullable List<UndergroundParkingDetails> undergroundParkingDetails) {
-        undergroundParkingAdapter.setParkings(undergroundParkingDetails);
-        }
-        });*/
+
         listViewModel.getParkAndRideDetails().observe(getViewLifecycleOwner(), new Observer<List<ParkAndRideDetails>>() {
             @Override
             public void onChanged(@Nullable List<ParkAndRideDetails> parkAndRideDetails) {
@@ -70,15 +71,31 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener {
     }
 
     private void disableMenuTooltip(){
-        View parkingLogo = bottomNavigationView.getChildAt(0).findViewById(R.id.parkingLogo);
-        View parkAndRideLogo = bottomNavigationView.getChildAt(0).findViewById(R.id.parkAndRideLogo);
+        View parkingLogo = bottomNavigationView.getChildAt(0).findViewById(R.id.parkingItem);
+        View parkAndRideLogo = bottomNavigationView.getChildAt(0).findViewById(R.id.parkAndRideItem);
 
         parkingLogo.setOnLongClickListener(this);
         parkAndRideLogo.setOnLongClickListener(this);
     }
 
+
+
     @Override
     public boolean onLongClick(View v) {
+        return true;
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.parkingItem:
+                recyclerView.setAdapter(undergroundParkingAdapter);
+                break;
+            case R.id.parkAndRideItem:
+                recyclerView.setAdapter(parkAndRideAdapter);
+                break;
+        }
         return true;
     }
 }

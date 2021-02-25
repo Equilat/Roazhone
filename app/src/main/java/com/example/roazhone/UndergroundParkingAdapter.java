@@ -27,7 +27,6 @@ public class UndergroundParkingAdapter extends  RecyclerView.Adapter<Underground
     @NonNull
     @Override
     public UndergroundParkingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        System.out.println("here");
         View itemView = LayoutInflater.
                 from(parent.getContext()).
                 inflate(R.layout.card_layout, parent, false);
@@ -37,7 +36,6 @@ public class UndergroundParkingAdapter extends  RecyclerView.Adapter<Underground
 
     @Override
     public void onBindViewHolder(@NonNull UndergroundParkingViewHolder vh, int i) {
-        System.out.println("here");
         UndergroundParkingDetails upd = parkingList.get(i);
         vh.vName.setText(upd.getNomParking());
         if(upd.getStatus().equals("FERME")) {
