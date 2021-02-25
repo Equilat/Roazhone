@@ -4,12 +4,9 @@ package com.example.roazhone.api;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.roazhone.model.RelayParkingDetails;
-import com.example.roazhone.model.RelayParkingDetails;
-import com.example.roazhone.model.UndergroundParkingDetails;
+import com.example.roazhone.model.ParkAndRideDetails;
 import com.example.roazhone.model.UndergroundParkingDetails;
 
 import java.util.List;
@@ -25,21 +22,28 @@ import retrofit2.Response;
 public class APICalls {
 
     private static final String TAG = APICalls.class.getName();
+    private static APICalls apiCalls;
     private final MutableLiveData<List<UndergroundParkingDetails>> undergroundParkingLiveData = new MutableLiveData<>();
-    private final MutableLiveData<List<RelayParkingDetails>> relayParkingLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<ParkAndRideDetails>> parkAndRideLiveData = new MutableLiveData<>();
+
+    public static APICalls getInstance() {
+        if (apiCalls == null) {
+            apiCalls = new APICalls();
+        }
+        return apiCalls;
+    }
 
     /**
      * Call the API to get all the undergroung parking of Rennes.
      */
-    public void searchUndergroundParkingDetailss() {
+    public MutableLiveData<List<UndergroundParkingDetails>> searchUndergroundParkingDetails() {
         APIService apiService = APIService.retrofit.create(APIService.class);
-        Call<List<UndergroundParkingDetails>> call = apiService.getUndergroundParkingDetails();
-        call.enqueue(new Callback<List<UndergroundParkingDetails>>() {
+        apiService.getUndergroundParkingDetails().enqueue(new Callback<List<UndergroundParkingDetails>>() {
             @Override
             public void onResponse(Call<List<UndergroundParkingDetails>> call, Response<List<UndergroundParkingDetails>> response) {
                 if (response.body() != null) {
                     List<UndergroundParkingDetails> parkings = response.body();
-                    undergroundParkingLiveData.postValue(parkings);
+                    undergroundParkingLiveData.setValue(parkings);
                 }
             }
 
@@ -47,40 +51,33 @@ public class APICalls {
             public void onFailure(@NonNull Call<List<UndergroundParkingDetails>> call, @NonNull Throwable t) {
                 Log.wtf(TAG, "onResponseFailed : " + call.request().url());
                 t.printStackTrace();
-                undergroundParkingLiveData.postValue(null);
+                undergroundParkingLiveData.setValue(null);
             }
         });
+        return undergroundParkingLiveData;
     }
 
     /**
      * Call the API to get all the relay parking of Rennes.
      */
-    public void searchRelayParkingDetailss() {
+    public MutableLiveData<List<ParkAndRideDetails>> searchParkAndRideDetails() {
         APIService apiService = APIService.retrofit.create(APIService.class);
-        Call<List<RelayParkingDetails>> call = apiService.getRelayParkingDetails();
-        call.enqueue(new Callback<List<RelayParkingDetails>>() {
+        apiService.getRelayParkingDetails().enqueue(new Callback<List<ParkAndRideDetails>>() {
             @Override
-            public void onResponse(Call<List<RelayParkingDetails>> call, Response<List<RelayParkingDetails>> response) {
+            public void onResponse(Call<List<ParkAndRideDetails>> call, Response<List<ParkAndRideDetails>> response) {
                 if (response.body() != null) {
-                    List<RelayParkingDetails> parkings = response.body();
-                    relayParkingLiveData.postValue(parkings);
+                    List<ParkAndRideDetails> parkings = response.body();
+                    parkAndRideLiveData.setValue(parkings);
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<RelayParkingDetails>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<ParkAndRideDetails>> call, @NonNull Throwable t) {
                 Log.wtf(TAG, "onResponseFailed : " + call.request().url());
                 t.printStackTrace();
-                relayParkingLiveData.postValue(null);
+                parkAndRideLiveData.setValue(null);
             }
         });
-    }
-
-    public MutableLiveData<List<UndergroundParkingDetails>> getUndergroundParkingDetailsLiveData() {
-        return undergroundParkingLiveData;
-    }
-
-    public MutableLiveData<List<RelayParkingDetails>> getRelayParkingDetailsLiveData() {
-        return relayParkingLiveData;
+        return parkAndRideLiveData;
     }
 }
