@@ -20,20 +20,17 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.example.roazhone.model.RelayParkingDetails;
+import com.example.roazhone.model.ParkAndRideDetails;
 import com.example.roazhone.model.UndergroundParkingDetails;
-import com.google.android.material.resources.TextAppearance;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class InfosParkingFragment extends Fragment {
 
-   // private RelayParkingDetails parkingDetails;
+    //private ParkAndRideDetails parkingDetails;
     private UndergroundParkingDetails parkingDetails;
 
     private TextView nom;
@@ -93,9 +90,9 @@ public class InfosParkingFragment extends Fragment {
 
         Object o = parkingDetails;
 
-        if(o instanceof RelayParkingDetails) {
+        if(o instanceof ParkAndRideDetails) {
 
-            RelayParkingDetails relayParkingDetails = (RelayParkingDetails) o;
+            ParkAndRideDetails relayParkingDetails = (ParkAndRideDetails) o;
 
             //Tarifs, horaires et divider invisibles
             tarifs = myView.findViewById(R.id.ipf_tarifs_liste);
@@ -156,7 +153,7 @@ public class InfosParkingFragment extends Fragment {
 
             //Nom du parking
             nom = myView.findViewById(R.id.ipf_nom);
-            nom.setText("Parking "+ undergroundParkingDetails.getNomParking());
+            nom.setText(getString(R.string.parking) + undergroundParkingDetails.getNomParking());
 
             //Place dans le Parking
             places = myView.findViewById(R.id.ipf_nb_places);

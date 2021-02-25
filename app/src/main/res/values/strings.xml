@@ -11,7 +11,7 @@
     <string name="vers_google_maps">Vers Google Maps</string>
     <string name="str_places_disponibles">places disponibles</string>
     <string name="nombre_de_places_pmr">Nombre de places pmr</string>
-    <string name="parking">Parking :&#160;</string>
+    <string name="parking">Parking&#160;</string>
     <string name="parking_complet">Parking complet</string>
     <string name="parking_ferme">Parking fermé</string>
     <string name="ferme">FERME</string>
