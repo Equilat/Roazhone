@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Class to map details about relay parking that come from remote API.
+ * Class to map details about park and ride parking that come from remote API.
  */
 public class ParkAndRideDetails implements Serializable {
 

@@ -22,21 +22,28 @@ import retrofit2.Response;
 public class APICalls {
 
     private static final String TAG = APICalls.class.getName();
+    private static APICalls apiCalls;
     private final MutableLiveData<List<UndergroundParkingDetails>> undergroundParkingLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<ParkAndRideDetails>> parkAndRideLiveData = new MutableLiveData<>();
+
+    public static APICalls getInstance() {
+        if (apiCalls == null) {
+            apiCalls = new APICalls();
+        }
+        return apiCalls;
+    }
 
     /**
      * Call the API to get all the undergroung parking of Rennes.
      */
-    public void searchUndergroundParkingDetails() {
+    public MutableLiveData<List<UndergroundParkingDetails>> searchUndergroundParkingDetails() {
         APIService apiService = APIService.retrofit.create(APIService.class);
-        Call<List<UndergroundParkingDetails>> call = apiService.getUndergroundParkingDetails();
-        call.enqueue(new Callback<List<UndergroundParkingDetails>>() {
+        apiService.getUndergroundParkingDetails().enqueue(new Callback<List<UndergroundParkingDetails>>() {
             @Override
             public void onResponse(Call<List<UndergroundParkingDetails>> call, Response<List<UndergroundParkingDetails>> response) {
                 if (response.body() != null) {
                     List<UndergroundParkingDetails> parkings = response.body();
-                    undergroundParkingLiveData.postValue(parkings);
+                    undergroundParkingLiveData.setValue(parkings);
                 }
             }
 
@@ -44,23 +51,23 @@ public class APICalls {
             public void onFailure(@NonNull Call<List<UndergroundParkingDetails>> call, @NonNull Throwable t) {
                 Log.wtf(TAG, "onResponseFailed : " + call.request().url());
                 t.printStackTrace();
-                undergroundParkingLiveData.postValue(null);
+                undergroundParkingLiveData.setValue(null);
             }
         });
+        return undergroundParkingLiveData;
     }
 
     /**
      * Call the API to get all the relay parking of Rennes.
      */
-    public void searchParkAndRideDetails() {
+    public MutableLiveData<List<ParkAndRideDetails>> searchParkAndRideDetails() {
         APIService apiService = APIService.retrofit.create(APIService.class);
-        Call<List<ParkAndRideDetails>> call = apiService.getRelayParkingDetails();
-        call.enqueue(new Callback<List<ParkAndRideDetails>>() {
+        apiService.getRelayParkingDetails().enqueue(new Callback<List<ParkAndRideDetails>>() {
             @Override
             public void onResponse(Call<List<ParkAndRideDetails>> call, Response<List<ParkAndRideDetails>> response) {
                 if (response.body() != null) {
                     List<ParkAndRideDetails> parkings = response.body();
-                    parkAndRideLiveData.postValue(parkings);
+                    parkAndRideLiveData.setValue(parkings);
                 }
             }
 
@@ -68,16 +75,9 @@ public class APICalls {
             public void onFailure(@NonNull Call<List<ParkAndRideDetails>> call, @NonNull Throwable t) {
                 Log.wtf(TAG, "onResponseFailed : " + call.request().url());
                 t.printStackTrace();
-                parkAndRideLiveData.postValue(null);
+                parkAndRideLiveData.setValue(null);
             }
         });
-    }
-
-    public MutableLiveData<List<UndergroundParkingDetails>> getUndergroundParkingDetailsLiveData() {
-        return undergroundParkingLiveData;
-    }
-
-    public MutableLiveData<List<ParkAndRideDetails>> getParkAndRideLiveData() {
         return parkAndRideLiveData;
     }
 }

@@ -15,23 +15,11 @@ import java.util.List;
 public class ListViewModel extends AndroidViewModel {
 
     private APICalls repository;
-    private static boolean intialized = false;
     private MutableLiveData<List<UndergroundParkingDetails>> undergroundParkingDetails;
     private MutableLiveData<List<ParkAndRideDetails>> parkAndRideDetails;
 
     public ListViewModel(@NonNull Application application) {
         super(application);
-        if (!isIntialized()) {
-            repository = new APICalls();
-        }
-        repository.searchUndergroundParkingDetails();
-        repository.searchParkAndRideDetails();
-        undergroundParkingDetails = repository.getUndergroundParkingDetailsLiveData();
-        parkAndRideDetails = repository.getParkAndRideLiveData();
-    }
-
-    public boolean isIntialized() {
-        return intialized;
     }
 
     public MutableLiveData<List<UndergroundParkingDetails>> getUndergroundParkingDetails() {
@@ -42,9 +30,9 @@ public class ListViewModel extends AndroidViewModel {
         return parkAndRideDetails;
     }
 
-    public void setRepository(APICalls r) {
-        repository = r;
-        undergroundParkingDetails = repository.getUndergroundParkingDetailsLiveData();
-        parkAndRideDetails = repository.getParkAndRideLiveData();
+    public void initialize() {
+        repository = APICalls.getInstance();
+        undergroundParkingDetails = repository.searchUndergroundParkingDetails();
+        parkAndRideDetails = repository.searchParkAndRideDetails();
     }
 }
