@@ -79,8 +79,8 @@ public class InfosParkingFragment extends Fragment {
         parkingDetails.setCapaciteActuelle(400);
         parkingDetails.setNombreLibresPMR(15);
         List<Double> coord = new ArrayList<>();
-        coord.add(48.1152367);
-        coord.add(-1.677049014);
+        coord.add(48.0875369773);
+        coord.add(-1.6745548715);
         parkingDetails.setCoordonnees(coord);
 
         Object o = parkingDetails;
@@ -94,8 +94,6 @@ public class InfosParkingFragment extends Fragment {
             tarifs.setVisibility(View.INVISIBLE);
             tarifsTexte = myView.findViewById(R.id.ipf_tarifs_texte);
             tarifsTexte.setVisibility(View.INVISIBLE);
-            horaires = myView.findViewById(R.id.ipf_horaires);
-            horaires.setVisibility(View.INVISIBLE);
             divider = myView.findViewById(R.id.ipf_divider);
             divider.setVisibility(View.INVISIBLE);
 
@@ -137,6 +135,10 @@ public class InfosParkingFragment extends Fragment {
             //Adresse
             adresse = myView.findViewById(R.id.ipf_adresse);
             adresse.setText(getAddress(relayParkingDetails.getCoordonnees().get(0), relayParkingDetails.getCoordonnees().get(1)));
+
+            //Horaires
+            horaires = myView.findViewById(R.id.ipf_horaires);
+            horaires.setText(getString(R.string.horaires_pr));
 
         }
         else if (o instanceof UndergroundParkingDetails) {
@@ -183,7 +185,6 @@ public class InfosParkingFragment extends Fragment {
 
             //Horaires
             horaires = myView.findViewById(R.id.ipf_horaires);
-            horaires.setVisibility(View.VISIBLE);
             horaires.setText(undergroundParkingDetails.getHoraires());
 
             //Tarifs
