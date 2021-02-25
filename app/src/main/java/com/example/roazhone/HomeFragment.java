@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.roazhone.api.APICalls;
 import com.example.roazhone.model.ParkAndRideDetails;
@@ -25,6 +26,7 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.List;
 
 public class HomeFragment extends Fragment implements View.OnLongClickListener, NavigationView.OnNavigationItemSelectedListener {
+    private SwipeRefreshLayout swipeContainer;
 
     private BottomNavigationView bottomNavigationView;
     private ListViewModel listViewModel;
@@ -61,6 +63,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             @Override
             public void onChanged(@Nullable List<UndergroundParkingDetails> undergroundParkingDetails) {
                 undergroundParkingAdapter.setParkings(undergroundParkingDetails);
+                swipeContainer.setRefreshing(false);
             }
         });
 
@@ -68,18 +71,33 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             @Override
             public void onChanged(@Nullable List<ParkAndRideDetails> parkAndRideDetails) {
                 parkAndRideAdapter.setParkings(parkAndRideDetails);
+                swipeContainer.setRefreshing(false);
             }
         });
+
+        swipeContainer = view.findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+            @Override
+            public void onRefresh() {
+                listViewModel.initialize();
+            }
+
+        });
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
     }
 
-    private void disableMenuTooltip(){
+    private void disableMenuTooltip() {
         View parkingLogo = bottomNavigationView.getChildAt(0).findViewById(R.id.parkingItem);
         View parkAndRideLogo = bottomNavigationView.getChildAt(0).findViewById(R.id.parkAndRideItem);
 
         parkingLogo.setOnLongClickListener(this);
         parkAndRideLogo.setOnLongClickListener(this);
     }
-
 
 
 
