@@ -28,9 +28,6 @@ import java.util.Locale;
 
 public class InfosParkingFragment extends Fragment {
 
-    //private ParkAndRideDetails parkingDetails;
-    private UndergroundParkingDetails parkingDetails;
-
     private TextView nom;
     private TextView places;
     private TextView placesPMR;
@@ -54,10 +51,11 @@ public class InfosParkingFragment extends Fragment {
         View myView = inflater.inflate(R.layout.infos_parking_fragment, container, false);
 
         //Exemple 2
-        parkingDetails = new UndergroundParkingDetails();
+        /*
+        UndergroundParkingDetails parkingDetails = new UndergroundParkingDetails();
         parkingDetails.setNomParking("Hoche");
         parkingDetails.setStatus("OUVERT");
-        parkingDetails.setPlacesLibres(120);
+        parkingDetails.setPlacesLibres(13);
         parkingDetails.setPlacesMax(325);
         List<Double> coord = new ArrayList<>();
         coord.add(48.1152367);
@@ -71,20 +69,19 @@ public class InfosParkingFragment extends Fragment {
         parkingDetails.setTarif2h("3");
         parkingDetails.setTarif3h("4");
         parkingDetails.setTarif4h("5");
+         */
 
         //Exemple
-        /*
-        parkingDetails = new RelayParkingDetails();
+        ParkAndRideDetails parkingDetails = new ParkAndRideDetails();
         parkingDetails.setNomParking("Henri Fréville");
         parkingDetails.setStatus("OUVERT");
-        parkingDetails.setPlacesLibres(200);
+        parkingDetails.setPlacesLibres(20);
         parkingDetails.setCapaciteActuelle(400);
         parkingDetails.setNombreLibresPMR(15);
         List<Double> coord = new ArrayList<>();
         coord.add(48.1152367);
         coord.add(-1.677049014);
         parkingDetails.setCoordonnees(coord);
-        */
 
         Object o = parkingDetails;
 
@@ -109,26 +106,31 @@ public class InfosParkingFragment extends Fragment {
             //Place dans le Parking
             places = myView.findViewById(R.id.ipf_nb_places);
             placesPMR = myView.findViewById(R.id.ipf_nb_places_pmr);
-            placesPMR.setVisibility(View.VISIBLE);
 
-            if(relayParkingDetails.getStatus().equals(getString(R.string.parking_complet_long))){
+            if(relayParkingDetails.getStatus().equals(getString(R.string.parking_ferme_short))){
                 places.setText(getString(R.string.parking_ferme_long));
                 places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_red));
+                placesPMR.setVisibility(View.INVISIBLE);
+
             }
-            else if (relayParkingDetails.getStatus().equals(getString(R.string.parking_complet_long))){
-                places.setText(getString(R.string.parking_ferme_long));
+            else if (relayParkingDetails.getStatus().equals(getString(R.string.parking_complet_short))){
+                places.setText(getString(R.string.parking_complet_long));
                 places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_red));
+                placesPMR.setVisibility(View.INVISIBLE);
+
             }
             else {
                 if (relayParkingDetails.getPlacesLibres() <= relayParkingDetails.getCapaciteActuelle()*0.1) {
                     places.setText(relayParkingDetails.getPlacesLibres() + getString(R.string.places_dispos));
                     places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_orange));
                     placesPMR.setText(relayParkingDetails.getNombreLibresPMR() + getString(R.string.places_pmr_dispos));
+                    placesPMR.setVisibility(View.VISIBLE);
                 }
                 else {
                     places.setText(relayParkingDetails.getPlacesLibres() + getString(R.string.places_dispos));
                     places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_green));
                     placesPMR.setText(relayParkingDetails.getNombreLibresPMR() + getString(R.string.places_pmr_dispos));
+                    placesPMR.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -156,21 +158,21 @@ public class InfosParkingFragment extends Fragment {
             //Place dans le Parking
             places = myView.findViewById(R.id.ipf_nb_places);
 
-            if(undergroundParkingDetails.getStatus().equals(getString(R.string.parking_ferme_long))){
+            if(undergroundParkingDetails.getStatus().equals(getString(R.string.parking_ferme_short))){
                 places.setText(getString(R.string.parking_ferme_long));
                 places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_red));
             }
-            else if (undergroundParkingDetails.getStatus().equals(getString(R.string.parking_ferme_long))){
+            else if (undergroundParkingDetails.getStatus().equals(getString(R.string.parking_complet_short))){
                 places.setText(getString(R.string.parking_complet_long));
                 places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_red));
             }
             else {
                 if (undergroundParkingDetails.getPlacesLibres() <= undergroundParkingDetails.getPlacesMax()*0.1) {
-                    places.setText(undergroundParkingDetails.getPlacesLibres() + getString(R.string.places_pmr_dispos));
+                    places.setText(undergroundParkingDetails.getPlacesLibres() + getString(R.string.places_dispos));
                     places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_orange));
                 }
                 else {
-                    places.setText(undergroundParkingDetails.getPlacesLibres() + getString(R.string.places_pmr_dispos));
+                    places.setText(undergroundParkingDetails.getPlacesLibres() + getString(R.string.places_dispos));
                     places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_green));
                 }
             }
