@@ -38,7 +38,7 @@ public class APICalls {
      */
     public MutableLiveData<List<UndergroundParkingDetails>> searchUndergroundParkingDetails() {
         APIService apiService = APIService.retrofit.create(APIService.class);
-        apiService.getUndergroundParkingDetails().enqueue(new Callback<List<UndergroundParkingDetails>>() {
+        apiService.getUndergroundParkingDetails("https://data.rennesmetropole.fr/api/records/1.0/search/?apikey=e2b4c1f75c4122d7ed58c056de8fb11ffb52a2fe964d883a81eaeb1d&dataset=export-api-parking-citedia&q=").enqueue(new Callback<List<UndergroundParkingDetails>>() {
             @Override
             public void onResponse(Call<List<UndergroundParkingDetails>> call, Response<List<UndergroundParkingDetails>> response) {
                 if (response.body() != null) {
@@ -62,7 +62,7 @@ public class APICalls {
      */
     public MutableLiveData<List<ParkAndRideDetails>> searchParkAndRideDetails() {
         APIService apiService = APIService.retrofit.create(APIService.class);
-        apiService.getRelayParkingDetails().enqueue(new Callback<List<ParkAndRideDetails>>() {
+        apiService.getRelayParkingDetails("https://data.explore.star.fr/api/records/1.0/search/?dataset=tco-parcsrelais-etat-tr&q=&facet=nom&facet=etat").enqueue(new Callback<List<ParkAndRideDetails>>() {
             @Override
             public void onResponse(Call<List<ParkAndRideDetails>> call, Response<List<ParkAndRideDetails>> response) {
                 if (response.body() != null) {
