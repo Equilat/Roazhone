@@ -44,10 +44,10 @@ public interface APIService {
             .build();
 
 
-    @GET("records/1.0/search/?dataset=export-api-parking-citedia&q=")
+    @GET("records/1.0/search/?apikey=e2b4c1f75c4122d7ed58c056de8fb11ffb52a2fe964d883a81eaeb1d&dataset=export-api-parking-citedia&q=")
     Call<List<UndergroundParkingDetails>> getUndergroundParkingDetails();
 
-    @GET("records/1.0/search/?dataset=etat-des-parcs-relais-du-reseau-star-en-temps-reel&q=&sort=idparc&facet=nom&facet=etat ")
+    @GET("records/1.0/search/?apikey=e2b4c1f75c4122d7ed58c056de8fb11ffb52a2fe964d883a81eaeb1d&dataset=etat-des-parcs-relais-du-reseau-star-en-temps-reel&q=&sort=idparc&facet=nom&facet=etat ")
     Call<List<ParkAndRideDetails>> getRelayParkingDetails();
 
     /**
