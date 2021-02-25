@@ -55,10 +55,11 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         recyclerView.setAdapter(undergroundParkingAdapter);
 
         listViewModel = new ViewModelProvider(requireActivity()).get(ListViewModel.class);
-
+        listViewModel.initialize();
         listViewModel.getUndergroundParkingDetails().observe(getViewLifecycleOwner(), new Observer<List<UndergroundParkingDetails>>() {
             @Override
-            public void onChanged(@Nullable List<UndergroundParkingDetails> undergroundParkingDetails) { undergroundParkingAdapter.setParkings(undergroundParkingDetails);
+            public void onChanged(@Nullable List<UndergroundParkingDetails> undergroundParkingDetails) {
+                undergroundParkingAdapter.setParkings(undergroundParkingDetails);
             }
         });
 
