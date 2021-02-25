@@ -14,10 +14,8 @@
     <string name="str_places_disponibles">places disponibles</string>
     <string name="nombre_de_places_pmr">Nombre de places pmr</string>
     <string name="parking">Parking :&#160;</string>
-    <string name="parking_complet">Parking complet</string>
-    <string name="parking_ferme">Parking fermé</string>
-    <string name="ferme">FERME</string>
-    <string name="complet">COMPLET</string>
+    <string name="parking_complet_long">Parking complet</string>
+    <string name="parking_ferme_long">Parking fermé</string>
     <string name="places_dispos">&#160;places disponibles</string>
     <string name="places_pmr_dispos">&#160;places PMR disponibles</string>
     <string name="tarif_15">15 min :&#160;</string>
