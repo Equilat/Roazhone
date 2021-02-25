@@ -5,9 +5,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.roazhone.model.ParkAndRideRecord;
+
+import java.util.List;
+
 public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHolder>{
 
-    private List<ParkAndRideRecord> contactList;
+    private List<ParkAndRideRecord> parkingList;
 
     @NonNull
     @Override
@@ -22,6 +26,6 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
 
     @Override
     public int getItemCount() {
-        return 0;
+        return parkingList.size();
     }
 }

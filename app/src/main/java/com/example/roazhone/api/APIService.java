@@ -3,8 +3,8 @@ package com.example.roazhone.api;
 import android.net.TrafficStats;
 import android.util.Log;
 
-import com.example.roazhone.model.RelayParkingDetails;
-import com.example.roazhone.model.RelayParkingRecord;
+import com.example.roazhone.model.ParkAndRideDetails;
+import com.example.roazhone.model.ParkAndRideRecord;
 import com.example.roazhone.model.UndergroundParkingDetails;
 import com.example.roazhone.model.UndergroundParkingRecord;
 import com.google.gson.Gson;
@@ -31,9 +31,9 @@ public interface APIService {
     Gson gson =
             new GsonBuilder()
                     .registerTypeAdapter(List.class, new Deserializer<List<UndergroundParkingRecord>>())
-                    .registerTypeAdapter(List.class, new Deserializer<List<RelayParkingRecord>>())
+                    .registerTypeAdapter(List.class, new Deserializer<List<ParkAndRideRecord>>())
                     .registerTypeAdapter(UndergroundParkingDetails.class, new Deserializer<UndergroundParkingDetails>())
-                    .registerTypeAdapter(RelayParkingDetails.class, new Deserializer<RelayParkingDetails>())
+                    .registerTypeAdapter(ParkAndRideDetails.class, new Deserializer<ParkAndRideDetails>())
                     .create();
 
     OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -53,7 +53,7 @@ public interface APIService {
     Call<List<UndergroundParkingRecord>> getUndergroundParkingRecords();
 
     @GET("records/1.0/search/?dataset=etat-des-parcs-relais-du-reseau-star-en-temps-reel&q=&sort=idparc&facet=nom&facet=etat ")
-    Call<List<RelayParkingRecord>> getRelayParkingRecords();
+    Call<List<ParkAndRideRecord>> getRelayParkingRecords();
 
     /**
      * Custom Interceptor.

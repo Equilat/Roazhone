@@ -16,4 +16,6 @@ public class ParkingViewHolder extends RecyclerView.ViewHolder {
         vName =  v.findViewById(R.id.parkingName);
         vRoom = v.findViewById(R.id.parkingRoom);
     }
+
+
 }

@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Class to map information about relay parking's dataset that come from remote API.
  */
-public class RelayParkingRecord {
+public class ParkAndRideRecord {
 
     private final static long serialVersionUID = -5991800116026056414L;
     @SerializedName("datasetid")
@@ -17,7 +17,7 @@ public class RelayParkingRecord {
     private String recordid;
     @SerializedName("fields")
     @Expose
-    private RelayParkingDetails relayParkingDetails;
+    private ParkAndRideDetails parkAndRideDetails;
     //    @SerializedName("geometry")
 //    @Expose
     private transient String geometry;
@@ -41,12 +41,12 @@ public class RelayParkingRecord {
         this.recordid = recordid;
     }
 
-    public RelayParkingDetails getRelayParkingDetails() {
-        return relayParkingDetails;
+    public ParkAndRideDetails getParkAndRideDetails() {
+        return parkAndRideDetails;
     }
 
-    public void setRelayParkingDetails(RelayParkingDetails relayParkingDetails) {
-        this.relayParkingDetails = relayParkingDetails;
+    public void setParkAndRideDetails(ParkAndRideDetails parkAndRideDetails) {
+        this.parkAndRideDetails = parkAndRideDetails;
     }
 
     public String getRecordTimestamp() {

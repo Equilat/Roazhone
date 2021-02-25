@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Class to map details about relay parking that come from remote API.
  */
-public class RelayParkingDetails implements Serializable {
+public class ParkAndRideDetails implements Serializable {
 
     private final static long serialVersionUID = 1307429908633312002L;
     @SerializedName("etat")
