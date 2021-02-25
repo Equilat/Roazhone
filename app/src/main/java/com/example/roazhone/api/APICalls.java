@@ -28,7 +28,7 @@ public class APICalls {
     /**
      * Call the API to get all the undergroung parking of Rennes.
      */
-    public void searchUndergroundParkingDetailss() {
+    public void searchUndergroundParkingDetails() {
         APIService apiService = APIService.retrofit.create(APIService.class);
         Call<List<UndergroundParkingDetails>> call = apiService.getUndergroundParkingDetails();
         call.enqueue(new Callback<List<UndergroundParkingDetails>>() {
@@ -52,7 +52,7 @@ public class APICalls {
     /**
      * Call the API to get all the relay parking of Rennes.
      */
-    public void searchRelayParkingDetailss() {
+    public void searchParkAndRideDetails() {
         APIService apiService = APIService.retrofit.create(APIService.class);
         Call<List<ParkAndRideDetails>> call = apiService.getRelayParkingDetails();
         call.enqueue(new Callback<List<ParkAndRideDetails>>() {

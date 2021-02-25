@@ -29,11 +29,11 @@ public class TestViewModel extends AndroidViewModel {
     }
 
     public void searchUndergroundParkings() {
-        apiCalls.searchUndergroundParkingDetailss();
+        apiCalls.searchUndergroundParkingDetails();
     }
 
     public void searchRelayParkings() {
-        apiCalls.searchRelayParkingDetailss();
+        apiCalls.searchParkAndRideDetails();
     }
 
     public LiveData<List<UndergroundParkingDetails>> getUndergroundParkingsResponseLiveData() {

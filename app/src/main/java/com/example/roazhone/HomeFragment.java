@@ -32,8 +32,6 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View myView = inflater.inflate(R.layout.home_fragment, container, false);
-        apiCalls = new APICalls();
-
         bottomNavigationView = myView.findViewById(R.id.activity_main_bottom_navigation);
         disableMenuTooltip();
 

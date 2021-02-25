@@ -24,6 +24,8 @@ public class ListViewModel extends AndroidViewModel {
         if (!isIntialized()) {
             repository = new APICalls();
         }
+        repository.searchUndergroundParkingDetails();
+        repository.searchParkAndRideDetails();
         undergroundParkingDetails = repository.getUndergroundParkingDetailsLiveData();
         parkAndRideDetails = repository.getParkAndRideLiveData();
     }

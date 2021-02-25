@@ -47,7 +47,7 @@ public class UndergroundParkingAdapter extends  RecyclerView.Adapter<Underground
             vh.vRoom.setText(R.string.parking_complet);
         }
         else {
-            vh.vRoom.setText(upd.getPlacesLibres());
+            vh.vRoom.setText(upd.getPlacesLibres().toString());
         }
     }
 
