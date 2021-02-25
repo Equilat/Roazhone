@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/frameLayout"
@@ -81,8 +81,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ipf_nb_places_pmr" />
 
-        <com.google.android.gms.maps.MapView
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/ipf_adresse_map"
+            class="com.google.android.gms.maps.SupportMapFragment"
+            tools:context="com.example.mapwithmarker.MapsMarkerActivity"
             android:layout_width="0dp"
             android:layout_height="300dp"
             android:layout_marginStart="24dp"
@@ -91,8 +94,7 @@
             app:layout_constraintBottom_toTopOf="@+id/ipf_horaires"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ipf_adresse" />
-
+            app:layout_constraintTop_toBottomOf="@+id/ipf_adresse"/>
         <TextView
             android:id="@+id/ipf_horaires"
             android:layout_width="0dp"
@@ -104,6 +106,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/roazhone_grey_4"
             android:textColorHint="@color/roazhone_grey_4"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ipf_adresse_map" />
@@ -152,4 +155,3 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
-
