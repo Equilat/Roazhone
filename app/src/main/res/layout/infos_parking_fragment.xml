@@ -21,8 +21,9 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:text="@string/nom"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/black"
+            android:textSize="25sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,7 +31,7 @@
             android:id="@+id/ipf_maps_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="32dp"
             android:clickable="true"
             android:contentDescription="@string/vers_google_maps"
@@ -54,11 +55,23 @@
             app:layout_constraintTop_toBottomOf="@+id/ipf_nom" />
 
         <TextView
+            android:id="@+id/ipf_nb_places_pmr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="@string/nombre_de_places_pmr"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/roazhone_blue_clair"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ipf_nb_places" />
+
+        <TextView
             android:id="@+id/ipf_adresse"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
             android:text="@string/adresse"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -66,7 +79,7 @@
             android:textColorHint="@color/roazhone_grey_4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ipf_nb_places" />
+            app:layout_constraintTop_toBottomOf="@+id/ipf_nb_places_pmr" />
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/ipf_adresse_map"
@@ -91,12 +104,13 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/roazhone_grey_4"
             android:textColorHint="@color/roazhone_grey_4"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ipf_adresse_map" />
 
         <View
-            android:id="@+id/divider"
+            android:id="@+id/ipf_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginStart="24dp"
@@ -104,6 +118,7 @@
             android:layout_marginEnd="24dp"
             android:background="@color/roazhone_blue_clair"
             android:clickable="false"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ipf_horaires" />
@@ -113,13 +128,28 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="32dp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider" />
+            app:layout_constraintTop_toBottomOf="@+id/ipf_tarifs_texte" />
+
+        <TextView
+            android:id="@+id/ipf_tarifs_texte"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/tarifs"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/roazhone_grey_5"
+            android:textStyle="italic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ipf_divider"
+            tools:visibility="invisible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -4,10 +4,27 @@
     <string name="bottom_navigation_menu_parking">Parking</string>
     <string name="bottom_navigation_menu_park_and_ride">Parc Relais</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="nom">Nom</string>
     <string name="nombre_de_places">Nombre de places</string>
     <string name="adresse">Adresse</string>
     <string name="horaires">Horaires</string>
     <string name="vers_google_maps">Vers Google Maps</string>
+    <string name="nombre_de_places_pmr">Nombre de places pmr</string>
+    <string name="parking">Parking :&#160;</string>
+    <string name="parking_complet">Parking complet</string>
+    <string name="parking_ferme">Parking fermé</string>
+    <string name="ferme">FERME</string>
+    <string name="complet">COMPLET</string>
+    <string name="places_dispos">&#160;places disponibles</string>
+    <string name="places_pmr_dispos">&#160;places PMR disponibles</string>
+    <string name="tarif_15">15 min :&#160;</string>
+    <string name="tarif_30">30 min :&#160;</string>
+    <string name="tarif_1h">1h00 :&#160;</string>
+    <string name="tarif_1h30">1h30 :&#160;</string>
+    <string name="tarif_2h">2h00 :&#160;</string>
+    <string name="tarif_3h">3h00 :&#160;</string>
+    <string name="tarif_4h">4h00 :&#160;</string>
+    <string name="tarifs">Tarifs :</string>
+
+
 </resources>
