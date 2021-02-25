@@ -1,5 +1,6 @@
 package com.example.roazhone;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +16,15 @@ import java.util.List;
 public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHolder>{
 
     private List<ParkAndRideDetails> parkingList;
+    private Context context;
 
-    public ParkAndRideAdapter() {
+    public ParkAndRideAdapter(Context context) {
+        this.context = context;
         parkingList = new ArrayList<>();
     }
 
-    public ParkAndRideAdapter(List<ParkAndRideDetails> parkingList) {
+    public ParkAndRideAdapter(Context context, List<ParkAndRideDetails> parkingList) {
+        this.context = context;
         this.parkingList = parkingList;
     }
 
@@ -45,7 +49,7 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
             vh.vRoom.setText(R.string.parking_complet_short);
         }
         else {
-            vh.vRoom.setText(upd.getPlacesLibres().toString());
+            vh.vRoom.setText(upd.getPlacesLibres().toString()+context.getString(R.string.places_dispos));
         }
     }
 

@@ -50,8 +50,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
 
-        undergroundParkingAdapter = new UndergroundParkingAdapter();
-        parkAndRideAdapter = new ParkAndRideAdapter();
+        undergroundParkingAdapter = new UndergroundParkingAdapter(this.getContext());
+        parkAndRideAdapter = new ParkAndRideAdapter(this.getContext());
         recyclerView.setAdapter(undergroundParkingAdapter);
 
         listViewModel = new ViewModelProvider(requireActivity()).get(ListViewModel.class);

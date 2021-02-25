@@ -1,5 +1,6 @@
 package com.example.roazhone;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +16,15 @@ import java.util.List;
 public class UndergroundParkingAdapter extends  RecyclerView.Adapter<UndergroundParkingViewHolder>{
 
     private List<UndergroundParkingDetails> parkingList;
+    private Context context;
 
-    public UndergroundParkingAdapter() {
+    public UndergroundParkingAdapter(Context context) {
+        this.context = context;
         parkingList = new ArrayList<>();
     }
 
-    public UndergroundParkingAdapter(List<UndergroundParkingDetails> parkingList) {
+    public UndergroundParkingAdapter(Context context, List<UndergroundParkingDetails> parkingList) {
+        this.context = context;
         this.parkingList = parkingList;
     }
 
@@ -45,7 +49,7 @@ public class UndergroundParkingAdapter extends  RecyclerView.Adapter<Underground
             vh.vRoom.setText(R.string.parking_complet_short);
         }
         else {
-            vh.vRoom.setText(upd.getPlacesLibres().toString());
+            vh.vRoom.setText(upd.getPlacesLibres().toString()+context.getString(R.string.places_dispos));
         }
     }
 
