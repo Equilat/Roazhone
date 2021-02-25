@@ -25,10 +25,10 @@ public class UndergroundParkingDetails implements Serializable {
     private String tarif1h;
     @SerializedName("max")
     @Expose
-    private Integer max;
+    private Integer placesMax;
     @SerializedName("orgahoraires")
     @Expose
-    private String orgahoraires;
+    private String horaires;
     @SerializedName("tarif_3h")
     @Expose
     private String tarif3h;
@@ -37,10 +37,10 @@ public class UndergroundParkingDetails implements Serializable {
     private String tarif2h;
     @SerializedName("free")
     @Expose
-    private Integer free;
+    private Integer placesLibres;
     @SerializedName("key")
     @Expose
-    private String key;
+    private String nomParking;
     @SerializedName("tarif_4h")
     @Expose
     private String tarif4h;
@@ -53,6 +53,10 @@ public class UndergroundParkingDetails implements Serializable {
     @SerializedName("tarif_15")
     @Expose
     private String tarif15;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     public String getStatus() {
         return status;
@@ -86,20 +90,20 @@ public class UndergroundParkingDetails implements Serializable {
         this.tarif1h = tarif1h;
     }
 
-    public Integer getMax() {
-        return max;
+    public Integer getPlacesMax() {
+        return placesMax;
     }
 
-    public void setMax(Integer max) {
-        this.max = max;
+    public void setPlacesMax(Integer placesMax) {
+        this.placesMax = placesMax;
     }
 
-    public String getOrgahoraires() {
-        return orgahoraires;
+    public String getHoraires() {
+        return horaires;
     }
 
-    public void setOrgahoraires(String orgahoraires) {
-        this.orgahoraires = orgahoraires;
+    public void setHoraires(String horaires) {
+        this.horaires = horaires;
     }
 
     public String getTarif3h() {
@@ -118,20 +122,20 @@ public class UndergroundParkingDetails implements Serializable {
         this.tarif2h = tarif2h;
     }
 
-    public Integer getFree() {
-        return free;
+    public Integer getPlacesLibres() {
+        return placesLibres;
     }
 
-    public void setFree(Integer free) {
-        this.free = free;
+    public void setPlacesLibres(Integer placesLibres) {
+        this.placesLibres = placesLibres;
     }
 
-    public String getKey() {
-        return key;
+    public String getNomParking() {
+        return nomParking;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setNomParking(String nomParking) {
+        this.nomParking = nomParking;
     }
 
     public String getTarif4h() {
@@ -165,5 +169,4 @@ public class UndergroundParkingDetails implements Serializable {
     public void setTarif15(String tarif15) {
         this.tarif15 = tarif15;
     }
-
 }
