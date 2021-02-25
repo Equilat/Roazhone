@@ -11,12 +11,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginStart="5dp"
         android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/parkingInfos"
-            android:layout_width="350dp"
-            android:layout_height="40dp"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
             android:orientation="vertical"
             app:layout_constraintEnd_toStartOf="@+id/itinaryButton"
             app:layout_constraintStart_toStartOf="parent"
@@ -25,29 +26,32 @@
             <TextView
                 android:id="@+id/parkingName"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:textColor="@android:color/black"
-                android:textSize="14dp" />
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/parkingRoom"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:textColor="@android:color/black"
-                android:textSize="14dp" />
+                android:textSize="25sp" />
         </LinearLayout>
 
         <ImageButton
             android:id="@+id/itinaryButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_baseline_assistant_direction_24"
             android:backgroundTint="@color/white"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:src="@drawable/ic_baseline_assistant_direction_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
