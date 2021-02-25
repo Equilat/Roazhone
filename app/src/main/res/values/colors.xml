@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="roazhone_blue_clair">#92AFCD</color>
     <color name="roazhone_blue">#003A75</color>
     <color name="roazhone_dark_blue">#002E5C</color>
     <color name="roazhone_blue_variant">#00172E</color>
