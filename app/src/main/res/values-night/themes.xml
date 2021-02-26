@@ -20,5 +20,14 @@
     </style>
     <style name="Bottom_bar" parent="">
         <item name="android:background">@color/roazhone_dark_blue</item>
+        <item name="itemIconTint">@drawable/bottom_navigation_colors_dark</item>
+        <item name="itemTextColor">@drawable/bottom_navigation_colors_dark</item>
+    </style>
+    <style name="float_direction_icon" parent="">
+        <item name="backgroundTint">@color/roazhone_yellow</item>
+        <item name="tint">@color/black</item>
+    </style>
+    <style name="parking_name" parent="">
+        <item name="android:textColor">@color/white</item>
     </style>
 </resources>
