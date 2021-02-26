@@ -1,9 +1,12 @@
 package com.example.roazhone;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -59,6 +62,20 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
             vh.vRoom.setText(upd.getPlacesLibres().toString()+context.getString(R.string.places_dispos));
             vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_green));
         }
+
+        List<Double> coord = upd.getCoordonnees();
+        double lat = coord.get(0);
+        double lon = coord.get(1);
+        ImageButton gMapsLink = (ImageButton) vh.itemView.findViewById(R.id.itinaryButton);
+        gMapsLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri gmmIntentUri = Uri.parse("google.navigation:q="+lat+","+lon);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                context.startActivity(mapIntent);
+            }
+        });
     }
 
     @Override
