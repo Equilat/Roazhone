@@ -10,6 +10,7 @@
         tools:layout="@layout/home_fragment">
         <action
             android:id="@+id/actionHomeFragmentToInfosParkingFragment"
+            android:name="homeToInfosAction"
             app:destination="@id/infosParkingFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
@@ -22,6 +23,17 @@
     <fragment
         android:id="@+id/infosParkingFragment"
         android:name="com.example.roazhone.InfosParkingFragment"
-        android:label=" "
-        tools:layout="@layout/infos_parking_fragment" />
+        android:label=""
+        tools:layout="@layout/infos_parking_fragment">
+        <argument
+            android:name="undergroundParkingDetails"
+            app:nullable="true"
+            app:argType="com.example.roazhone.model.UndergroundParkingDetails"
+            android:defaultValue="@null" />
+        <argument
+            android:name="parkAndRideDetails"
+            app:nullable="true"
+            app:argType="com.example.roazhone.model.ParkAndRideDetails"
+            android:defaultValue="@null" />
+    </fragment>
 </navigation>

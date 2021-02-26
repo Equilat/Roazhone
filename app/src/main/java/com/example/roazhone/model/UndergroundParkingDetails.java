@@ -1,5 +1,8 @@
 package com.example.roazhone.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,7 +13,7 @@ import java.util.List;
 /**
  * Class to map details about underground parkings that come from remote API.
  */
-public class UndergroundParkingDetails implements Serializable {
+public class UndergroundParkingDetails implements Serializable, Parcelable {
     private final static long serialVersionUID = -4000423003554111796L;
 
     @SerializedName("status")
@@ -55,6 +58,37 @@ public class UndergroundParkingDetails implements Serializable {
     @SerializedName("tarif_15")
     @Expose
     private String tarif15;
+
+    public static final Creator<UndergroundParkingDetails> CREATOR = new Creator<UndergroundParkingDetails>() {
+        @Override
+        public UndergroundParkingDetails createFromParcel(Parcel source) {
+            System.out.println("mdr");
+            return new UndergroundParkingDetails(source);
+        }
+
+        @Override
+        public UndergroundParkingDetails[] newArray(int size) {
+            return new UndergroundParkingDetails[size];
+        }
+    };
+
+    public UndergroundParkingDetails(Parcel in) {
+        System.out.println("coucou");
+        this.status = in.readString();
+        this.tarif1h30 = in.readString();
+        this.tarif30 = in.readString();
+        this.tarif1h = in.readString();
+        this.placesMax = in.readInt();
+        this.horaires = in.readString();
+        this.tarif3h = in.readString();
+        this.tarif2h = in.readString();
+        this.placesLibres = in.readInt();
+        this.nomParking = in.readString();
+        this.tarif4h = in.readString();
+        in.readList(this.geo, Double.class.getClassLoader());
+        this.id = in.readString();
+        this.tarif15 = in.readString();
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -170,6 +204,29 @@ public class UndergroundParkingDetails implements Serializable {
 
     public void setTarif15(String tarif15) {
         this.tarif15 = tarif15;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(status);
+        dest.writeString(tarif1h30);
+        dest.writeString(tarif30);
+        dest.writeString(tarif1h);
+        dest.writeInt(placesMax);
+        dest.writeString(horaires);
+        dest.writeString(tarif3h);
+        dest.writeString(tarif2h);
+        dest.writeInt(placesLibres);
+        dest.writeString(nomParking);
+        dest.writeString(tarif4h);
+        dest.writeList(geo);
+        dest.writeString(id);
+        dest.writeString(tarif15);
     }
 
 

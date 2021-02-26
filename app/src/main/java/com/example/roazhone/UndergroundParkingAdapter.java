@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.roazhone.model.UndergroundParkingDetails;
@@ -35,7 +36,7 @@ public class UndergroundParkingAdapter extends  RecyclerView.Adapter<Underground
                 from(parent.getContext()).
                 inflate(R.layout.card_layout, parent, false);
 
-        return new UndergroundParkingViewHolder(itemView);
+        return new UndergroundParkingViewHolder(itemView, parkingList);
     }
 
     @Override
@@ -44,12 +45,19 @@ public class UndergroundParkingAdapter extends  RecyclerView.Adapter<Underground
         vh.vName.setText(upd.getNomParking());
         if(upd.getStatus().equals("FERME")) {
             vh.vRoom.setText(R.string.parking_ferme_short);
+            vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_red));
         }
         else if(upd.getPlacesLibres() == 0) {
             vh.vRoom.setText(R.string.parking_complet_short);
+            vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_red));
+        }
+        else if(upd.getPlacesLibres() <= upd.getPlacesMax()*0.1) {
+            vh.vRoom.setText(upd.getPlacesLibres().toString()+context.getString(R.string.places_dispos));
+            vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_orange));
         }
         else {
             vh.vRoom.setText(upd.getPlacesLibres().toString()+context.getString(R.string.places_dispos));
+            vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_green));
         }
     }
 

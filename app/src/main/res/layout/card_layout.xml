@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground"
     android:layout_margin="5dp"
+    android:theme="@style/Card"
     app:cardCornerRadius="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="5dp"
         android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/parkingInfos"
             android:layout_width="0dp"
-            android:layout_height="72dp"
+            android:layout_height="0dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/itinaryButton"
@@ -28,8 +28,10 @@
                 android:id="@+id/parkingName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
                 android:gravity="center_vertical"
-                android:textColor="@android:color/black"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:textSize="@dimen/roazhone_font_big"
                 android:textStyle="bold" />
 
@@ -38,15 +40,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/roazhone_font_medium" />
         </LinearLayout>
 
         <ImageButton
             android:id="@+id/itinaryButton"
+            android:theme="@style/Direction_icon"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:backgroundTint="@color/white"
+            android:contentDescription="@string/vers_google_maps"
             android:src="@drawable/ic_baseline_assistant_direction_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

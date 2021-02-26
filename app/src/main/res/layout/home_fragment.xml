@@ -11,6 +11,7 @@
             android:id="@+id/last_update_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:textColor="@color/roazhone_grey_5"
             android:textSize="@dimen/roazhone_font_small"
             android:layout_margin="5dp"
@@ -40,13 +41,11 @@
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/activity_main_bottom_navigation"
+            style="@style/Bottom_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
-            android:background="@color/roazhone_blue"
-            app:itemIconTint="@drawable/bottom_navigation_colors"
-            app:itemTextColor="@drawable/bottom_navigation_colors"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
