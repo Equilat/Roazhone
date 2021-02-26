@@ -1,17 +1,19 @@
 package com.example.roazhone;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -27,13 +29,25 @@ import java.util.List;
 
 public class HomeFragment extends Fragment implements View.OnLongClickListener, NavigationView.OnNavigationItemSelectedListener {
     private SwipeRefreshLayout swipeContainer;
-
+    private Handler handler;
     private BottomNavigationView bottomNavigationView;
     private ListViewModel listViewModel;
+    private final Runnable runnableCode = new Runnable() {
+        @Override
+        public void run() {
+            // Do something here on the main thread
+            Log.wtf("Handlers", "Called on main thread");
+            listViewModel.initialize();
+            // Repeat this the same runnable code block again another 2 seconds
+            // 'this' is referencing the Runnable object
+            handler.postDelayed(this, 60000);
+        }
+    };
     private RecyclerView recyclerView;
     private APICalls apiCalls;
     private UndergroundParkingAdapter undergroundParkingAdapter;
     private ParkAndRideAdapter parkAndRideAdapter;
+    private TextView viewUpdateTime;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,6 +57,10 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         bottomNavigationView = myView.findViewById(R.id.activity_main_bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
         disableMenuTooltip();
+        viewUpdateTime = myView.findViewById(R.id.last_update_time);
+
+        handler = new Handler();
+        handler.post(runnableCode);
 
         return myView;
     }
@@ -59,6 +77,12 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
 
         listViewModel = new ViewModelProvider(requireActivity()).get(ListViewModel.class);
         listViewModel.initialize();
+        listViewModel.getLastUpdateTime().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String lastUpdateTime) {
+                viewUpdateTime.setText(String.format("Mis à jour à : %s", lastUpdateTime));
+            }
+        });
         listViewModel.getUndergroundParkingDetails().observe(getViewLifecycleOwner(), new Observer<List<UndergroundParkingDetails>>() {
             @Override
             public void onChanged(@Nullable List<UndergroundParkingDetails> undergroundParkingDetails) {
@@ -98,9 +122,6 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         parkingLogo.setOnLongClickListener(this);
         parkAndRideLogo.setOnLongClickListener(this);
     }
-
-
-
 
     @Override
     public boolean onLongClick(View v) {
