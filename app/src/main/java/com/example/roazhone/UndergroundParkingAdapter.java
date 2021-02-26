@@ -35,7 +35,7 @@ public class UndergroundParkingAdapter extends  RecyclerView.Adapter<Underground
                 from(parent.getContext()).
                 inflate(R.layout.card_layout, parent, false);
 
-        return new UndergroundParkingViewHolder(itemView);
+        return new UndergroundParkingViewHolder(itemView, parkingList);
     }
 
     @Override

@@ -1,5 +1,8 @@
 package com.example.roazhone.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,7 +12,7 @@ import java.util.List;
 /**
  * Class to map details about park and ride parking that come from remote API.
  */
-public class ParkAndRideDetails implements Serializable {
+public class ParkAndRideDetails implements Serializable, Parcelable {
 
     private final static long serialVersionUID = 1307429908633312002L;
     @SerializedName("etat")
@@ -45,6 +48,34 @@ public class ParkAndRideDetails implements Serializable {
     @SerializedName("capaciteactuellepmr")
     @Expose
     private Integer capaciteActuellePMR;
+
+    public static final Creator<ParkAndRideDetails> CREATOR = new Creator<ParkAndRideDetails>() {
+        @Override
+        public ParkAndRideDetails createFromParcel(Parcel source) {
+            System.out.println("mdr");
+            return new ParkAndRideDetails(source);
+        }
+
+        @Override
+        public ParkAndRideDetails[] newArray(int size) {
+            return new ParkAndRideDetails[size];
+        }
+    };
+
+    public ParkAndRideDetails(Parcel in) {
+        this.status = in.readString();
+        this.lastUpdate = in.readString();
+        this.placesLibres = in.readInt();
+        this.id = in.readString();
+        this.nomParking = in.readString();
+        this.placesOccupees = in.readInt();
+        this.nombreLibresPMR = in.readInt();
+        this.capaciteActuelle = in.readInt();
+        this.placesOccupeesPMR = in.readInt();
+        in.readList(this.coordonnees, Double.class.getClassLoader());
+        this.capaciteActuellePMR = in.readInt();
+    }
+
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -136,5 +167,25 @@ public class ParkAndRideDetails implements Serializable {
 
     public void setCapaciteActuellePMR(Integer capaciteActuellePMR) {
         this.capaciteActuellePMR = capaciteActuellePMR;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(status);
+        dest.writeString(lastUpdate);
+        dest.writeInt(placesLibres);
+        dest.writeString(id);
+        dest.writeString(nomParking);
+        dest.writeInt(placesOccupees);
+        dest.writeInt(nombreLibresPMR);
+        dest.writeInt(capaciteActuelle);
+        dest.writeInt(placesOccupeesPMR);
+        dest.writeList(coordonnees);
+        dest.writeInt(capaciteActuellePMR);
     }
 }

@@ -1,29 +1,38 @@
 package com.example.roazhone;
 
+import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.roazhone.model.UndergroundParkingDetails;
+
+import java.util.List;
+
 
 public class UndergroundParkingViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     protected TextView vName;
     protected TextView vRoom;
+    private List<UndergroundParkingDetails> undergroundParkingDetailsList;
 
-    public UndergroundParkingViewHolder(View v) {
+    public UndergroundParkingViewHolder(View v, List<UndergroundParkingDetails> undergroundParkingDetailsList) {
         super(v);
         v.setOnClickListener(this);
         vName =  v.findViewById(R.id.parkingName);
         vRoom = v.findViewById(R.id.parkingRoom);
+        this.undergroundParkingDetailsList = undergroundParkingDetailsList;
     }
 
     @Override
     public void onClick(View v) {
-        System.out.println("here");
         int itemPosition = this.getAdapterPosition();
-        Navigation.findNavController(v).navigate(R.id.actionHomeFragmentToInfosParkingFragment);
+        UndergroundParkingDetails undergroundParkingDetails = undergroundParkingDetailsList.get(itemPosition);
+        HomeFragmentDirections.ActionHomeFragmentToInfosParkingFragment action = HomeFragmentDirections.actionHomeFragmentToInfosParkingFragment();
+        action.setUndergroundParkingDetails(undergroundParkingDetails);
+        Navigation.findNavController(v).navigate(action);
     }
 
 

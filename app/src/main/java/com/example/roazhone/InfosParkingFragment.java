@@ -5,6 +5,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -45,48 +46,18 @@ public class InfosParkingFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         View myView = inflater.inflate(R.layout.infos_parking_fragment, container, false);
 
-        //Exemple 2
-        /*
-        UndergroundParkingDetails parkingDetails = new UndergroundParkingDetails();
-        parkingDetails.setNomParking("Hoche");
-        parkingDetails.setStatus("OUVERT");
-        parkingDetails.setPlacesLibres(13);
-        parkingDetails.setPlacesMax(325);
-        List<Double> coord = new ArrayList<>();
-        coord.add(48.1152367);
-        coord.add(-1.677049014);
-        parkingDetails.setGeo(coord);
-        parkingDetails.setHoraires("Lundi, 7h30 à minuit. Mardi au samedi, 7h30 à 2h, sauf dimanche et jours fériés.");
-        parkingDetails.setTarif15("0.40");
-        parkingDetails.setTarif30("0.80");
-        parkingDetails.setTarif1h("1.60");
-        parkingDetails.setTarif1h30("1.80");
-        parkingDetails.setTarif2h("3");
-        parkingDetails.setTarif3h("4");
-        parkingDetails.setTarif4h("5");
-         */
-
-        //Exemple
-        ParkAndRideDetails parkingDetails = new ParkAndRideDetails();
-        parkingDetails.setNomParking("Henri Fréville");
-        parkingDetails.setStatus("OUVERT");
-        parkingDetails.setPlacesLibres(20);
-        parkingDetails.setCapaciteActuelle(400);
-        parkingDetails.setNombreLibresPMR(15);
-        List<Double> coord = new ArrayList<>();
-        coord.add(48.0875369773);
-        coord.add(-1.6745548715);
-        parkingDetails.setCoordonnees(coord);
-
-        Object o = parkingDetails;
+        Object o = InfosParkingFragmentArgs.fromBundle(getArguments()).getParkAndRideDetails();
+        if(o == null) {
+            o = InfosParkingFragmentArgs.fromBundle(getArguments()).getUndergroundParkingDetails();
+        }
 
         if(o instanceof ParkAndRideDetails) {
 
-            ParkAndRideDetails relayParkingDetails = (ParkAndRideDetails) o;
-
+            ParkAndRideDetails parkAndRideDetails = (ParkAndRideDetails) o;
             //Tarifs, horaires et divider invisibles
             tarifs = myView.findViewById(R.id.ipf_tarifs_liste);
             tarifs.setVisibility(View.INVISIBLE);
@@ -97,42 +68,42 @@ public class InfosParkingFragment extends Fragment {
 
             //Nom du parking
             nom = myView.findViewById(R.id.ipf_nom);
-            nom.setText(getString(R.string.parking) + relayParkingDetails.getNomParking());
+            nom.setText(getString(R.string.parking) + parkAndRideDetails.getNomParking());
 
             //Place dans le Parking
             places = myView.findViewById(R.id.ipf_nb_places);
             placesPMR = myView.findViewById(R.id.ipf_nb_places_pmr);
 
-            if(relayParkingDetails.getStatus().equals(getString(R.string.parking_ferme_short))){
+            if(parkAndRideDetails.getStatus().equals(getString(R.string.parking_ferme_short))){
                 places.setText(getString(R.string.parking_ferme_long));
                 places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_red));
                 placesPMR.setVisibility(View.INVISIBLE);
 
             }
-            else if (relayParkingDetails.getStatus().equals(getString(R.string.parking_complet_short))){
+            else if (parkAndRideDetails.getStatus().equals(getString(R.string.parking_complet_short))){
                 places.setText(getString(R.string.parking_complet_long));
                 places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_red));
                 placesPMR.setVisibility(View.INVISIBLE);
 
             }
             else {
-                if (relayParkingDetails.getPlacesLibres() <= relayParkingDetails.getCapaciteActuelle()*0.1) {
-                    places.setText(relayParkingDetails.getPlacesLibres() + getString(R.string.places_dispos));
+                if (parkAndRideDetails.getPlacesLibres() <= parkAndRideDetails.getCapaciteActuelle()*0.1) {
+                    places.setText(parkAndRideDetails.getPlacesLibres() + getString(R.string.places_dispos));
                     places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_orange));
-                    placesPMR.setText(relayParkingDetails.getNombreLibresPMR() + getString(R.string.places_pmr_dispos));
+                    placesPMR.setText(parkAndRideDetails.getNombreLibresPMR() + getString(R.string.places_pmr_dispos));
                     placesPMR.setVisibility(View.VISIBLE);
                 }
                 else {
-                    places.setText(relayParkingDetails.getPlacesLibres() + getString(R.string.places_dispos));
+                    places.setText(parkAndRideDetails.getPlacesLibres() + getString(R.string.places_dispos));
                     places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_green));
-                    placesPMR.setText(relayParkingDetails.getNombreLibresPMR() + getString(R.string.places_pmr_dispos));
+                    placesPMR.setText(parkAndRideDetails.getNombreLibresPMR() + getString(R.string.places_pmr_dispos));
                     placesPMR.setVisibility(View.VISIBLE);
                 }
             }
 
             //Adresse
             adresse = myView.findViewById(R.id.ipf_adresse);
-            adresse.setText(getAddress(relayParkingDetails.getCoordonnees().get(0), relayParkingDetails.getCoordonnees().get(1)));
+            adresse.setText(getAddress(parkAndRideDetails.getCoordonnees().get(0), parkAndRideDetails.getCoordonnees().get(1)));
 
             //Horaires
             horaires = myView.findViewById(R.id.ipf_horaires);
@@ -140,7 +111,6 @@ public class InfosParkingFragment extends Fragment {
 
         }
         else if (o instanceof UndergroundParkingDetails) {
-
             //Places PMR invisible
             placesPMR = myView.findViewById(R.id.ipf_nb_places_pmr);
             placesPMR.setVisibility(View.INVISIBLE);

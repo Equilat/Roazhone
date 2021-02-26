@@ -55,7 +55,6 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
 
         undergroundParkingAdapter = new UndergroundParkingAdapter(this.getContext());
         parkAndRideAdapter = new ParkAndRideAdapter(this.getContext());
-        recyclerView.setAdapter(undergroundParkingAdapter);
 
         listViewModel = new ViewModelProvider(requireActivity()).get(ListViewModel.class);
         listViewModel.initialize();
@@ -84,11 +83,18 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             }
 
         });
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+        swipeContainer.setColorSchemeResources(R.color.roazhone_yellow);
 
+    }
+
+    public void onStart() {
+        super.onStart();
+        MenuItem selectedItem = bottomNavigationView.getMenu().findItem(bottomNavigationView.getSelectedItemId());
+        if (selectedItem.getItemId() == R.id.parkingItem) {
+            recyclerView.setAdapter(undergroundParkingAdapter);
+        } else if (selectedItem.getItemId() == R.id.parkAndRideItem) {
+            recyclerView.setAdapter(parkAndRideAdapter);
+        }
     }
 
     private void disableMenuTooltip() {

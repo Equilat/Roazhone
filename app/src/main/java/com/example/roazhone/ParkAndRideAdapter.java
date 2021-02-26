@@ -35,7 +35,7 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
                 from(parent.getContext()).
                 inflate(R.layout.card_layout, parent, false);
 
-        return new ParkAndRideViewHolder(itemView);
+        return new ParkAndRideViewHolder(itemView, parkingList);
     }
 
     @Override

@@ -11,6 +11,7 @@
         >
         <action
             android:id="@+id/actionHomeFragmentToInfosParkingFragment"
+            android:name="homeToInfosAction"
             app:destination="@id/infosParkingFragment"
             app:launchSingleTop="true"
             app:popUpTo="@navigation/nav_graph"
@@ -20,5 +21,16 @@
         android:id="@+id/infosParkingFragment"
         android:name="com.example.roazhone.InfosParkingFragment"
         android:label="infos_parking_fragment"
-        tools:layout="@layout/infos_parking_fragment"/>
+        tools:layout="@layout/infos_parking_fragment">
+        <argument
+            android:name="undergroundParkingDetails"
+            app:nullable="true"
+            app:argType="com.example.roazhone.model.UndergroundParkingDetails"
+            android:defaultValue="@null" />
+        <argument
+            android:name="parkAndRideDetails"
+            app:nullable="true"
+            app:argType="com.example.roazhone.model.ParkAndRideDetails"
+            android:defaultValue="@null" />
+    </fragment>
 </navigation>
