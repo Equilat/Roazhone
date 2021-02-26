@@ -1,5 +1,6 @@
 package com.example.roazhone;
 
+import android.app.ActionBar;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
@@ -48,6 +49,9 @@ public class InfosParkingFragment extends Fragment {
                              Bundle savedInstanceState) {
         View myView = inflater.inflate(R.layout.infos_parking_fragment, container, false);
 
+        //ActionBar actionBar = getActivity().getActionBar();
+        //actionBar.setDisplayHomeAsUpEnabled(true);
+
         //Exemple 2
         /*
         UndergroundParkingDetails parkingDetails = new UndergroundParkingDetails();
@@ -70,6 +74,7 @@ public class InfosParkingFragment extends Fragment {
          */
 
         //Exemple
+
         ParkAndRideDetails parkingDetails = new ParkAndRideDetails();
         parkingDetails.setNomParking("Henri Fréville");
         parkingDetails.setStatus("OUVERT");
@@ -80,6 +85,7 @@ public class InfosParkingFragment extends Fragment {
         coord.add(48.0875369773);
         coord.add(-1.6745548715);
         parkingDetails.setCoordonnees(coord);
+
 
         Object o = parkingDetails;
 
