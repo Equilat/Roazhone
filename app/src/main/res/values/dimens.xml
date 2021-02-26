@@ -2,5 +2,5 @@
 <resources>
     <dimen name="roazhone_font_big">25sp</dimen>
     <dimen name="roazhone_font_medium">20sp</dimen>
-    <dimen name="roazhone_font_small">10sp</dimen>
+    <dimen name="roazhone_font_small">15sp</dimen>
 </resources>

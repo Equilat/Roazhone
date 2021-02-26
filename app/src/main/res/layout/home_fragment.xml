@@ -11,6 +11,7 @@
             android:id="@+id/last_update_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:textColor="@color/roazhone_grey_5"
             android:textSize="@dimen/roazhone_font_small"
             app:layout_constraintBottom_toTopOf="@id/swipeContainer"
