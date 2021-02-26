@@ -275,6 +275,6 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
                 .position(coords)
                 .title("nom"));
         CameraPosition camPos = new CameraPosition.Builder().target(coords).zoom(15).build();
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(camPos));
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
     }
 }
