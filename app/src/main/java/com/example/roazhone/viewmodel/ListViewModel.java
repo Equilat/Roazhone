@@ -12,9 +12,12 @@ import com.example.roazhone.model.ParkAndRideDetails;
 import com.example.roazhone.model.UndergroundParkingDetails;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class ListViewModel extends AndroidViewModel {
 
@@ -46,5 +49,10 @@ public class ListViewModel extends AndroidViewModel {
 
     public LiveData<String> getLastUpdateTime() {
         return lastUpdateTime;
+    }
+
+    public void sortParkingByFreePlaces(){
+        Objects.requireNonNull(undergroundParkingDetails.getValue()).sort(UndergroundParkingDetails.undergroundFreePlacesComparator);
+        Objects.requireNonNull(parkAndRideDetails.getValue()).sort(ParkAndRideDetails.parkAndRideFreePlacesComparator);
     }
 }

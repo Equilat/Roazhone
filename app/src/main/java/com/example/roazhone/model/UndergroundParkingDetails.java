@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -11,6 +12,7 @@ import java.util.List;
  */
 public class UndergroundParkingDetails implements Serializable {
     private final static long serialVersionUID = -4000423003554111796L;
+
     @SerializedName("status")
     @Expose
     private String status;
@@ -169,4 +171,12 @@ public class UndergroundParkingDetails implements Serializable {
     public void setTarif15(String tarif15) {
         this.tarif15 = tarif15;
     }
+
+
+    public static Comparator<UndergroundParkingDetails> undergroundFreePlacesComparator = new Comparator<UndergroundParkingDetails>() {
+        @Override
+        public int compare(UndergroundParkingDetails o1, UndergroundParkingDetails o2) {
+            return o2.placesLibres.compareTo(o1.placesLibres);
+        }
+    };
 }

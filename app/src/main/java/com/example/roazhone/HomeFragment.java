@@ -4,10 +4,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,33 +21,34 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.roazhone.api.APICalls;
 import com.example.roazhone.model.ParkAndRideDetails;
 import com.example.roazhone.model.UndergroundParkingDetails;
 import com.example.roazhone.viewmodel.ListViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
+import java.time.Duration;
 import java.util.List;
 
 public class HomeFragment extends Fragment implements View.OnLongClickListener, NavigationView.OnNavigationItemSelectedListener {
+
+    private final String TAG = HomeFragment.class.getName();
     private SwipeRefreshLayout swipeContainer;
+    private boolean sortByDispo;
+    private boolean sortByDistance;
     private Handler handler;
     private BottomNavigationView bottomNavigationView;
     private ListViewModel listViewModel;
     private final Runnable runnableCode = new Runnable() {
         @Override
         public void run() {
-            // Do something here on the main thread
-            Log.wtf("Handlers", "Called on main thread");
+            Log.wtf(TAG, "Auto Refresh");
             listViewModel.initialize();
-            // Repeat this the same runnable code block again another 2 seconds
-            // 'this' is referencing the Runnable object
+            // Repeat this the same runnable code block again
             handler.postDelayed(this, 60000);
         }
     };
     private RecyclerView recyclerView;
-    private APICalls apiCalls;
     private UndergroundParkingAdapter undergroundParkingAdapter;
     private ParkAndRideAdapter parkAndRideAdapter;
     private TextView viewUpdateTime;
@@ -53,6 +57,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        setHasOptionsMenu(true);
         View myView = inflater.inflate(R.layout.home_fragment, container, false);
         bottomNavigationView = myView.findViewById(R.id.activity_main_bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
@@ -81,11 +86,13 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             @Override
             public void onChanged(@Nullable String lastUpdateTime) {
                 viewUpdateTime.setText(String.format("Mis à jour à : %s", lastUpdateTime));
+                swipeContainer.setRefreshing(false);
             }
         });
         listViewModel.getUndergroundParkingDetails().observe(getViewLifecycleOwner(), new Observer<List<UndergroundParkingDetails>>() {
             @Override
             public void onChanged(@Nullable List<UndergroundParkingDetails> undergroundParkingDetails) {
+                sortByDispo();
                 undergroundParkingAdapter.setParkings(undergroundParkingDetails);
                 swipeContainer.setRefreshing(false);
             }
@@ -94,6 +101,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         listViewModel.getParkAndRideDetails().observe(getViewLifecycleOwner(), new Observer<List<ParkAndRideDetails>>() {
             @Override
             public void onChanged(@Nullable List<ParkAndRideDetails> parkAndRideDetails) {
+                sortByDispo();
                 parkAndRideAdapter.setParkings(parkAndRideDetails);
                 swipeContainer.setRefreshing(false);
             }
@@ -140,5 +148,37 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
                 break;
         }
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.sort_menu_dispo:
+                item.setChecked(!item.isChecked());
+                sortByDispo = item.isChecked();
+                sortByDispo();
+                return true;
+            case R.id.sort_menu_distance:
+                item.setChecked(!item.isChecked());
+                sortByDistance = item.isChecked();
+                Toast.makeText(this.getContext(), "WIP", Toast.LENGTH_LONG);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void sortByDispo() {
+        if (sortByDispo) {
+            listViewModel.sortParkingByFreePlaces();
+            undergroundParkingAdapter.notifyDataSetChanged();
+            parkAndRideAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        //menu.setGroupCheckable(0, false, true);
+        inflater.inflate(R.menu.sort_menu, menu);
     }
 }

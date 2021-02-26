@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -137,4 +138,11 @@ public class ParkAndRideDetails implements Serializable {
     public void setCapaciteActuellePMR(Integer capaciteActuellePMR) {
         this.capaciteActuellePMR = capaciteActuellePMR;
     }
+
+    public static Comparator<ParkAndRideDetails> parkAndRideFreePlacesComparator = new Comparator<ParkAndRideDetails>() {
+        @Override
+        public int compare(ParkAndRideDetails o1, ParkAndRideDetails o2) {
+            return o2.placesLibres.compareTo(o1.placesLibres);
+        }
+    };
 }
