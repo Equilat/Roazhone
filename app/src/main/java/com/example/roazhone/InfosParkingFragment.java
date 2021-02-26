@@ -1,8 +1,10 @@
 package com.example.roazhone;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -29,6 +31,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,11 +53,10 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
     private double lat = 48.11542271903488;
     private SupportMapFragment mv;
     private GoogleMap map;
-
+    private  FloatingActionButton gMapsLink;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
 
@@ -63,6 +65,7 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
                              @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View myView = inflater.inflate(R.layout.infos_parking_fragment, container, false);
+
 
         Object o = InfosParkingFragmentArgs.fromBundle(getArguments()).getParkAndRideDetails();
         if(o == null) {
@@ -87,6 +90,11 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
             //Place dans le Parking
             places = myView.findViewById(R.id.ipf_nb_places);
             placesPMR = myView.findViewById(R.id.ipf_nb_places_pmr);
+
+            //Geolocalisation du parking
+            List<Double> coord = parkAndRideDetails.getCoordonnees();
+            lat = coord.get(0);
+            lon = coord.get(1);
 
             if(parkAndRideDetails.getStatus().equals(getString(R.string.parking_ferme_short))){
                 places.setText(getString(R.string.parking_ferme_long));
@@ -141,6 +149,11 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
 
             //Place dans le Parking
             places = myView.findViewById(R.id.ipf_nb_places);
+
+            //Geolocalisation du parking
+            List<Double> coord = undergroundParkingDetails.getGeo();
+            lat = coord.get(0);
+            lon = coord.get(1);
 
             if(undergroundParkingDetails.getStatus().equals(getString(R.string.parking_ferme_short))){
                 places.setText(getString(R.string.parking_ferme_long));
@@ -206,6 +219,16 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        FloatingActionButton gMapsLink = (FloatingActionButton) view.findViewById(R.id.ipf_maps_button);
+        gMapsLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri gmmIntentUri = Uri.parse("google.navigation:q="+lat+","+lon);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+            }
+        });
         mv = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.ipf_adresse_map));
         mv.onCreate(savedInstanceState);
         mv.onResume();
