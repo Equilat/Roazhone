@@ -102,6 +102,35 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ipf_adresse_map" />
 
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/ipf_adresse_map"
+            class="com.google.android.gms.maps.SupportMapFragment"
+            tools:context="com.example.mapwithmarker.MapsMarkerActivity"
+            android:layout_width="0dp"
+            android:layout_height="300dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintBottom_toTopOf="@+id/ipf_horaires"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ipf_adresse"/>
+        <TextView
+            android:id="@+id/ipf_horaires"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:text="@string/horaires"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/roazhone_grey_4"
+            android:textColorHint="@color/roazhone_grey_4"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ipf_adresse_map" />
+
             <View
                 android:id="@+id/ipf_divider"
                 android:layout_width="match_parent"
