@@ -203,7 +203,7 @@ public class ParkAndRideDetails implements Serializable, Parcelable {
         }
     };
 
-    public static Comparator<ParkAndRideDetails> parkAndRideDetailsComparator = new Comparator<ParkAndRideDetails>() {
+    public static Comparator<ParkAndRideDetails> parkAndRideDetailsUserDistanceComparator = new Comparator<ParkAndRideDetails>() {
         @Override
         public int compare(ParkAndRideDetails o1, ParkAndRideDetails o2) {
             return o1.userDistance.compareTo(o2.userDistance);

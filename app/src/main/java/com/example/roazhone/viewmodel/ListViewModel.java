@@ -37,13 +37,12 @@ public class ListViewModel extends AndroidViewModel {
         return parkAndRideDetails;
     }
 
-    public void initialize(double userLatitude, double userLongitude) {
+    public void initialize() {
         repository = APICalls.getInstance();
         undergroundParkingDetails = repository.searchUndergroundParkingDetails();
          parkAndRideDetails = repository.searchParkAndRideDetails();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
         lastUpdateTime.setValue(sdf.format(new Date()));
-//        computeUserDistances(userLatitude, userLongitude);
     }
 
     public LiveData<String> getLastUpdateTime() {
@@ -57,15 +56,13 @@ public class ListViewModel extends AndroidViewModel {
 
     public void sortParkingByUserDistance() {
         Objects.requireNonNull(undergroundParkingDetails.getValue()).sort(UndergroundParkingDetails.undergroundUserDistanceComparator);
-        Objects.requireNonNull(parkAndRideDetails.getValue()).sort(ParkAndRideDetails.parkAndRideDetailsComparator);
+        Objects.requireNonNull(parkAndRideDetails.getValue()).sort(ParkAndRideDetails.parkAndRideDetailsUserDistanceComparator);
     }
 
     public void computeUserDistancesUnderground(double latitude, double longitude) {
-        System.out.println("compute user distances : "+ latitude +" / "+longitude);
         undergroundParkingDetails.getValue().forEach(upd -> upd.computeUserDistance(latitude, longitude));
     }
     public void computeUserDistancesPr(double latitude, double longitude) {
-        System.out.println("compute user distances : "+ latitude +" / "+longitude);
         parkAndRideDetails.getValue().forEach(prd -> prd.computeUserDistance(latitude, longitude));
     }
 }

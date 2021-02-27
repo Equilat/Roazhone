@@ -65,7 +65,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         @Override
         public void run() {
             Log.wtf(TAG, "Auto Refresh");
-            listViewModel.initialize(userLatitude, userLongitude);
+            listViewModel.initialize();
             getLocation();
             // Repeat this the same runnable code block again
             handler.postDelayed(this, 60000);
@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
 
         listViewModel = new ViewModelProvider(requireActivity()).get(ListViewModel.class);
         getLocation();
-        listViewModel.initialize(userLatitude, userLongitude);
+        listViewModel.initialize();
         listViewModel.getLastUpdateTime().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String lastUpdateTime) {
@@ -110,10 +110,10 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         listViewModel.getUndergroundParkingDetails().observe(getViewLifecycleOwner(), new Observer<List<UndergroundParkingDetails>>() {
             @Override
             public void onChanged(@Nullable List<UndergroundParkingDetails> undergroundParkingDetails) {
-                sortByDispo();
-                sortByDistance();
                 undergroundParkingAdapter.setParkings(undergroundParkingDetails);
                 listViewModel.computeUserDistancesUnderground(userLatitude, userLongitude);
+                sortByDispo();
+                sortByDistance();
                 undergroundParkingAdapter.notifyDataSetChanged();
                 swipeContainer.setRefreshing(false);
             }
@@ -122,10 +122,10 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         listViewModel.getParkAndRideDetails().observe(getViewLifecycleOwner(), new Observer<List<ParkAndRideDetails>>() {
             @Override
             public void onChanged(@Nullable List<ParkAndRideDetails> parkAndRideDetails) {
-                sortByDispo();
-                sortByDistance();
                 parkAndRideAdapter.setParkings(parkAndRideDetails);
                 listViewModel.computeUserDistancesPr(userLatitude, userLongitude);
+                sortByDispo();
+                sortByDistance();
                 parkAndRideAdapter.notifyDataSetChanged();
 
                 swipeContainer.setRefreshing(false);
@@ -137,8 +137,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
 
             @Override
             public void onRefresh() {
+                listViewModel.initialize();
                 getLocation();
-                listViewModel.initialize(userLatitude, userLongitude);
             }
 
         });
@@ -195,12 +195,15 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
                 item.setChecked(!item.isChecked());
                 sortByDistance = item.isChecked();
                 sortByDistance();
-                Toast.makeText(this.getContext(), "WIP", Toast.LENGTH_LONG);
+                Toast.makeText(this.getContext(), "WIP", Toast.LENGTH_LONG).show();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Sort the parking by number of free places.
+     */
     private void sortByDispo() {
         if (sortByDispo) {
             listViewModel.sortParkingByFreePlaces();
@@ -209,15 +212,10 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         }
     }
 
+    /**
+     * Sort the parking by distance to the user.
+     */
     private void sortByDistance() {
-        if (sortByDistance) {
-            listViewModel.sortParkingByUserDistance();
-            undergroundParkingAdapter.notifyDataSetChanged();
-            parkAndRideAdapter.notifyDataSetChanged();
-        }
-    }
-
-    private void setSortByDistance() {
         if (sortByDistance) {
             listViewModel.sortParkingByUserDistance();
             undergroundParkingAdapter.notifyDataSetChanged();
@@ -232,11 +230,13 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         inflater.inflate(R.menu.sort_menu, menu);
     }
 
+    /**
+     * Get the user's location.
+     */
     @SuppressLint("MissingPermission")
     private void getLocation() {
         if (checkPermissions()) {
             if (isLocationEnabled()) {
-
                 locationManager = (LocationManager) this.getContext().getSystemService(Context.LOCATION_SERVICE);
                 criteria = new Criteria();
                 bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true));
@@ -258,57 +258,52 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
                 startActivity(intent);
             }
         } else {
-            // if permissions aren't available,
-            // request for permissions
+            // if permission isn't available, request for permission
             requestPermissions();
         }
     }
 
     /**
-     * check for permissions
+     * Check for permissions
      */
     private boolean checkPermissions() {
         return ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
-    // method to request for permissions
+    /**
+     * Method to request for permissions
+     */
     private void requestPermissions() {
         ActivityCompat.requestPermissions(this.getActivity(), new String[]{
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION}, 44);
     }
 
-    // method to check
-    // if location is enabled
+    /**
+     * Checking if location is enabled.
+     */
     private boolean isLocationEnabled() {
         LocationManager locationManager = (LocationManager) this.getContext().getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
-    // If everything is alright then
     @Override
     public void
     onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 44) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this.getContext(), "on perm result", Toast.LENGTH_LONG);
-//                getLocation();
+                Toast.makeText(this.getContext(), "on perm result", Toast.LENGTH_LONG).show();
+                getLocation();
             }
         }
     }
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        //Hey, a non null location! Sweet!
-
-        //remove location callback:
         locationManager.removeUpdates(this);
-
-        //open the map:
         userLatitude = location.getLatitude();
         userLongitude = location.getLongitude();
         Toast.makeText(this.getActivity(), "LOCATION CHANGED latitude:" + userLatitude + " longitude:" + userLongitude, Toast.LENGTH_SHORT).show();
-//        searchNearestPlace(voice2text);
     }
 }
