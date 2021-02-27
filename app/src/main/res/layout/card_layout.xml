@@ -44,6 +44,13 @@
                 android:paddingEnd="5dp"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/roazhone_font_medium" />
+            <TextView
+                android:id="@+id/parkingDistance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="@dimen/roazhone_font_small" />
         </LinearLayout>
 
         <ImageButton

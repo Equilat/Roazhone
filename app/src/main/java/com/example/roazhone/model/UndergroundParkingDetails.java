@@ -1,5 +1,6 @@
 package com.example.roazhone.model;
 
+import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -59,10 +60,11 @@ public class UndergroundParkingDetails implements Serializable, Parcelable {
     @Expose
     private String tarif15;
 
+    private Float userDistance;
+
     public static final Creator<UndergroundParkingDetails> CREATOR = new Creator<UndergroundParkingDetails>() {
         @Override
         public UndergroundParkingDetails createFromParcel(Parcel source) {
-            System.out.println("mdr");
             return new UndergroundParkingDetails(source);
         }
 
@@ -206,6 +208,23 @@ public class UndergroundParkingDetails implements Serializable, Parcelable {
         this.tarif15 = tarif15;
     }
 
+    public Float getUserDistance() {
+        return userDistance;
+    }
+
+    public void computeUserDistance(double userLat, double userLong) {
+        Location loc1 = new Location("");
+        loc1.setLatitude(userLat);
+        loc1.setLongitude(userLong);
+
+        Location loc2 = new Location("");
+        loc2.setLatitude(this.geo.get(0));
+        loc2.setLongitude(this.geo.get(1));
+
+        this.userDistance = loc1.distanceTo(loc2) / 1000;
+        System.out.println("user distance : "+this.userDistance);
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -234,6 +253,13 @@ public class UndergroundParkingDetails implements Serializable, Parcelable {
         @Override
         public int compare(UndergroundParkingDetails o1, UndergroundParkingDetails o2) {
             return o2.placesLibres.compareTo(o1.placesLibres);
+        }
+    };
+
+    public static Comparator<UndergroundParkingDetails> undergroundUserDistanceComparator = new Comparator<UndergroundParkingDetails>() {
+        @Override
+        public int compare(UndergroundParkingDetails o1, UndergroundParkingDetails o2) {
+            return o1.userDistance.compareTo(o2.userDistance);
         }
     };
 }

@@ -1,7 +1,17 @@
 package com.example.roazhone;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,34 +35,42 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.roazhone.model.ParkAndRideDetails;
 import com.example.roazhone.model.UndergroundParkingDetails;
 import com.example.roazhone.viewmodel.ListViewModel;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
-import java.time.Duration;
 import java.util.List;
 
-public class HomeFragment extends Fragment implements View.OnLongClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class HomeFragment extends Fragment implements View.OnLongClickListener, NavigationView.OnNavigationItemSelectedListener, LocationListener {
 
     private final String TAG = HomeFragment.class.getName();
+    public LocationManager locationManager;
+    public Criteria criteria;
+    public String bestProvider;
     private SwipeRefreshLayout swipeContainer;
     private boolean sortByDispo;
     private boolean sortByDistance;
     private Handler handler;
     private BottomNavigationView bottomNavigationView;
     private ListViewModel listViewModel;
-    private final Runnable runnableCode = new Runnable() {
-        @Override
-        public void run() {
-            Log.wtf(TAG, "Auto Refresh");
-            listViewModel.initialize();
-            // Repeat this the same runnable code block again
-            handler.postDelayed(this, 60000);
-        }
-    };
     private RecyclerView recyclerView;
     private UndergroundParkingAdapter undergroundParkingAdapter;
     private ParkAndRideAdapter parkAndRideAdapter;
     private TextView viewUpdateTime;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private double userLatitude;
+    private double userLongitude;
+    private final Runnable runnableCode = new Runnable() {
+        @Override
+        public void run() {
+            Log.wtf(TAG, "Auto Refresh");
+            listViewModel.initialize(userLatitude, userLongitude);
+            getLocation();
+            // Repeat this the same runnable code block again
+            handler.postDelayed(this, 60000);
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,10 +82,9 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         bottomNavigationView.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
         disableMenuTooltip();
         viewUpdateTime = myView.findViewById(R.id.last_update_time);
-
         handler = new Handler();
         handler.post(runnableCode);
-
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this.getContext());
         return myView;
     }
 
@@ -80,7 +98,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         parkAndRideAdapter = new ParkAndRideAdapter(this.getContext());
 
         listViewModel = new ViewModelProvider(requireActivity()).get(ListViewModel.class);
-        listViewModel.initialize();
+        getLocation();
+        listViewModel.initialize(userLatitude, userLongitude);
         listViewModel.getLastUpdateTime().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String lastUpdateTime) {
@@ -92,7 +111,10 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             @Override
             public void onChanged(@Nullable List<UndergroundParkingDetails> undergroundParkingDetails) {
                 sortByDispo();
+                sortByDistance();
                 undergroundParkingAdapter.setParkings(undergroundParkingDetails);
+                listViewModel.computeUserDistancesUnderground(userLatitude, userLongitude);
+                undergroundParkingAdapter.notifyDataSetChanged();
                 swipeContainer.setRefreshing(false);
             }
         });
@@ -101,7 +123,11 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             @Override
             public void onChanged(@Nullable List<ParkAndRideDetails> parkAndRideDetails) {
                 sortByDispo();
+                sortByDistance();
                 parkAndRideAdapter.setParkings(parkAndRideDetails);
+                listViewModel.computeUserDistancesPr(userLatitude, userLongitude);
+                parkAndRideAdapter.notifyDataSetChanged();
+
                 swipeContainer.setRefreshing(false);
             }
         });
@@ -111,7 +137,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
 
             @Override
             public void onRefresh() {
-                listViewModel.initialize();
+                getLocation();
+                listViewModel.initialize(userLatitude, userLongitude);
             }
 
         });
@@ -167,6 +194,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             case R.id.sort_menu_distance:
                 item.setChecked(!item.isChecked());
                 sortByDistance = item.isChecked();
+                sortByDistance();
                 Toast.makeText(this.getContext(), "WIP", Toast.LENGTH_LONG);
                 return true;
         }
@@ -181,10 +209,106 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         }
     }
 
+    private void sortByDistance() {
+        if (sortByDistance) {
+            listViewModel.sortParkingByUserDistance();
+            undergroundParkingAdapter.notifyDataSetChanged();
+            parkAndRideAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void setSortByDistance() {
+        if (sortByDistance) {
+            listViewModel.sortParkingByUserDistance();
+            undergroundParkingAdapter.notifyDataSetChanged();
+            parkAndRideAdapter.notifyDataSetChanged();
+        }
+    }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         //menu.setGroupCheckable(0, false, true);
         inflater.inflate(R.menu.sort_menu, menu);
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getLocation() {
+        if (checkPermissions()) {
+            if (isLocationEnabled()) {
+
+                locationManager = (LocationManager) this.getContext().getSystemService(Context.LOCATION_SERVICE);
+                criteria = new Criteria();
+                bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true));
+
+                //You can still do this if you like, you might get lucky:
+                Location location = locationManager.getLastKnownLocation(bestProvider);
+                if (location != null) {
+                    Log.e("TAG", "GPS is on");
+                    userLatitude = location.getLatitude();
+                    userLongitude = location.getLongitude();
+                    Toast.makeText(this.getActivity(), "latitude:" + userLatitude + " longitude:" + userLongitude, Toast.LENGTH_SHORT).show();
+                } else {
+                    //This is what you need:
+                    locationManager.requestLocationUpdates(bestProvider, 1000, 0, this);
+                }
+            } else {
+                Toast.makeText(this.getContext(), "Please turn on" + " your location...", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        } else {
+            // if permissions aren't available,
+            // request for permissions
+            requestPermissions();
+        }
+    }
+
+    /**
+     * check for permissions
+     */
+    private boolean checkPermissions() {
+        return ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    // method to request for permissions
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(this.getActivity(), new String[]{
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION}, 44);
+    }
+
+    // method to check
+    // if location is enabled
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) this.getContext().getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    // If everything is alright then
+    @Override
+    public void
+    onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 44) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this.getContext(), "on perm result", Toast.LENGTH_LONG);
+//                getLocation();
+            }
+        }
+    }
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        //Hey, a non null location! Sweet!
+
+        //remove location callback:
+        locationManager.removeUpdates(this);
+
+        //open the map:
+        userLatitude = location.getLatitude();
+        userLongitude = location.getLongitude();
+        Toast.makeText(this.getActivity(), "LOCATION CHANGED latitude:" + userLatitude + " longitude:" + userLongitude, Toast.LENGTH_SHORT).show();
+//        searchNearestPlace(voice2text);
     }
 }
