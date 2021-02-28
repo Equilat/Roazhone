@@ -223,8 +223,8 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
             }
 
             //Favoris
-            updateFavorisStar("ugf", undergroundParkingDetails.getId());
-            setOnClickFavoris("ugf", undergroundParkingDetails.getId());
+            updateFavorisStar("upf", undergroundParkingDetails.getId());
+            setOnClickFavoris("upf", undergroundParkingDetails.getId());
 
         }
 

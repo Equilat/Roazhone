@@ -17,11 +17,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class UndergroundParkingAdapter extends  RecyclerView.Adapter<UndergroundParkingViewHolder>{
 
     private List<UndergroundParkingDetails> parkingList;
     private Context context;
+    private Set<String> parkingsFavoris;
 
     public UndergroundParkingAdapter(Context context) {
         this.context = context;
@@ -31,6 +33,12 @@ public class UndergroundParkingAdapter extends  RecyclerView.Adapter<Underground
     public UndergroundParkingAdapter(Context context, List<UndergroundParkingDetails> parkingList) {
         this.context = context;
         this.parkingList = parkingList;
+    }
+
+    public UndergroundParkingAdapter(Context context, Set<String> parkingsFavoris) {
+        this.context = context;
+        this.parkingsFavoris = parkingsFavoris;
+        parkingList = new ArrayList<>();
     }
 
     @NonNull
@@ -48,6 +56,14 @@ public class UndergroundParkingAdapter extends  RecyclerView.Adapter<Underground
     public void onBindViewHolder(@NonNull UndergroundParkingViewHolder vh, int i) {
         UndergroundParkingDetails upd = parkingList.get(i);
         vh.vName.setText(upd.getNomParking());
+
+        if(parkingsFavoris!=null && parkingsFavoris.contains(upd.getId())){
+            vh.vFavoris.setVisibility(View.VISIBLE);
+        }
+        else {
+            vh.vFavoris.setVisibility(View.INVISIBLE);
+        }
+
         if(upd.getStatus().equals("FERME")) {
             vh.vRoom.setText(R.string.parking_ferme_short);
             vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_red));

@@ -1,11 +1,9 @@
 package com.example.roazhone;
 
-import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,6 +14,7 @@ import java.util.List;
 
 public class ParkAndRideViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+    protected ImageView vFavoris;
     protected TextView vName;
     protected TextView vRoom;
     private final List<ParkAndRideDetails> parkAndRideDetailsList;
@@ -25,6 +24,7 @@ public class ParkAndRideViewHolder extends RecyclerView.ViewHolder implements Vi
         v.setOnClickListener(this);
         vName =  v.findViewById(R.id.parkingName);
         vRoom = v.findViewById(R.id.parkingRoom);
+        vFavoris = v.findViewById(R.id.parkingFavoris);
         this.parkAndRideDetailsList = parkAndRideDetailsList;
     }
 

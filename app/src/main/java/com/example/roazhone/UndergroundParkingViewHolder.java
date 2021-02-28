@@ -2,6 +2,7 @@ package com.example.roazhone;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.navigation.Navigation;
@@ -14,6 +15,7 @@ import java.util.List;
 
 public class UndergroundParkingViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+    protected ImageView vFavoris;
     protected TextView vName;
     protected TextView vRoom;
     private List<UndergroundParkingDetails> undergroundParkingDetailsList;
@@ -23,6 +25,7 @@ public class UndergroundParkingViewHolder extends RecyclerView.ViewHolder implem
         v.setOnClickListener(this);
         vName =  v.findViewById(R.id.parkingName);
         vRoom = v.findViewById(R.id.parkingRoom);
+        vFavoris = v.findViewById(R.id.parkingFavoris);
         this.undergroundParkingDetailsList = undergroundParkingDetailsList;
     }
 

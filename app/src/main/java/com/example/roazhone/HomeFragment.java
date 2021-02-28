@@ -1,5 +1,7 @@
 package com.example.roazhone;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -28,7 +30,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.time.Duration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class HomeFragment extends Fragment implements View.OnLongClickListener, NavigationView.OnNavigationItemSelectedListener {
 
@@ -76,8 +80,12 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
 
-        undergroundParkingAdapter = new UndergroundParkingAdapter(this.getContext());
-        parkAndRideAdapter = new ParkAndRideAdapter(this.getContext());
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        Set<String> parkAndRideFavoris = sharedPref.getStringSet("prf", new HashSet<>());
+        Set<String> undergroundFavoris = sharedPref.getStringSet("upf", new HashSet<>());
+
+        undergroundParkingAdapter = new UndergroundParkingAdapter(this.getContext(), undergroundFavoris);
+        parkAndRideAdapter = new ParkAndRideAdapter(this.getContext(), parkAndRideFavoris);
 
         listViewModel = new ViewModelProvider(requireActivity()).get(ListViewModel.class);
         listViewModel.initialize();
