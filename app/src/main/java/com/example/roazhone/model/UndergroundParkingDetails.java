@@ -222,7 +222,6 @@ public class UndergroundParkingDetails implements Serializable, Parcelable {
         loc2.setLongitude(this.geo.get(1));
 
         this.userDistance = loc1.distanceTo(loc2) / 1000;
-        System.out.println("user distance : "+this.userDistance);
     }
 
     @Override

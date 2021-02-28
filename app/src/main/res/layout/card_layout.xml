@@ -48,6 +48,8 @@
                 android:id="@+id/parkingDistance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:gravity="center_vertical"
                 android:textColor="@android:color/holo_red_dark"
                 android:textSize="@dimen/roazhone_font_small" />

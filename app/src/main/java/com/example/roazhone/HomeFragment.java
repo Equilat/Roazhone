@@ -41,6 +41,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment implements View.OnLongClickListener, NavigationView.OnNavigationItemSelectedListener, LocationListener {
 
@@ -195,7 +196,6 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
                 item.setChecked(!item.isChecked());
                 sortByDistance = item.isChecked();
                 sortByDistance();
-                Toast.makeText(this.getContext(), "WIP", Toast.LENGTH_LONG).show();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -237,7 +237,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
     private void getLocation() {
         if (checkPermissions()) {
             if (isLocationEnabled()) {
-                locationManager = (LocationManager) this.getContext().getSystemService(Context.LOCATION_SERVICE);
+                locationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
                 criteria = new Criteria();
                 bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true));
 
@@ -249,7 +249,6 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
                     userLongitude = location.getLongitude();
                     Toast.makeText(this.getActivity(), "latitude:" + userLatitude + " longitude:" + userLongitude, Toast.LENGTH_SHORT).show();
                 } else {
-                    //This is what you need:
                     locationManager.requestLocationUpdates(bestProvider, 1000, 0, this);
                 }
             } else {
