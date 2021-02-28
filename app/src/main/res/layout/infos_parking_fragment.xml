@@ -149,6 +149,19 @@
                     app:layout_constraintTop_toBottomOf="@+id/ipf_divider"
                     tools:visibility="invisible" />
 
+                <ImageView
+                    android:id="@+id/ipf_favoris"
+                    style="@style/favorite_star"
+                    android:layout_width="45dp"
+                    android:layout_height="41dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginEnd="40dp"
+                    android:clickable="false"
+                    android:contentDescription="@string/ajout_au_favoris"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_baseline_star_border_24" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 

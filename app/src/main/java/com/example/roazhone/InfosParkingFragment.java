@@ -1,6 +1,8 @@
 package com.example.roazhone;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
@@ -18,6 +20,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -35,8 +38,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class InfosParkingFragment extends Fragment implements OnMapReadyCallback {
 
@@ -49,16 +54,16 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
     private TextView tarifsTexte;
     private TableLayout tarifs;
     private ArrayList<Pair<String, String>> tarifsPairs;
-    private double lon = -1.676292780746903;
-    private double lat = 48.11542271903488;
+    private double lon;
+    private double lat;
     private SupportMapFragment mv;
     private GoogleMap map;
-    private  FloatingActionButton gMapsLink;
+    private ImageView favoris;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,6 +71,7 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
         super.onCreateView(inflater, container, savedInstanceState);
         View myView = inflater.inflate(R.layout.infos_parking_fragment, container, false);
 
+        favoris = myView.findViewById(R.id.ipf_favoris);
 
         Object o = InfosParkingFragmentArgs.fromBundle(getArguments()).getParkAndRideDetails();
         if(o == null) {
@@ -131,6 +137,9 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
             horaires = myView.findViewById(R.id.ipf_horaires);
             horaires.setText(getString(R.string.horaires_pr));
 
+            //Favoris
+            updateFavorisStar("prf", parkAndRideDetails.getId());
+            setOnClickFavoris("prf", parkAndRideDetails.getId());
         }
         else if (o instanceof UndergroundParkingDetails) {
             //Places PMR invisible
@@ -172,6 +181,7 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
                     places.setText(undergroundParkingDetails.getPlacesLibres() + getString(R.string.places_dispos));
                     places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_green));
                 }
+
             }
 
             //Adresse
@@ -211,6 +221,11 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
 
                     tarifs.addView(row);
             }
+
+            //Favoris
+            updateFavorisStar("ugf", undergroundParkingDetails.getId());
+            setOnClickFavoris("ugf", undergroundParkingDetails.getId());
+
         }
 
         return myView ;
@@ -253,12 +268,47 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        map =googleMap;
+        map = googleMap;
         LatLng coords = new LatLng(lat, lon);
         googleMap.addMarker(new MarkerOptions()
                 .position(coords)
                 .title("nom"));
         CameraPosition camPos = new CameraPosition.Builder().target(coords).zoom(15).build();
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
+    }
+
+    public void setOnClickFavoris(String favoris_key, String id){
+
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+        favoris.setOnClickListener(v -> {
+            SharedPreferences.Editor editor = sharedPref.edit();
+            Set<String> parkingsFavoris = sharedPref.getStringSet(favoris_key, new HashSet<>());
+            if(parkingsFavoris.contains(id)){
+                parkingsFavoris.remove(id);
+                editor.putStringSet(favoris_key, parkingsFavoris);
+                editor.apply();
+                favoris.setImageResource(R.drawable.ic_baseline_star_border_24);
+            }
+            else {
+                parkingsFavoris.add(id);
+                editor.putStringSet(favoris_key, parkingsFavoris);
+                editor.apply();
+                favoris.setImageResource(R.drawable.ic_baseline_star_24);
+            }
+
+            updateFavorisStar(favoris_key, id);
+        });
+    }
+
+    public void updateFavorisStar(String favoris_key, String id){
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        Set<String> parkingsFavoris = sharedPref.getStringSet(favoris_key, new HashSet<>());
+        if(parkingsFavoris.contains(id)){
+            favoris.setImageResource(R.drawable.ic_baseline_star_24);
+        }
+        else {
+            favoris.setImageResource(R.drawable.ic_baseline_star_border_24);
+        }
     }
 }
