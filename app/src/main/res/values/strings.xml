@@ -3,14 +3,13 @@
     <!-- BOTTOM NAVIGATION VIEW -->
     <string name="bottom_navigation_menu_parking">Parking</string>
     <string name="bottom_navigation_menu_park_and_ride">Parc Relais</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="nom">Nom</string>
     <string name="nombre_de_places">Nombre de places</string>
     <string name="adresse">Adresse</string>
     <string name="horaires">Horaires</string>
     <string name="vers_google_maps">Vers Google Maps</string>
     <string name="parking_complet_short">COMPLET</string>
-    <string name="parking_ferme_short">FERME</string>
+    <string name="parking_ferme_short">FERMÉ</string>
     <string name="parking">Parking&#160;</string>
     <string name="str_places_disponibles">places disponibles</string>
     <string name="nombre_de_places_pmr">Nombre de places pmr</string>
@@ -29,6 +28,8 @@
     <string name="horaires_pr">Ouvert du lundi au mercredi de 5h à 1h, du jeudi au samedi de 5h à 2h (en période estivale de 5h à 1h) et fermé les dimanches et jours fériés.</string>
     <string name="sort_dispo">Disponibilité</string>
     <string name="sort_distance">Distance</string>
+    <string name="ajout_au_favoris">Ajout au favoris</string>
+    <string name="favoris">Favoris</string>
 
 
 </resources>

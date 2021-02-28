@@ -16,11 +16,13 @@ import com.example.roazhone.model.ParkAndRideDetails;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-public class ParkAndRideAdapter extends RecyclerView.Adapter<ParkAndRideViewHolder> {
+public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHolder>{
 
-    private final Context context;
+    private Set<String> parkingsFavoris;
     private List<ParkAndRideDetails> parkingList;
+    private Context context;
 
     public ParkAndRideAdapter(Context context) {
         this.context = context;
@@ -30,6 +32,12 @@ public class ParkAndRideAdapter extends RecyclerView.Adapter<ParkAndRideViewHold
     public ParkAndRideAdapter(Context context, List<ParkAndRideDetails> parkingList) {
         this.context = context;
         this.parkingList = parkingList;
+    }
+
+    public ParkAndRideAdapter(Context context, Set<String> parkingsFavoris) {
+        this.context = context;
+        this.parkingsFavoris = parkingsFavoris;
+        parkingList = new ArrayList<>();
     }
 
     @NonNull
@@ -47,17 +55,28 @@ public class ParkAndRideAdapter extends RecyclerView.Adapter<ParkAndRideViewHold
         ParkAndRideDetails upd = parkingList.get(i);
         vh.vName.setText(upd.getNomParking());
         vh.vDistance.setText(upd.getUserDistance() == null ? "distance" : upd.getUserDistance().toString() + " km");
-        if (upd.getStatus().equals("FERME")) {
+
+        if(parkingsFavoris!=null && parkingsFavoris.contains(upd.getId())){
+            vh.vFavoris.setVisibility(View.VISIBLE);
+        }
+        else {
+            vh.vFavoris.setVisibility(View.INVISIBLE);
+        }
+
+        if(upd.getStatus().equals("Fermé")) {
             vh.vRoom.setText(R.string.parking_ferme_short);
             vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_red));
-        } else if (upd.getPlacesLibres() == 0) {
+        }
+        else if(upd.getPlacesLibres() == 0) {
             vh.vRoom.setText(R.string.parking_complet_short);
             vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_red));
-        } else if (upd.getPlacesLibres() <= upd.getCapaciteActuelle() * 0.1) {
-            vh.vRoom.setText(upd.getPlacesLibres().toString() + context.getString(R.string.places_dispos));
+        }
+        else if(upd.getPlacesLibres() <= upd.getCapaciteActuelle()*0.2) {
+            vh.vRoom.setText(upd.getPlacesLibres().toString()+context.getString(R.string.places_dispos));
             vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_orange));
-        } else {
-            vh.vRoom.setText(upd.getPlacesLibres().toString() + context.getString(R.string.places_dispos));
+        }
+        else {
+            vh.vRoom.setText(upd.getPlacesLibres().toString()+context.getString(R.string.places_dispos));
             vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_green));
         }
 
@@ -68,7 +87,7 @@ public class ParkAndRideAdapter extends RecyclerView.Adapter<ParkAndRideViewHold
         gMapsLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + lat + "," + lon);
+                Uri gmmIntentUri = Uri.parse("google.navigation:q="+lat+","+lon);
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 context.startActivity(mapIntent);

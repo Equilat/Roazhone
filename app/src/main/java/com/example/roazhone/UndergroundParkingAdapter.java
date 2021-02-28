@@ -16,11 +16,13 @@ import com.example.roazhone.model.UndergroundParkingDetails;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundParkingViewHolder> {
 
     private List<UndergroundParkingDetails> parkingList;
-    private final Context context;
+    private Context context;
+    private Set<String> parkingsFavoris;
 
     public UndergroundParkingAdapter(Context context) {
         this.context = context;
@@ -30,6 +32,12 @@ public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundP
     public UndergroundParkingAdapter(Context context, List<UndergroundParkingDetails> parkingList) {
         this.context = context;
         this.parkingList = parkingList;
+    }
+
+    public UndergroundParkingAdapter(Context context, Set<String> parkingsFavoris) {
+        this.context = context;
+        this.parkingsFavoris = parkingsFavoris;
+        parkingList = new ArrayList<>();
     }
 
     @NonNull
@@ -47,18 +55,28 @@ public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundP
     public void onBindViewHolder(@NonNull UndergroundParkingViewHolder vh, int i) {
         UndergroundParkingDetails upd = parkingList.get(i);
         vh.vName.setText(upd.getNomParking());
-        vh.vDistance.setText(upd.getUserDistance() == null ? "distance" : upd.getUserDistance().toString() + " km");
-        if (upd.getStatus().equals("FERME")) {
+        vh.vDistance.setText(upd.getUserDistance() == null ? "distance" : upd.getUserDistance() + " km");
+        if(parkingsFavoris!=null && parkingsFavoris.contains(upd.getId())){
+            vh.vFavoris.setVisibility(View.VISIBLE);
+        }
+        else {
+            vh.vFavoris.setVisibility(View.INVISIBLE);
+        }
+
+        if(upd.getStatus().equals("FERME")) {
             vh.vRoom.setText(R.string.parking_ferme_short);
             vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_red));
-        } else if (upd.getPlacesLibres() == 0) {
+        }
+        else if(upd.getPlacesLibres() == 0) {
             vh.vRoom.setText(R.string.parking_complet_short);
             vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_red));
-        } else if (upd.getPlacesLibres() <= upd.getPlacesMax() * 0.1) {
-            vh.vRoom.setText(upd.getPlacesLibres().toString() + context.getString(R.string.places_dispos));
+        }
+        else if(upd.getPlacesLibres() <= upd.getPlacesMax()*0.2) {
+            vh.vRoom.setText(upd.getPlacesLibres().toString()+context.getString(R.string.places_dispos));
             vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_orange));
-        } else {
-            vh.vRoom.setText(upd.getPlacesLibres().toString() + context.getString(R.string.places_dispos));
+        }
+        else {
+            vh.vRoom.setText(upd.getPlacesLibres().toString()+context.getString(R.string.places_dispos));
             vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_green));
         }
 

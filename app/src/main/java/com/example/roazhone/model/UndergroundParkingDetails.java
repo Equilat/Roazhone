@@ -8,6 +8,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.List;
 
@@ -60,7 +63,7 @@ public class UndergroundParkingDetails implements Serializable, Parcelable {
     @Expose
     private String tarif15;
 
-    private Float userDistance;
+    private Double userDistance;
 
     public static final Creator<UndergroundParkingDetails> CREATOR = new Creator<UndergroundParkingDetails>() {
         @Override
@@ -208,7 +211,7 @@ public class UndergroundParkingDetails implements Serializable, Parcelable {
         this.tarif15 = tarif15;
     }
 
-    public Float getUserDistance() {
+    public Double getUserDistance() {
         return userDistance;
     }
 
@@ -216,12 +219,14 @@ public class UndergroundParkingDetails implements Serializable, Parcelable {
         Location loc1 = new Location("");
         loc1.setLatitude(userLat);
         loc1.setLongitude(userLong);
-
         Location loc2 = new Location("");
         loc2.setLatitude(this.geo.get(0));
         loc2.setLongitude(this.geo.get(1));
 
-        this.userDistance = loc1.distanceTo(loc2) / 1000;
+        this.userDistance = (double) (loc1.distanceTo(loc2) / 1000);
+        BigDecimal bigDecimal = new BigDecimal(Double.toString(this.userDistance));
+        bigDecimal = bigDecimal.setScale(3, RoundingMode.HALF_UP);
+        this.userDistance =  bigDecimal.doubleValue();
     }
 
     @Override

@@ -27,4 +27,7 @@
     <style name="parking_name" parent="">
         <item name="android:textColor">@color/black</item>
     </style>
+    <style name="favorite_star" parent="">
+        <item name="android:tint">@color/roazhone_yellow_2</item>
+    </style>
 </resources>

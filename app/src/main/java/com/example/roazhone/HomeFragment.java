@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -40,11 +41,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 
 public class HomeFragment extends Fragment implements View.OnLongClickListener, NavigationView.OnNavigationItemSelectedListener, LocationListener {
 
+    static final int PERMISSION_ID = 44;
     private final String TAG = HomeFragment.class.getName();
     public LocationManager locationManager;
     public Criteria criteria;
@@ -83,6 +86,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         bottomNavigationView.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
         disableMenuTooltip();
         viewUpdateTime = myView.findViewById(R.id.last_update_time);
+
         handler = new Handler();
         handler.post(runnableCode);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this.getContext());
@@ -95,8 +99,12 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
 
-        undergroundParkingAdapter = new UndergroundParkingAdapter(this.getContext());
-        parkAndRideAdapter = new ParkAndRideAdapter(this.getContext());
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        Set<String> parkAndRideFavoris = sharedPref.getStringSet("prf", new HashSet<>());
+        Set<String> undergroundFavoris = sharedPref.getStringSet("upf", new HashSet<>());
+
+        undergroundParkingAdapter = new UndergroundParkingAdapter(this.getContext(), undergroundFavoris);
+        parkAndRideAdapter = new ParkAndRideAdapter(this.getContext(), parkAndRideFavoris);
 
         listViewModel = new ViewModelProvider(requireActivity()).get(ListViewModel.class);
         getLocation();
@@ -241,7 +249,6 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
                 criteria = new Criteria();
                 bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true));
 
-                //You can still do this if you like, you might get lucky:
                 Location location = locationManager.getLastKnownLocation(bestProvider);
                 if (location != null) {
                     Log.e("TAG", "GPS is on");
@@ -266,23 +273,23 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
      * Check for permissions
      */
     private boolean checkPermissions() {
-        return ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        return ActivityCompat.checkSelfPermission(this.requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     /**
      * Method to request for permissions
      */
     private void requestPermissions() {
-        ActivityCompat.requestPermissions(this.getActivity(), new String[]{
+        ActivityCompat.requestPermissions(this.requireActivity(), new String[]{
                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION}, 44);
+                Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ID);
     }
 
     /**
      * Checking if location is enabled.
      */
     private boolean isLocationEnabled() {
-        LocationManager locationManager = (LocationManager) this.getContext().getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
@@ -290,9 +297,9 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
     public void
     onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 44) {
+        if (requestCode == PERMISSION_ID) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this.getContext(), "on perm result", Toast.LENGTH_LONG).show();
+//                Toast.makeText(this.getContext(), "on perm result", Toast.LENGTH_LONG).show();
                 getLocation();
             }
         }
