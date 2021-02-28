@@ -96,20 +96,20 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
             lat = coord.get(0);
             lon = coord.get(1);
 
-            if(parkAndRideDetails.getStatus().equals(getString(R.string.parking_ferme_short))){
+            if(parkAndRideDetails.getStatus().equals("Fermé")){
                 places.setText(getString(R.string.parking_ferme_long));
                 places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_red));
                 placesPMR.setVisibility(View.INVISIBLE);
 
             }
-            else if (parkAndRideDetails.getStatus().equals(getString(R.string.parking_complet_short))){
+            else if (parkAndRideDetails.getStatus().equals("Complet") || parkAndRideDetails.getPlacesLibres() == 0){
                 places.setText(getString(R.string.parking_complet_long));
                 places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_red));
                 placesPMR.setVisibility(View.INVISIBLE);
 
             }
             else {
-                if (parkAndRideDetails.getPlacesLibres() <= parkAndRideDetails.getCapaciteActuelle()*0.1) {
+                if (parkAndRideDetails.getPlacesLibres() <= parkAndRideDetails.getCapaciteActuelle()*0.2) {
                     places.setText(parkAndRideDetails.getPlacesLibres() + getString(R.string.places_dispos));
                     places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_orange));
                     placesPMR.setText(parkAndRideDetails.getNombreLibresPMR() + getString(R.string.places_pmr_dispos));
@@ -159,12 +159,12 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
                 places.setText(getString(R.string.parking_ferme_long));
                 places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_red));
             }
-            else if (undergroundParkingDetails.getStatus().equals(getString(R.string.parking_complet_short))){
+            else if (undergroundParkingDetails.getStatus().equals(getString(R.string.parking_complet_short)) || undergroundParkingDetails.getPlacesLibres() == 0){
                 places.setText(getString(R.string.parking_complet_long));
                 places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_red));
             }
             else {
-                if (undergroundParkingDetails.getPlacesLibres() <= undergroundParkingDetails.getPlacesMax()*0.1) {
+                if (undergroundParkingDetails.getPlacesLibres() <= undergroundParkingDetails.getPlacesMax()*0.2) {
                     places.setText(undergroundParkingDetails.getPlacesLibres() + getString(R.string.places_dispos));
                     places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_orange));
                 }

@@ -46,7 +46,7 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
     public void onBindViewHolder(@NonNull ParkAndRideViewHolder vh, int i) {
         ParkAndRideDetails upd = parkingList.get(i);
         vh.vName.setText(upd.getNomParking());
-        if(upd.getStatus().equals("FERME")) {
+        if(upd.getStatus().equals("Fermé")) {
             vh.vRoom.setText(R.string.parking_ferme_short);
             vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_red));
         }
@@ -54,7 +54,7 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
             vh.vRoom.setText(R.string.parking_complet_short);
             vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_red));
         }
-        else if(upd.getPlacesLibres() <= upd.getCapaciteActuelle()*0.1) {
+        else if(upd.getPlacesLibres() <= upd.getCapaciteActuelle()*0.2) {
             vh.vRoom.setText(upd.getPlacesLibres().toString()+context.getString(R.string.places_dispos));
             vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_orange));
         }

@@ -56,7 +56,7 @@ public class UndergroundParkingAdapter extends  RecyclerView.Adapter<Underground
             vh.vRoom.setText(R.string.parking_complet_short);
             vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_red));
         }
-        else if(upd.getPlacesLibres() <= upd.getPlacesMax()*0.1) {
+        else if(upd.getPlacesLibres() <= upd.getPlacesMax()*0.2) {
             vh.vRoom.setText(upd.getPlacesLibres().toString()+context.getString(R.string.places_dispos));
             vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_orange));
         }
