@@ -1,5 +1,6 @@
 package com.example.roazhone.model;
 
+import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -7,6 +8,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.List;
 
@@ -59,10 +63,11 @@ public class UndergroundParkingDetails implements Serializable, Parcelable {
     @Expose
     private String tarif15;
 
+    private Double userDistance;
+
     public static final Creator<UndergroundParkingDetails> CREATOR = new Creator<UndergroundParkingDetails>() {
         @Override
         public UndergroundParkingDetails createFromParcel(Parcel source) {
-            System.out.println("mdr");
             return new UndergroundParkingDetails(source);
         }
 
@@ -73,7 +78,6 @@ public class UndergroundParkingDetails implements Serializable, Parcelable {
     };
 
     public UndergroundParkingDetails(Parcel in) {
-        System.out.println("coucou");
         this.status = in.readString();
         this.tarif1h30 = in.readString();
         this.tarif30 = in.readString();
@@ -206,6 +210,24 @@ public class UndergroundParkingDetails implements Serializable, Parcelable {
         this.tarif15 = tarif15;
     }
 
+    public Double getUserDistance() {
+        return userDistance;
+    }
+
+    public void computeUserDistance(double userLat, double userLong) {
+        Location loc1 = new Location("");
+        loc1.setLatitude(userLat);
+        loc1.setLongitude(userLong);
+        Location loc2 = new Location("");
+        loc2.setLatitude(this.geo.get(0));
+        loc2.setLongitude(this.geo.get(1));
+
+        this.userDistance = (double) (loc1.distanceTo(loc2) / 1000);
+        BigDecimal bigDecimal = new BigDecimal(Double.toString(this.userDistance));
+        bigDecimal = bigDecimal.setScale(3, RoundingMode.HALF_UP);
+        this.userDistance =  bigDecimal.doubleValue();
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -234,6 +256,13 @@ public class UndergroundParkingDetails implements Serializable, Parcelable {
         @Override
         public int compare(UndergroundParkingDetails o1, UndergroundParkingDetails o2) {
             return o2.placesLibres.compareTo(o1.placesLibres);
+        }
+    };
+
+    public static Comparator<UndergroundParkingDetails> undergroundUserDistanceComparator = new Comparator<UndergroundParkingDetails>() {
+        @Override
+        public int compare(UndergroundParkingDetails o1, UndergroundParkingDetails o2) {
+            return o1.userDistance.compareTo(o2.userDistance);
         }
     };
 }

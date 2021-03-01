@@ -18,6 +18,7 @@ public class UndergroundParkingViewHolder extends RecyclerView.ViewHolder implem
     protected ImageView vFavoris;
     protected TextView vName;
     protected TextView vRoom;
+    protected TextView vDistance;
     private List<UndergroundParkingDetails> undergroundParkingDetailsList;
 
     public UndergroundParkingViewHolder(View v, List<UndergroundParkingDetails> undergroundParkingDetailsList) {
@@ -25,6 +26,7 @@ public class UndergroundParkingViewHolder extends RecyclerView.ViewHolder implem
         v.setOnClickListener(this);
         vName =  v.findViewById(R.id.parkingName);
         vRoom = v.findViewById(R.id.parkingRoom);
+        vDistance = v.findViewById(R.id.parkingDistance);
         vFavoris = v.findViewById(R.id.parkingFavoris);
         this.undergroundParkingDetailsList = undergroundParkingDetailsList;
     }

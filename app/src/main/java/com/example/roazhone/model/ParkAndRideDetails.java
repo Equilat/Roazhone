@@ -1,5 +1,6 @@
 package com.example.roazhone.model;
 
+import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -7,6 +8,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.List;
 
@@ -50,10 +54,11 @@ public class ParkAndRideDetails implements Serializable, Parcelable {
     @Expose
     private Integer capaciteActuellePMR;
 
+    private Double userDistance;
+
     public static final Creator<ParkAndRideDetails> CREATOR = new Creator<ParkAndRideDetails>() {
         @Override
         public ParkAndRideDetails createFromParcel(Parcel source) {
-            System.out.println("mdr");
             return new ParkAndRideDetails(source);
         }
 
@@ -170,6 +175,10 @@ public class ParkAndRideDetails implements Serializable, Parcelable {
         this.capaciteActuellePMR = capaciteActuellePMR;
     }
 
+    public Double getUserDistance() {
+        return userDistance;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -196,4 +205,23 @@ public class ParkAndRideDetails implements Serializable, Parcelable {
             return o2.placesLibres.compareTo(o1.placesLibres);
         }
     };
+
+    public static Comparator<ParkAndRideDetails> parkAndRideDetailsUserDistanceComparator = new Comparator<ParkAndRideDetails>() {
+        @Override
+        public int compare(ParkAndRideDetails o1, ParkAndRideDetails o2) {
+            return o1.userDistance.compareTo(o2.userDistance);
+        }
+    };
+    public void computeUserDistance(double userLat, double userLong) {
+        Location loc1 = new Location("");
+        loc1.setLatitude(userLat);
+        loc1.setLongitude(userLong);
+        Location loc2 = new Location("");
+        loc2.setLatitude(this.coordonnees.get(0));
+        loc2.setLongitude(this.coordonnees.get(1));
+
+        this.userDistance = (double) (loc1.distanceTo(loc2) / 1000);
+        BigDecimal bigDecimal = new BigDecimal(Double.toString(this.userDistance));
+        bigDecimal = bigDecimal.setScale(3, RoundingMode.HALF_UP);
+        this.userDistance =  bigDecimal.doubleValue();    }
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="colombier_ouverture">00:00,00:00,00:00,00:00,00:00,00:00,00:00</string>
+    <string name="colombier_fermeture">00:00,00:00,00:00,00:00,00:00,00:00,00:00</string>
+    <string name="gare_sud_ouverture">00:00,00:00,00:00,00:00,00:00,00:00,00:00</string>
+    <string name="gare_sud_fermeture">00:00,00:00,00:00,00:00,00:00,00:00,00:00</string>
+    <string name="dinan_chezy_ouverture">07:00,07:00,07:00,07:00,07:00,07:00,fermé</string>
+    <string name="dinan_chezy_fermeture">21:00,21:00,21:00,00:00,00:00,00:00,fermé</string>
+    <string name="vilaine_ouverture">00:00,00:00,00:00,00:00,00:00,00:00,00:00</string>
+    <string name="vilaine_fermeture">00:00,00:00,00:00,00:00,00:00,00:00,00:00</string>
+    <string name="hoche_ouverture">07:30,07:30,07:30,07:30,07:30,07:30,fermé</string>
+    <string name="hoche_fermeture">00:00,02:00,02:00,02:00,02:00,02:00,fermé</string>
+    <string name="kennedy_ouverture">05:45,05:45,05:45,05:45,05:45,05:45,fermé</string>
+    <string name="kennedy_fermeture">20:30,20:30,20:30,20:30,20:30,20:30,fermé</string>
+    <string name="lices_ouverture">07:00,07:00,07:00,07:00,07:00,06:00,07:00</string>
+    <string name="lices_fermeture">00:00,03:00,03:00,03:00,03:00,03:00,21:00</string>
+    <string name="charles_de_gaulle_ouverture">05:00,05:00,05:00,05:00,05:00,05:00,05:00</string>
+    <string name="charles_de_gaulle_fermeture">02:00,02:00,02:00,02:00,02:00,02:00,02:00</string>
+    <string name="kleber_ouverture">08:00,08:00,08:00,08:00,08:00,08:00,fermé</string>
+    <string name="kleber_fermeture">20:00,20:00,20:00,20:00,20:00,20:00,fermé</string>
+    <string name="arsenal_ouverture">06:30,06:30,06:30,06:30,06:30,00:00,00:00</string>
+    <string name="arsenal_fermeture">22:00,22:00,22:00,22:00,00:00,00:00,06:00</string>
+</resources>

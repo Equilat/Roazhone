@@ -43,6 +43,20 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/parkingName" />
+        <TextView
+            android:id="@+id/parkingDistance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:textColor="@color/roazhone_grey_5"
+            android:textSize="@dimen/roazhone_font_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/parkingRoom"/>
 
         <LinearLayout
             android:id="@+id/parkingInfos"
@@ -82,3 +96,4 @@
 
 
 </androidx.cardview.widget.CardView>
+

@@ -17,6 +17,7 @@ public class ParkAndRideViewHolder extends RecyclerView.ViewHolder implements Vi
     protected ImageView vFavoris;
     protected TextView vName;
     protected TextView vRoom;
+    protected TextView vDistance;
     private final List<ParkAndRideDetails> parkAndRideDetailsList;
 
     public ParkAndRideViewHolder(View v, List<ParkAndRideDetails> parkAndRideDetailsList) {
@@ -25,6 +26,7 @@ public class ParkAndRideViewHolder extends RecyclerView.ViewHolder implements Vi
         vName =  v.findViewById(R.id.parkingName);
         vRoom = v.findViewById(R.id.parkingRoom);
         vFavoris = v.findViewById(R.id.parkingFavoris);
+        vDistance = v.findViewById(R.id.parkingDistance);
         this.parkAndRideDetailsList = parkAndRideDetailsList;
     }
 

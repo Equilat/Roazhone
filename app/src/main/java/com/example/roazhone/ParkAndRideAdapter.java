@@ -2,7 +2,6 @@ package com.example.roazhone;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.roazhone.model.ParkAndRideDetails;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -56,6 +54,7 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
     public void onBindViewHolder(@NonNull ParkAndRideViewHolder vh, int i) {
         ParkAndRideDetails upd = parkingList.get(i);
         vh.vName.setText(upd.getNomParking());
+        vh.vDistance.setText(upd.getUserDistance() == null ? "" : upd.getUserDistance().toString() + " km");
 
         if(parkingsFavoris!=null && parkingsFavoris.contains(upd.getId())){
             vh.vFavoris.setVisibility(View.VISIBLE);
