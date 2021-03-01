@@ -19,11 +19,13 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -119,29 +121,26 @@ public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundP
     private boolean isOpened(String parkingName) throws ParseException {
         boolean ret = false;
         Calendar calendarToday = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
-        Calendar calendarTomorrow = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
-        calendarTomorrow.add(Calendar.DATE, 1);
         int dayOfWeek = calendarToday.get(Calendar.DAY_OF_WEEK);
         String[] parkingWeeklyOpeningHours = getParkingOpeningHours(parkingName);
         String[] parkingWeeklyClosingHours = getParkingClosingHours(parkingName);
         String parkingOpeningHours = parkingWeeklyOpeningHours[dayOfWeek - 1];
         String parkingClosingHours = parkingWeeklyClosingHours[dayOfWeek - 1];
         if(!parkingOpeningHours.equals("fermé")) {
-            Date parkingOpeningTime = new SimpleDateFormat("HH:mm", Locale.FRANCE).parse(parkingOpeningHours);
-            Date parkingClosingTime = new SimpleDateFormat("HH:mm", Locale.FRANCE).parse(parkingClosingHours);
-            Date currentTime = calendarToday.getTime();
-            if(parkingOpeningHours.equals(parkingClosingHours)) {
-                ret = true;
-            }
-            else if(parkingClosingHours.compareTo("00:00") >= 0) {
-                calendarTomorrow.setTime(parkingClosingTime);
-                if((currentTime.after(parkingOpeningTime) ||currentTime.equals(parkingOpeningTime)) && currentTime.before(calendarTomorrow.getTime())) {
+            Calendar calendarOpening = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
+            calendarOpening.setTime(Objects.requireNonNull(new SimpleDateFormat("hh:mm", Locale.FRANCE).parse(parkingOpeningHours)));
+            calendarOpening.set(calendarToday.get(Calendar.YEAR),calendarToday.get(Calendar.MONTH), calendarToday.get(Calendar.DATE), calendarToday.get(Calendar.HOUR_OF_DAY), calendarToday.get(Calendar.MINUTE));
+            Calendar calendarClosing = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
+            calendarClosing.setTime(Objects.requireNonNull(new SimpleDateFormat("hh:mm", Locale.FRANCE).parse(parkingClosingHours)));
+            calendarClosing.set(calendarToday.get(Calendar.YEAR),calendarToday.get(Calendar.MONTH), calendarToday.get(Calendar.DATE), calendarToday.get(Calendar.HOUR_OF_DAY), calendarToday.get(Calendar.MINUTE));
+            if(calendarClosing.before(calendarOpening) || calendarClosing.equals(calendarOpening)) {
+                calendarClosing.add(Calendar.DAY_OF_MONTH, 1);
+                if((calendarOpening.before(calendarToday) || calendarOpening.equals(calendarToday)) && (calendarClosing.after(calendarToday))) {
                     ret = true;
                 }
             }
             else {
-                calendarToday.setTime(parkingClosingTime);
-                if((currentTime.after(parkingOpeningTime) ||currentTime.equals(parkingOpeningTime)) && currentTime.before(calendarToday.getTime())) {
+                if(calendarOpening.before(calendarToday) && calendarClosing.after(calendarToday)) {
                     ret = true;
                 }
             }
