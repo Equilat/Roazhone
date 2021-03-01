@@ -2,6 +2,7 @@ package com.example.roazhone;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +11,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -40,6 +42,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.HashSet;
 import java.util.List;
@@ -47,7 +50,9 @@ import java.util.Set;
 
 public class HomeFragment extends Fragment implements View.OnLongClickListener, NavigationView.OnNavigationItemSelectedListener, LocationListener {
 
-    static final int PERMISSION_ID = 44;
+    public static final String permission_location_params = "La permission d'accès à la localisation est désactivée";
+    public static final String permission_location_explain = "La permission d'accès à la localisation est nécessaire";
+    static final int PERMISSION_ID = 1;
     private final String TAG = HomeFragment.class.getName();
     public LocationManager locationManager;
     public Criteria criteria;
@@ -65,6 +70,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
     private FusedLocationProviderClient mFusedLocationClient;
     private double userLatitude;
     private double userLongitude;
+    private View myView;
     private final Runnable runnableCode = new Runnable() {
         @Override
         public void run() {
@@ -81,7 +87,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         setHasOptionsMenu(true);
-        View myView = inflater.inflate(R.layout.home_fragment, container, false);
+        myView = inflater.inflate(R.layout.home_fragment, container, false);
         bottomNavigationView = myView.findViewById(R.id.activity_main_bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
         disableMenuTooltip();
@@ -243,7 +249,12 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
      */
     @SuppressLint("MissingPermission")
     private void getLocation() {
-        if (checkPermissions()) {
+        if (ActivityCompat.checkSelfPermission(requireActivity().getApplicationContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            this.checkPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, "La localisation est nécessaire", PERMISSION_ID);
+        } else {
             if (isLocationEnabled()) {
                 locationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
                 criteria = new Criteria();
@@ -263,27 +274,24 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
             }
-        } else {
-            // if permission isn't available, request for permission
-            requestPermissions();
         }
     }
 
-    /**
-     * Check for permissions
-     */
-    private boolean checkPermissions() {
-        return ActivityCompat.checkSelfPermission(this.requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
+//    /**
+//     * Check for permissions
+//     */
+//    private boolean checkPermissions() {
+//        return ActivityCompat.checkSelfPermission(this.requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+//    }
 
-    /**
-     * Method to request for permissions
-     */
-    private void requestPermissions() {
-        ActivityCompat.requestPermissions(this.requireActivity(), new String[]{
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ID);
-    }
+//    /**
+//     * Method to request for permissions
+//     */
+//    private void requestPermissions() {
+//        this.requestPermissions(new String[]{
+//                Manifest.permission.ACCESS_COARSE_LOCATION,
+//                Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ID);
+//    }
 
     /**
      * Checking if location is enabled.
@@ -293,17 +301,6 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
-    @Override
-    public void
-    onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_ID) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                Toast.makeText(this.getContext(), "on perm result", Toast.LENGTH_LONG).show();
-                getLocation();
-            }
-        }
-    }
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
@@ -311,5 +308,78 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         userLatitude = location.getLatitude();
         userLongitude = location.getLongitude();
         Toast.makeText(this.getActivity(), "LOCATION CHANGED latitude:" + userLatitude + " longitude:" + userLongitude, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Check if the permissions or granted and ask them if it is not.
+     *
+     * @param permissions   permissions to verify/ask
+     * @param rational_text explicative text about the permission
+     * @param requestCode   requestCode
+     */
+    public void checkPermission(String[] permissions, String rational_text, int requestCode) {
+        for (String permission : permissions) {
+            if (this.requireActivity().shouldShowRequestPermissionRationale(permission)) {
+                this.explain(this.getActivity(), permission, requestCode, rational_text);
+            } else {
+                this.requestPermissions(new String[]{permission},
+                        requestCode);
+            }
+        }
+    }
+
+    /**
+     * Shows a SnackBar in order for the user to go understand why the permission is needed and to re-ask the
+     * permission.
+     *
+     * @param activity    activity
+     * @param permission  permission
+     * @param requestCode requestCode
+     * @param message     a message that explains why the permission is needed
+     */
+    public void explain(Activity activity, String permission, int requestCode, String message) {
+        Snackbar.make(myView, message, Snackbar.LENGTH_LONG).setAction("Activer", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.requestPermissions(new String[]{permission},
+                        requestCode);
+            }
+        }).show();
+    }
+
+    /**
+     * Shows a SnackBar in order for the user to go to the parameters
+     * and check the permission.
+     *
+     * @param activity activity
+     * @param message  explicative message
+     */
+    public void displayOptions(Activity activity, String message) {
+        Snackbar.make(myView, message, Snackbar.LENGTH_LONG).setAction("Paramètres", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                final Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
+                intent.setData(uri);
+                activity.startActivity(intent);
+            }
+        }).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PERMISSION_ID) {
+            if (grantResults.length > 0 && permissions.length > 0) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getLocation();
+                } else if (!shouldShowRequestPermissionRationale(permissions[0])) {
+                    this.displayOptions(this.getActivity(), permission_location_params);
+                } else {
+                    this.explain(this.getActivity(), permissions[0], requestCode, permission_location_explain);
+                }
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 }
