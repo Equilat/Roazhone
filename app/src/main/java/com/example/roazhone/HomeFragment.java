@@ -355,6 +355,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         if (requestCode == PERMISSION_ID) {
             if (grantResults.length > 0 && permissions.length > 0) {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    listViewModel.initialize();
                     getLocation();
                     System.out.println("on perm result get location");
                 } else if (!shouldShowRequestPermissionRationale(permissions[0])) {
