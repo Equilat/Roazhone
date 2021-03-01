@@ -277,22 +277,6 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         }
     }
 
-//    /**
-//     * Check for permissions
-//     */
-//    private boolean checkPermissions() {
-//        return ActivityCompat.checkSelfPermission(this.requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-//    }
-
-//    /**
-//     * Method to request for permissions
-//     */
-//    private void requestPermissions() {
-//        this.requestPermissions(new String[]{
-//                Manifest.permission.ACCESS_COARSE_LOCATION,
-//                Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ID);
-//    }
-
     /**
      * Checking if location is enabled.
      */
@@ -372,6 +356,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             if (grantResults.length > 0 && permissions.length > 0) {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getLocation();
+                    System.out.println("on perm result get location");
                 } else if (!shouldShowRequestPermissionRationale(permissions[0])) {
                     this.displayOptions(this.getActivity(), permission_location_params);
                 } else {
