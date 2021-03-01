@@ -78,7 +78,6 @@ public class UndergroundParkingDetails implements Serializable, Parcelable {
     };
 
     public UndergroundParkingDetails(Parcel in) {
-        System.out.println("coucou");
         this.status = in.readString();
         this.tarif1h30 = in.readString();
         this.tarif30 = in.readString();

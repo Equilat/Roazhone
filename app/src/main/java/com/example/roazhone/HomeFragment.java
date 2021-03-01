@@ -55,7 +55,6 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
     static final int PERMISSION_ID = 1;
     private final String TAG = HomeFragment.class.getName();
     public LocationManager locationManager;
-    public Criteria criteria;
     private SwipeRefreshLayout swipeContainer;
     private boolean sortByDispo;
     private boolean sortByDistance;
@@ -66,7 +65,6 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
     private UndergroundParkingAdapter undergroundParkingAdapter;
     private ParkAndRideAdapter parkAndRideAdapter;
     private TextView viewUpdateTime;
-    private FusedLocationProviderClient mFusedLocationClient;
     private double userLatitude;
     private double userLongitude;
     private View myView;
@@ -93,7 +91,6 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
 
         handler = new Handler();
         handler.post(runnableCode);
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this.getContext());
         return myView;
     }
 
@@ -124,9 +121,11 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             @Override
             public void onChanged(@Nullable List<UndergroundParkingDetails> undergroundParkingDetails) {
                 undergroundParkingAdapter.setParkings(undergroundParkingDetails);
-                listViewModel.computeUserDistancesUnderground(userLatitude, userLongitude);
+                if (isLocationEnabled()) {
+                    listViewModel.computeUserDistancesUnderground(userLatitude, userLongitude);
+                    sortByDistance();
+                }
                 sortByDispo();
-                sortByDistance();
                 undergroundParkingAdapter.notifyDataSetChanged();
                 swipeContainer.setRefreshing(false);
             }
@@ -136,9 +135,11 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             @Override
             public void onChanged(@Nullable List<ParkAndRideDetails> parkAndRideDetails) {
                 parkAndRideAdapter.setParkings(parkAndRideDetails);
-                listViewModel.computeUserDistancesPr(userLatitude, userLongitude);
+                if (isLocationEnabled()) {
+                    listViewModel.computeUserDistancesPr(userLatitude, userLongitude);
+                    sortByDistance();
+                }
                 sortByDispo();
-                sortByDistance();
                 parkAndRideAdapter.notifyDataSetChanged();
 
                 swipeContainer.setRefreshing(false);
@@ -238,7 +239,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        //menu.setGroupCheckable(0, false, true);
+        menu.setGroupCheckable(0, false, true);
         inflater.inflate(R.menu.sort_menu, menu);
     }
 
@@ -255,23 +256,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         } else {
             if (isLocationEnabled()) {
                 locationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
-                criteria = new Criteria();
-                criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-
-                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                if (location != null) {
-                    Log.e("TAG", "GPS is on");
-                    userLatitude = location.getLatitude();
-                    userLongitude = location.getLongitude();
-                    undergroundParkingAdapter.notifyDataSetChanged();
-                    parkAndRideAdapter.notifyDataSetChanged();
-                    Toast.makeText(this.getActivity(), "latitude:" + userLatitude + " longitude:" + userLongitude, Toast.LENGTH_SHORT).show();
-                } else {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-//                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-                }
-            }
-            else {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            } else {
                 Toast.makeText(this.getContext(), "Veuillez activer" + " votre GPS...", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);

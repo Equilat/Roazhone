@@ -68,7 +68,7 @@ public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundP
     public void onBindViewHolder(@NonNull UndergroundParkingViewHolder vh, int i) {
         UndergroundParkingDetails upd = parkingList.get(i);
         vh.vName.setText(upd.getNomParking());
-        vh.vDistance.setText(upd.getUserDistance() == null ? "distance" : upd.getUserDistance() + " km");
+        vh.vDistance.setText(upd.getUserDistance() == null ? "" : upd.getUserDistance() + " km");
         if(parkingsFavoris!=null && parkingsFavoris.contains(upd.getId())){
             vh.vFavoris.setVisibility(View.VISIBLE);
         }

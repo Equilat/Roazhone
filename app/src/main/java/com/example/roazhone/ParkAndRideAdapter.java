@@ -54,7 +54,7 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
     public void onBindViewHolder(@NonNull ParkAndRideViewHolder vh, int i) {
         ParkAndRideDetails upd = parkingList.get(i);
         vh.vName.setText(upd.getNomParking());
-        vh.vDistance.setText(upd.getUserDistance() == null ? "distance" : upd.getUserDistance().toString() + " km");
+        vh.vDistance.setText(upd.getUserDistance() == null ? "" : upd.getUserDistance().toString() + " km");
 
         if(parkingsFavoris!=null && parkingsFavoris.contains(upd.getId())){
             vh.vFavoris.setVisibility(View.VISIBLE);
