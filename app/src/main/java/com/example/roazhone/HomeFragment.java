@@ -56,7 +56,6 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
     private final String TAG = HomeFragment.class.getName();
     public LocationManager locationManager;
     public Criteria criteria;
-    public String bestProvider;
     private SwipeRefreshLayout swipeContainer;
     private boolean sortByDispo;
     private boolean sortByDistance;
@@ -85,7 +84,6 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         setHasOptionsMenu(true);
         myView = inflater.inflate(R.layout.home_fragment, container, false);
         bottomNavigationView = myView.findViewById(R.id.activity_main_bottom_navigation);
@@ -258,19 +256,23 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             if (isLocationEnabled()) {
                 locationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
                 criteria = new Criteria();
-                bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true));
+                criteria.setAccuracy(Criteria.ACCURACY_COARSE);
 
-                Location location = locationManager.getLastKnownLocation(bestProvider);
+                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 if (location != null) {
                     Log.e("TAG", "GPS is on");
                     userLatitude = location.getLatitude();
                     userLongitude = location.getLongitude();
+                    undergroundParkingAdapter.notifyDataSetChanged();
+                    parkAndRideAdapter.notifyDataSetChanged();
                     Toast.makeText(this.getActivity(), "latitude:" + userLatitude + " longitude:" + userLongitude, Toast.LENGTH_SHORT).show();
                 } else {
-                    locationManager.requestLocationUpdates(bestProvider, 1000, 0, this);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+//                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
                 }
-            } else {
-                Toast.makeText(this.getContext(), "Please turn on" + " your location...", Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(this.getContext(), "Veuillez activer" + " votre GPS...", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
             }
@@ -291,6 +293,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         locationManager.removeUpdates(this);
         userLatitude = location.getLatitude();
         userLongitude = location.getLongitude();
+        undergroundParkingAdapter.notifyDataSetChanged();
+        parkAndRideAdapter.notifyDataSetChanged();
         Toast.makeText(this.getActivity(), "LOCATION CHANGED latitude:" + userLatitude + " longitude:" + userLongitude, Toast.LENGTH_SHORT).show();
     }
 
