@@ -40,6 +40,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
     private SwipeRefreshLayout swipeContainer;
     private boolean sortByDispo;
     private boolean sortByDistance;
+    private boolean sortByFavoris;
     private Handler handler;
     private BottomNavigationView bottomNavigationView;
     private ListViewModel listViewModel;
@@ -186,6 +187,12 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             listViewModel.sortParkingByFreePlaces();
             undergroundParkingAdapter.notifyDataSetChanged();
             parkAndRideAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void sortByFavoris() {
+        if (sortByFavoris) {
+            //TODO
         }
     }
 

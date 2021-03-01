@@ -9,5 +9,9 @@
             android:id="@+id/sort_menu_distance"
             android:checkable="true"
             android:title="@string/sort_distance" />
+        <item
+            android:id="@+id/sort_menu_favoris"
+            android:checkable="true"
+            android:title="@string/favoris" />
     </group>
 </menu>
