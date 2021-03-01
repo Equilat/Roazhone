@@ -7,15 +7,18 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.roazhone.R;
 import com.example.roazhone.api.APICalls;
 import com.example.roazhone.model.ParkAndRideDetails;
 import com.example.roazhone.model.UndergroundParkingDetails;
 
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 
 public class ListViewModel extends AndroidViewModel {
 
@@ -57,6 +60,25 @@ public class ListViewModel extends AndroidViewModel {
     public void sortParkingByUserDistance() {
         Objects.requireNonNull(undergroundParkingDetails.getValue()).sort(UndergroundParkingDetails.undergroundUserDistanceComparator);
         Objects.requireNonNull(parkAndRideDetails.getValue()).sort(ParkAndRideDetails.parkAndRideDetailsUserDistanceComparator);
+    }
+
+    public void sortParkingByFavoris(Set<String> upFavoris, Set<String> prFavoris) {
+        Objects.requireNonNull(undergroundParkingDetails.getValue()).sort(new Comparator<UndergroundParkingDetails>() {
+            @Override
+            public int compare(UndergroundParkingDetails o1, UndergroundParkingDetails o2) {
+                Boolean f1 = upFavoris.contains(o1.getId());
+                Boolean f2 = upFavoris.contains(o2.getId());
+                return f2.compareTo(f1);
+            }
+        });
+        Objects.requireNonNull(parkAndRideDetails.getValue()).sort(new Comparator<ParkAndRideDetails>() {
+            @Override
+            public int compare(ParkAndRideDetails o1, ParkAndRideDetails o2) {
+                Boolean f1 = prFavoris.contains(o1.getId());
+                Boolean f2 = prFavoris.contains(o2.getId());
+                return f2.compareTo(f1);
+            }
+        });
     }
 
     public void computeUserDistancesUnderground(double latitude, double longitude) {

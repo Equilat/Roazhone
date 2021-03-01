@@ -212,6 +212,7 @@ public class ParkAndRideDetails implements Serializable, Parcelable {
             return o1.userDistance.compareTo(o2.userDistance);
         }
     };
+
     public void computeUserDistance(double userLat, double userLong) {
         Location loc1 = new Location("");
         loc1.setLatitude(userLat);

@@ -126,6 +126,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
                     listViewModel.computeUserDistancesUnderground(userLatitude, userLongitude);
                     sortByDistance();
                 }
+                sortByFavoris();
                 sortByDispo();
                 undergroundParkingAdapter.notifyDataSetChanged();
                 swipeContainer.setRefreshing(false);
@@ -141,6 +142,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
                     sortByDistance();
                 }
                 sortByDispo();
+                sortByFavoris();
                 parkAndRideAdapter.notifyDataSetChanged();
 
                 swipeContainer.setRefreshing(false);
@@ -211,6 +213,11 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
                 sortByDistance = item.isChecked();
                 sortByDistance();
                 return true;
+            case R.id.sort_menu_favoris:
+                item.setChecked(!item.isChecked());
+                sortByFavoris = item.isChecked();
+                sortByFavoris();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -239,7 +246,12 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
 
     private void sortByFavoris() {
         if (sortByFavoris) {
-            //TODO
+            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+            Set<String> upFavoris = sharedPref.getStringSet("upf", new HashSet<>());
+            Set<String> prFavoris = sharedPref.getStringSet("prf", new HashSet<>());
+            listViewModel.sortParkingByFavoris(upFavoris, prFavoris);
+            undergroundParkingAdapter.notifyDataSetChanged();
+            parkAndRideAdapter.notifyDataSetChanged();
         }
     }
 
