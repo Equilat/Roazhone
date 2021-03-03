@@ -10,6 +10,7 @@
     <string name="vers_google_maps">Vers Google Maps</string>
     <string name="parking_complet_short">COMPLET</string>
     <string name="parking_ferme_short">FERMÉ</string>
+    <string name="parking_ferme_short_no_accents">FERME</string>
     <string name="parking">Parking&#160;</string>
     <string name="str_places_disponibles">places disponibles</string>
     <string name="nombre_de_places_pmr">Nombre de places pmr</string>

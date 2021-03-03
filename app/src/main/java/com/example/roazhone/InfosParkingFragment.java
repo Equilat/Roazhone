@@ -164,7 +164,7 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
             lat = coord.get(0);
             lon = coord.get(1);
 
-            if(undergroundParkingDetails.getStatus().equals(getString(R.string.parking_ferme_short))){
+            if(undergroundParkingDetails.getStatus().equals(getString(R.string.parking_ferme_short_no_accents))){
                 places.setText(getString(R.string.parking_ferme_long));
                 places.setTextColor(ContextCompat.getColor(getContext(), R.color.roazhone_red));
             }

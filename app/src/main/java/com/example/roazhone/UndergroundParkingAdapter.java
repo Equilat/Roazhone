@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -40,17 +41,20 @@ public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundP
     public UndergroundParkingAdapter(Context context) {
         this.context = context;
         parkingList = new ArrayList<>();
+        setHasStableIds(true);
     }
 
     public UndergroundParkingAdapter(Context context, List<UndergroundParkingDetails> parkingList) {
         this.context = context;
         this.parkingList = parkingList;
+        setHasStableIds(true);
     }
 
     public UndergroundParkingAdapter(Context context, Set<String> parkingsFavoris) {
         this.context = context;
         this.parkingsFavoris = parkingsFavoris;
         parkingList = new ArrayList<>();
+        setHasStableIds(true);
     }
 
     @NonNull
@@ -77,7 +81,8 @@ public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundP
         }
 
         try {
-            if(!isOpened(upd.getNomParking()) || upd.getStatus().equals("FERME")) {
+            parkingStatusCalculation(upd);
+            if(upd.getStatus().equals(context.getString(R.string.parking_ferme_short_no_accents))) {
                 vh.vRoom.setText(R.string.parking_ferme_short);
                 vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_red));
             }
@@ -118,34 +123,54 @@ public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundP
         return parkingList.size();
     }
 
-    private boolean isOpened(String parkingName) throws ParseException {
-        boolean ret = false;
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    private void parkingStatusCalculation(UndergroundParkingDetails upd) throws ParseException {
         Calendar calendarToday = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
+        calendarToday.set(Calendar.SECOND, 0);
+        calendarToday.set(Calendar.MILLISECOND, 0);
+        String nomParking = upd.getNomParking();
         int dayOfWeek = calendarToday.get(Calendar.DAY_OF_WEEK);
-        String[] parkingWeeklyOpeningHours = getParkingOpeningHours(parkingName);
-        String[] parkingWeeklyClosingHours = getParkingClosingHours(parkingName);
-        String parkingOpeningHours = parkingWeeklyOpeningHours[dayOfWeek - 1];
-        String parkingClosingHours = parkingWeeklyClosingHours[dayOfWeek - 1];
-        if(!parkingOpeningHours.equals("fermé")) {
+        String[] parkingWeeklyOpeningHours = getParkingOpeningHours(nomParking);
+        String[] parkingWeeklyClosingHours = getParkingClosingHours(nomParking);
+        String[] parkingOpeningHours = parkingWeeklyOpeningHours[dayOfWeek - 1].split(":");
+        String[] parkingClosingHours = parkingWeeklyClosingHours[dayOfWeek - 1].split(":");
+        if(!parkingOpeningHours[0].equals("fermé")) {
             Calendar calendarOpening = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
-            calendarOpening.setTime(Objects.requireNonNull(new SimpleDateFormat("hh:mm", Locale.FRANCE).parse(parkingOpeningHours)));
-            calendarOpening.set(calendarToday.get(Calendar.YEAR),calendarToday.get(Calendar.MONTH), calendarToday.get(Calendar.DATE), calendarToday.get(Calendar.HOUR_OF_DAY), calendarToday.get(Calendar.MINUTE));
+            calendarOpening.set(calendarToday.get(Calendar.YEAR),calendarToday.get(Calendar.MONTH), calendarToday.get(Calendar.DATE));
+            calendarOpening.set(Calendar.HOUR_OF_DAY, Integer.parseInt(parkingOpeningHours[0]));
+            calendarOpening.set(Calendar.MINUTE, Integer.parseInt(parkingOpeningHours[1]));
+            calendarOpening.set(Calendar.SECOND, 0);
+            calendarOpening.set(Calendar.MILLISECOND, 0);
             Calendar calendarClosing = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
-            calendarClosing.setTime(Objects.requireNonNull(new SimpleDateFormat("hh:mm", Locale.FRANCE).parse(parkingClosingHours)));
-            calendarClosing.set(calendarToday.get(Calendar.YEAR),calendarToday.get(Calendar.MONTH), calendarToday.get(Calendar.DATE), calendarToday.get(Calendar.HOUR_OF_DAY), calendarToday.get(Calendar.MINUTE));
+            calendarClosing.set(calendarToday.get(Calendar.YEAR),calendarToday.get(Calendar.MONTH), calendarToday.get(Calendar.DATE));
+            calendarClosing.set(Calendar.HOUR_OF_DAY, Integer.parseInt(parkingClosingHours[0]));
+            calendarClosing.set(Calendar.MINUTE, Integer.parseInt(parkingClosingHours[1]));
+            calendarClosing.set(Calendar.SECOND, 0);
+            calendarClosing.set(Calendar.MILLISECOND, 0);
             if(calendarClosing.before(calendarOpening) || calendarClosing.equals(calendarOpening)) {
                 calendarClosing.add(Calendar.DAY_OF_MONTH, 1);
-                if((calendarOpening.before(calendarToday) || calendarOpening.equals(calendarToday)) && (calendarClosing.after(calendarToday))) {
-                    ret = true;
+                if((!calendarOpening.before(calendarToday) && !calendarOpening.equals(calendarToday)) || (!calendarClosing.after(calendarToday))) {
+                    upd.setStatus(context.getString(R.string.parking_ferme_short_no_accents));
                 }
             }
             else {
-                if(calendarOpening.before(calendarToday) && calendarClosing.after(calendarToday)) {
-                    ret = true;
+                if(!calendarOpening.before(calendarToday) || !calendarClosing.after(calendarToday)) {
+                    upd.setStatus(context.getString(R.string.parking_ferme_short_no_accents));
                 }
             }
         }
-        return ret;
+        else {
+            upd.setStatus(context.getString(R.string.parking_ferme_short_no_accents));
+        }
     }
 
     private String[] getParkingOpeningHours(String parkingName) {
