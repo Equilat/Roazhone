@@ -117,10 +117,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             @Override
             public void onChanged(@Nullable List<UndergroundParkingDetails> undergroundParkingDetails) {
                 undergroundParkingAdapter.setParkings(undergroundParkingDetails);
-//                if (isLocationEnabled()) {
                 listViewModel.computeUserDistancesUnderground();
                 sortByDistance();
-//                }
                 sortByFavoris();
                 sortByDispo();
                 undergroundParkingAdapter.notifyDataSetChanged();
@@ -132,10 +130,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             @Override
             public void onChanged(@Nullable List<ParkAndRideDetails> parkAndRideDetails) {
                 parkAndRideAdapter.setParkings(parkAndRideDetails);
-//                if (isLocationEnabled()) {
                 listViewModel.computeUserDistancesPr();
                 sortByDistance();
-//                }
                 sortByDispo();
                 sortByFavoris();
                 parkAndRideAdapter.notifyDataSetChanged();

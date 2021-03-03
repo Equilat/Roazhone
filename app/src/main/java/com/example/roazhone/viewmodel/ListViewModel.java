@@ -100,10 +100,14 @@ public class ListViewModel extends AndroidViewModel {
     }
 
     public void computeUserDistancesUnderground() {
-        Objects.requireNonNull(undergroundParkingDetails.getValue()).forEach(upd -> upd.computeUserDistance(latitude, longitude));
+        if (latitude != 0 && longitude != 0) {
+            Objects.requireNonNull(undergroundParkingDetails.getValue()).forEach(upd -> upd.computeUserDistance(latitude, longitude));
+        }
     }
 
     public void computeUserDistancesPr() {
-        Objects.requireNonNull(parkAndRideDetails.getValue()).forEach(prd -> prd.computeUserDistance(latitude, longitude));
+        if (latitude != 0 && longitude != 0) {
+            Objects.requireNonNull(parkAndRideDetails.getValue()).forEach(prd -> prd.computeUserDistance(latitude, longitude));
+        }
     }
 }
