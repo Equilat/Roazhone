@@ -10,7 +10,6 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.List;
 
@@ -18,8 +17,34 @@ import java.util.List;
  * Class to map details about underground parkings that come from remote API.
  */
 public class UndergroundParkingDetails implements Serializable, Parcelable {
-    private final static long serialVersionUID = -4000423003554111796L;
+    public static final Creator<UndergroundParkingDetails> CREATOR = new Creator<UndergroundParkingDetails>() {
+        @Override
+        public UndergroundParkingDetails createFromParcel(Parcel source) {
+            return new UndergroundParkingDetails(source);
+        }
 
+        @Override
+        public UndergroundParkingDetails[] newArray(int size) {
+            return new UndergroundParkingDetails[size];
+        }
+    };
+    private final static long serialVersionUID = -4000423003554111796L;
+    public static Comparator<UndergroundParkingDetails> undergroundFreePlacesComparator = new Comparator<UndergroundParkingDetails>() {
+        @Override
+        public int compare(UndergroundParkingDetails o1, UndergroundParkingDetails o2) {
+            return o2.placesLibres.compareTo(o1.placesLibres);
+        }
+    };
+    public static Comparator<UndergroundParkingDetails> undergroundUserDistanceComparator = new Comparator<UndergroundParkingDetails>() {
+        @Override
+        public int compare(UndergroundParkingDetails o1, UndergroundParkingDetails o2) {
+            if (o1.userDistance != null) {
+
+                return o1.userDistance.compareTo(o2.userDistance);
+            }
+            return 0;
+        }
+    };
     @SerializedName("status")
     @Expose
     private String status;
@@ -62,20 +87,7 @@ public class UndergroundParkingDetails implements Serializable, Parcelable {
     @SerializedName("tarif_15")
     @Expose
     private String tarif15;
-
     private Double userDistance;
-
-    public static final Creator<UndergroundParkingDetails> CREATOR = new Creator<UndergroundParkingDetails>() {
-        @Override
-        public UndergroundParkingDetails createFromParcel(Parcel source) {
-            return new UndergroundParkingDetails(source);
-        }
-
-        @Override
-        public UndergroundParkingDetails[] newArray(int size) {
-            return new UndergroundParkingDetails[size];
-        }
-    };
 
     public UndergroundParkingDetails(Parcel in) {
         this.status = in.readString();
@@ -225,7 +237,7 @@ public class UndergroundParkingDetails implements Serializable, Parcelable {
         this.userDistance = (double) (loc1.distanceTo(loc2) / 1000);
         BigDecimal bigDecimal = new BigDecimal(Double.toString(this.userDistance));
         bigDecimal = bigDecimal.setScale(3, RoundingMode.HALF_UP);
-        this.userDistance =  bigDecimal.doubleValue();
+        this.userDistance = bigDecimal.doubleValue();
     }
 
     @Override
@@ -250,19 +262,4 @@ public class UndergroundParkingDetails implements Serializable, Parcelable {
         dest.writeString(id);
         dest.writeString(tarif15);
     }
-
-
-    public static Comparator<UndergroundParkingDetails> undergroundFreePlacesComparator = new Comparator<UndergroundParkingDetails>() {
-        @Override
-        public int compare(UndergroundParkingDetails o1, UndergroundParkingDetails o2) {
-            return o2.placesLibres.compareTo(o1.placesLibres);
-        }
-    };
-
-    public static Comparator<UndergroundParkingDetails> undergroundUserDistanceComparator = new Comparator<UndergroundParkingDetails>() {
-        @Override
-        public int compare(UndergroundParkingDetails o1, UndergroundParkingDetails o2) {
-            return o1.userDistance.compareTo(o2.userDistance);
-        }
-    };
 }

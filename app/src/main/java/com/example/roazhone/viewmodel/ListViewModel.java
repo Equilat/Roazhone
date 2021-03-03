@@ -7,7 +7,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.roazhone.R;
 import com.example.roazhone.api.APICalls;
 import com.example.roazhone.model.ParkAndRideDetails;
 import com.example.roazhone.model.UndergroundParkingDetails;
@@ -26,10 +25,28 @@ public class ListViewModel extends AndroidViewModel {
     private APICalls repository;
     private MutableLiveData<List<UndergroundParkingDetails>> undergroundParkingDetails;
     private MutableLiveData<List<ParkAndRideDetails>> parkAndRideDetails;
+    private double latitude = 0;
+    private double longitude = 0;
 
     public ListViewModel(@NonNull Application application) {
         super(application);
         lastUpdateTime = new MutableLiveData<String>();
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public MutableLiveData<List<UndergroundParkingDetails>> getUndergroundParkingDetails() {
@@ -43,7 +60,8 @@ public class ListViewModel extends AndroidViewModel {
     public void initialize() {
         repository = APICalls.getInstance();
         undergroundParkingDetails = repository.searchUndergroundParkingDetails();
-         parkAndRideDetails = repository.searchParkAndRideDetails();
+        parkAndRideDetails = repository.searchParkAndRideDetails();
+
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
         lastUpdateTime.setValue(sdf.format(new Date()));
     }
@@ -81,10 +99,11 @@ public class ListViewModel extends AndroidViewModel {
         });
     }
 
-    public void computeUserDistancesUnderground(double latitude, double longitude) {
-        undergroundParkingDetails.getValue().forEach(upd -> upd.computeUserDistance(latitude, longitude));
+    public void computeUserDistancesUnderground() {
+        Objects.requireNonNull(undergroundParkingDetails.getValue()).forEach(upd -> upd.computeUserDistance(latitude, longitude));
     }
-    public void computeUserDistancesPr(double latitude, double longitude) {
-        parkAndRideDetails.getValue().forEach(prd -> prd.computeUserDistance(latitude, longitude));
+
+    public void computeUserDistancesPr() {
+        Objects.requireNonNull(parkAndRideDetails.getValue()).forEach(prd -> prd.computeUserDistance(latitude, longitude));
     }
 }
