@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -38,8 +37,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.roazhone.model.ParkAndRideDetails;
 import com.example.roazhone.model.UndergroundParkingDetails;
 import com.example.roazhone.viewmodel.ListViewModel;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -66,15 +63,13 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
     private UndergroundParkingAdapter undergroundParkingAdapter;
     private ParkAndRideAdapter parkAndRideAdapter;
     private TextView viewUpdateTime;
-    private double userLatitude;
-    private double userLongitude;
     private View myView;
     private final Runnable runnableCode = new Runnable() {
         @Override
         public void run() {
             Log.wtf(TAG, "Auto Refresh");
-            listViewModel.initialize();
             getLocation();
+            listViewModel.initialize();
             // Repeat this the same runnable code block again
             handler.postDelayed(this, 60000);
         }
@@ -122,10 +117,10 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             @Override
             public void onChanged(@Nullable List<UndergroundParkingDetails> undergroundParkingDetails) {
                 undergroundParkingAdapter.setParkings(undergroundParkingDetails);
-                if (isLocationEnabled()) {
-                    listViewModel.computeUserDistancesUnderground(userLatitude, userLongitude);
-                    sortByDistance();
-                }
+//                if (isLocationEnabled()) {
+                listViewModel.computeUserDistancesUnderground();
+                sortByDistance();
+//                }
                 sortByFavoris();
                 sortByDispo();
                 undergroundParkingAdapter.notifyDataSetChanged();
@@ -137,10 +132,10 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             @Override
             public void onChanged(@Nullable List<ParkAndRideDetails> parkAndRideDetails) {
                 parkAndRideAdapter.setParkings(parkAndRideDetails);
-                if (isLocationEnabled()) {
-                    listViewModel.computeUserDistancesPr(userLatitude, userLongitude);
-                    sortByDistance();
-                }
+//                if (isLocationEnabled()) {
+                listViewModel.computeUserDistancesPr();
+                sortByDistance();
+//                }
                 sortByDispo();
                 sortByFavoris();
                 parkAndRideAdapter.notifyDataSetChanged();
@@ -151,16 +146,13 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
 
         swipeContainer = view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
             @Override
             public void onRefresh() {
-                listViewModel.initialize();
                 getLocation();
+                listViewModel.initialize();
             }
-
         });
         swipeContainer.setColorSchemeResources(R.color.roazhone_yellow);
-
     }
 
     public void onStart() {
@@ -246,7 +238,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
 
     private void sortByFavoris() {
         if (sortByFavoris) {
-            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
             Set<String> upFavoris = sharedPref.getStringSet("upf", new HashSet<>());
             Set<String> prFavoris = sharedPref.getStringSet("prf", new HashSet<>());
             listViewModel.sortParkingByFavoris(upFavoris, prFavoris);
@@ -268,10 +260,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
     @SuppressLint("MissingPermission")
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(requireActivity().getApplicationContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            this.checkPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, "La localisation est nécessaire", PERMISSION_ID);
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            this.checkPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, "La localisation est nécessaire", PERMISSION_ID);
         } else {
             if (isLocationEnabled()) {
                 locationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
@@ -296,11 +286,13 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
     @Override
     public void onLocationChanged(@NonNull Location location) {
         locationManager.removeUpdates(this);
-        userLatitude = location.getLatitude();
-        userLongitude = location.getLongitude();
+        listViewModel.setLatitude(location.getLatitude());
+        listViewModel.setLongitude(location.getLongitude());
+        Toast.makeText(this.getActivity(), "LOCATION CHANGED :" + listViewModel.getLatitude() + " | " + listViewModel.getLongitude(), Toast.LENGTH_SHORT).show();
+        listViewModel.computeUserDistancesUnderground();
+        listViewModel.computeUserDistancesPr();
         undergroundParkingAdapter.notifyDataSetChanged();
         parkAndRideAdapter.notifyDataSetChanged();
-        Toast.makeText(this.getActivity(), "LOCATION CHANGED latitude:" + userLatitude + " longitude:" + userLongitude, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -364,9 +356,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         if (requestCode == PERMISSION_ID) {
             if (grantResults.length > 0 && permissions.length > 0) {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    listViewModel.initialize();
                     getLocation();
-                    System.out.println("on perm result get location");
+                    listViewModel.initialize();
                 } else if (!shouldShowRequestPermissionRationale(permissions[0])) {
                     this.displayOptions(this.getActivity(), permission_location_params);
                 } else {

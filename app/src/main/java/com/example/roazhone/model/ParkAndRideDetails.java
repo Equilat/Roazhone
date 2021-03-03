@@ -10,7 +10,6 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.List;
 
@@ -19,7 +18,33 @@ import java.util.List;
  */
 public class ParkAndRideDetails implements Serializable, Parcelable {
 
+    public static final Creator<ParkAndRideDetails> CREATOR = new Creator<ParkAndRideDetails>() {
+        @Override
+        public ParkAndRideDetails createFromParcel(Parcel source) {
+            return new ParkAndRideDetails(source);
+        }
+
+        @Override
+        public ParkAndRideDetails[] newArray(int size) {
+            return new ParkAndRideDetails[size];
+        }
+    };
     private final static long serialVersionUID = 1307429908633312002L;
+    public static Comparator<ParkAndRideDetails> parkAndRideFreePlacesComparator = new Comparator<ParkAndRideDetails>() {
+        @Override
+        public int compare(ParkAndRideDetails o1, ParkAndRideDetails o2) {
+            return o2.placesLibres.compareTo(o1.placesLibres);
+        }
+    };
+    public static Comparator<ParkAndRideDetails> parkAndRideDetailsUserDistanceComparator = new Comparator<ParkAndRideDetails>() {
+        @Override
+        public int compare(ParkAndRideDetails o1, ParkAndRideDetails o2) {
+            if (o1.userDistance != null) {
+                return o1.userDistance.compareTo(o2.userDistance);
+            }
+            return 0;
+        }
+    };
     @SerializedName("etat")
     @Expose
     private String status;
@@ -53,20 +78,7 @@ public class ParkAndRideDetails implements Serializable, Parcelable {
     @SerializedName("capaciteactuellepmr")
     @Expose
     private Integer capaciteActuellePMR;
-
     private Double userDistance;
-
-    public static final Creator<ParkAndRideDetails> CREATOR = new Creator<ParkAndRideDetails>() {
-        @Override
-        public ParkAndRideDetails createFromParcel(Parcel source) {
-            return new ParkAndRideDetails(source);
-        }
-
-        @Override
-        public ParkAndRideDetails[] newArray(int size) {
-            return new ParkAndRideDetails[size];
-        }
-    };
 
     public ParkAndRideDetails(Parcel in) {
         this.status = in.readString();
@@ -81,7 +93,6 @@ public class ParkAndRideDetails implements Serializable, Parcelable {
         in.readList(this.coordonnees, Double.class.getClassLoader());
         this.capaciteActuellePMR = in.readInt();
     }
-
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -199,20 +210,6 @@ public class ParkAndRideDetails implements Serializable, Parcelable {
         dest.writeInt(capaciteActuellePMR);
     }
 
-    public static Comparator<ParkAndRideDetails> parkAndRideFreePlacesComparator = new Comparator<ParkAndRideDetails>() {
-        @Override
-        public int compare(ParkAndRideDetails o1, ParkAndRideDetails o2) {
-            return o2.placesLibres.compareTo(o1.placesLibres);
-        }
-    };
-
-    public static Comparator<ParkAndRideDetails> parkAndRideDetailsUserDistanceComparator = new Comparator<ParkAndRideDetails>() {
-        @Override
-        public int compare(ParkAndRideDetails o1, ParkAndRideDetails o2) {
-            return o1.userDistance.compareTo(o2.userDistance);
-        }
-    };
-
     public void computeUserDistance(double userLat, double userLong) {
         Location loc1 = new Location("");
         loc1.setLatitude(userLat);
@@ -224,5 +221,6 @@ public class ParkAndRideDetails implements Serializable, Parcelable {
         this.userDistance = (double) (loc1.distanceTo(loc2) / 1000);
         BigDecimal bigDecimal = new BigDecimal(Double.toString(this.userDistance));
         bigDecimal = bigDecimal.setScale(3, RoundingMode.HALF_UP);
-        this.userDistance =  bigDecimal.doubleValue();    }
+        this.userDistance = bigDecimal.doubleValue();
+    }
 }
