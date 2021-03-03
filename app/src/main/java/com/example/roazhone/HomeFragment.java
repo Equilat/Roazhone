@@ -118,8 +118,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             public void onChanged(@Nullable List<UndergroundParkingDetails> undergroundParkingDetails) {
                 undergroundParkingAdapter.setParkings(undergroundParkingDetails);
 //                if (isLocationEnabled()) {
-                    listViewModel.computeUserDistancesUnderground();
-                    sortByDistance();
+                listViewModel.computeUserDistancesUnderground();
+                sortByDistance();
 //                }
                 sortByFavoris();
                 sortByDispo();
@@ -133,8 +133,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             public void onChanged(@Nullable List<ParkAndRideDetails> parkAndRideDetails) {
                 parkAndRideAdapter.setParkings(parkAndRideDetails);
 //                if (isLocationEnabled()) {
-                    listViewModel.computeUserDistancesPr();
-                    sortByDistance();
+                listViewModel.computeUserDistancesPr();
+                sortByDistance();
 //                }
                 sortByDispo();
                 sortByFavoris();
@@ -260,10 +260,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
     @SuppressLint("MissingPermission")
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(requireActivity().getApplicationContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            this.checkPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, "La localisation est nécessaire", PERMISSION_ID);
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            this.checkPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, "La localisation est nécessaire", PERMISSION_ID);
         } else {
             if (isLocationEnabled()) {
                 locationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
