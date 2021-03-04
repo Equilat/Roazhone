@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -23,6 +24,8 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
     private Set<String> parkingsFavoris;
     private List<ParkAndRideDetails> parkingList;
     private Context context;
+    private View itemView;
+    boolean isLoading;
 
     public ParkAndRideAdapter(Context context) {
         this.context = context;
@@ -43,7 +46,7 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
     @NonNull
     @Override
     public ParkAndRideViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.
+        itemView = LayoutInflater.
                 from(parent.getContext()).
                 inflate(R.layout.card_layout, parent, false);
 
@@ -54,8 +57,17 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
     public void onBindViewHolder(@NonNull ParkAndRideViewHolder vh, int i) {
         ParkAndRideDetails upd = parkingList.get(i);
         vh.vName.setText(upd.getNomParking());
-        vh.vDistance.setText(upd.getUserDistance() == null ? "" : upd.getUserDistance().toString() + " km");
-
+        if(isLoading) {
+            vh.vDistance.setText(itemView.getResources().getString(R.string.calcul_en_cours));
+        }
+        else if(upd.getUserDistance() == null) {
+            vh.vDistance.setText("");
+        }
+        if(upd.getUserDistance() != null) {
+            String text = String.format(context.getString(R.string.distance_kilometres), upd.getUserDistance().toString());
+            vh.vDistance.setText(text);
+            isLoading = false;
+        }
         if(parkingsFavoris!=null && parkingsFavoris.contains(upd.getId())){
             vh.vFavoris.setVisibility(View.VISIBLE);
         }
@@ -103,5 +115,9 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
     public void setParkings(List<ParkAndRideDetails> parkingList) {
         this.parkingList = parkingList;
         notifyDataSetChanged();
+    }
+
+    public void setIsLoading(boolean isLoading) {
+        this.isLoading = isLoading;
     }
 }

@@ -31,6 +31,8 @@
     <string name="sort_distance">Distance</string>
     <string name="ajout_au_favoris">Ajout au favoris</string>
     <string name="favoris">Favoris</string>
+    <string name="calcul_en_cours">Calcul en cours…</string>
+    <string name="distance_kilometres">%1$s km</string>
 
 
 </resources>

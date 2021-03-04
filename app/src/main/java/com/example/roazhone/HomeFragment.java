@@ -260,6 +260,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             this.checkPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, "La localisation est nécessaire", PERMISSION_ID);
         } else {
             if (isLocationEnabled()) {
+                undergroundParkingAdapter.setIsLoading(true);
+                parkAndRideAdapter.setIsLoading(true);
                 locationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
             } else {
@@ -284,7 +286,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         locationManager.removeUpdates(this);
         listViewModel.setLatitude(location.getLatitude());
         listViewModel.setLongitude(location.getLongitude());
-        Toast.makeText(this.getActivity(), "LOCATION CHANGED :" + listViewModel.getLatitude() + " | " + listViewModel.getLongitude(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this.getActivity(), "LOCATION CHANGED :" + listViewModel.getLatitude() + " | " + listViewModel.getLongitude(), Toast.LENGTH_SHORT).show();
         listViewModel.computeUserDistancesUnderground();
         listViewModel.computeUserDistancesPr();
         undergroundParkingAdapter.notifyDataSetChanged();
@@ -352,6 +354,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         if (requestCode == PERMISSION_ID) {
             if (grantResults.length > 0 && permissions.length > 0) {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    undergroundParkingAdapter.setIsLoading(true);
+                    parkAndRideAdapter.setIsLoading(true);
                     getLocation();
                     listViewModel.initialize();
                 } else if (!shouldShowRequestPermissionRationale(permissions[0])) {

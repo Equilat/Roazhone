@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/sort_menu_dispo"
-            android:checkable="true"
             android:title="@string/sort_dispo" />
         <item
             android:id="@+id/sort_menu_distance"
-            android:checkable="true"
-            android:title="@string/sort_distance" />
+            android:title="@string/sort_distance"/>
         <item
             android:id="@+id/sort_menu_favoris"
-            android:checkable="true"
-            android:title="@string/favoris" />
+            android:title="@string/favoris"/>
     </group>
 </menu>

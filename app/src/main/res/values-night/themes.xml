@@ -6,6 +6,7 @@
         <item name="colorPrimaryDark">@color/roazhone_dark_blue_2</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/roazhone_dark_blue</item>
+        <item name="colorAccent">@color/roazhone_yellow</item>
     </style>
 
     <style name="BackgroundFragment" parent="">
