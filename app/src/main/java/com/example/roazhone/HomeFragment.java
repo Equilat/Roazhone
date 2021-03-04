@@ -2,7 +2,6 @@ package com.example.roazhone;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -194,11 +193,13 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             case R.id.sort_menu_dispo:
                 item.setChecked(!item.isChecked());
                 sortByDispo = item.isChecked();
+                sortByDistance = false;
                 sortByDispo();
                 return true;
             case R.id.sort_menu_distance:
                 item.setChecked(!item.isChecked());
                 sortByDistance = item.isChecked();
+                sortByDispo = false;
                 sortByDistance();
                 return true;
             case R.id.sort_menu_favoris:
@@ -303,7 +304,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
     public void checkPermission(String[] permissions, String rational_text, int requestCode) {
         for (String permission : permissions) {
             if (this.requireActivity().shouldShowRequestPermissionRationale(permission)) {
-                this.explain(this.getActivity(), permission, requestCode, rational_text);
+                this.explain(permission, requestCode, rational_text);
             } else {
                 this.requestPermissions(new String[]{permission},
                         requestCode);
@@ -315,16 +316,15 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
      * Shows a SnackBar in order for the user to go understand why the permission is needed and to re-ask the
      * permission.
      *
-     * @param activity    activity
      * @param permission  permission
      * @param requestCode requestCode
      * @param message     a message that explains why the permission is needed
      */
-    public void explain(Activity activity, String permission, int requestCode, String message) {
+    public void explain(String permission, int requestCode, String message) {
         Snackbar.make(myView, message, Snackbar.LENGTH_LONG).setAction("Activer", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                activity.requestPermissions(new String[]{permission},
+                HomeFragment.this.requestPermissions(new String[]{permission},
                         requestCode);
             }
         }).show();
@@ -334,17 +334,16 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
      * Shows a SnackBar in order for the user to go to the parameters
      * and check the permission.
      *
-     * @param activity activity
-     * @param message  explicative message
+     * @param message explicative message
      */
-    public void displayOptions(Activity activity, String message) {
+    public void displayOptions(String message) {
         Snackbar.make(myView, message, Snackbar.LENGTH_LONG).setAction("Paramètres", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                final Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
+                final Uri uri = Uri.fromParts("package", HomeFragment.this.getActivity().getPackageName(), null);
                 intent.setData(uri);
-                activity.startActivity(intent);
+                HomeFragment.this.startActivity(intent);
             }
         }).show();
     }
@@ -359,9 +358,9 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
                     getLocation();
                     listViewModel.initialize();
                 } else if (!shouldShowRequestPermissionRationale(permissions[0])) {
-                    this.displayOptions(this.getActivity(), permission_location_params);
+                    this.displayOptions(permission_location_params);
                 } else {
-                    this.explain(this.getActivity(), permissions[0], requestCode, permission_location_explain);
+                    this.explain(permissions[0], requestCode, permission_location_explain);
                 }
             }
         } else {

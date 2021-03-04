@@ -236,7 +236,7 @@ public class UndergroundParkingDetails implements Serializable, Parcelable {
 
         this.userDistance = (double) (loc1.distanceTo(loc2) / 1000);
         BigDecimal bigDecimal = new BigDecimal(Double.toString(this.userDistance));
-        bigDecimal = bigDecimal.setScale(3, RoundingMode.HALF_UP);
+        bigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_UP);
         this.userDistance = bigDecimal.doubleValue();
     }
 
