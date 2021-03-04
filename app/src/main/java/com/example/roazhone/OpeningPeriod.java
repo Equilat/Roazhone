@@ -71,8 +71,15 @@ public class OpeningPeriod {
     }
 
     private Integer getTimeOfDay() {
+        int ret = 0;
         int hours = calendar.get(Calendar.HOUR_OF_DAY);
         int minutes = calendar.get(Calendar.MINUTE);
-        return Integer.parseInt(String.valueOf(hours) + minutes);
+        if(minutes < 10) {
+            ret = Integer.parseInt(String.valueOf(hours) + String.valueOf(0) + minutes);
+        }
+        else {
+            ret = Integer.parseInt(String.valueOf(hours) + minutes);
+        }
+        return ret;
     }
 }
