@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +45,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class HomeFragment extends Fragment implements View.OnLongClickListener, NavigationView.OnNavigationItemSelectedListener, LocationListener {
+public class HomeFragment extends Fragment implements View.OnLongClickListener, NavigationView.OnNavigationItemSelectedListener, LocationListener, ParkAndRideAdapter.OnFavorisClicked, UndergroundParkingAdapter.OnFavorisClicked {
 
     public static final String permission_location_params = "La permission d'accès à la localisation est désactivée";
     public static final String permission_location_explain = "La permission d'accès à la localisation est nécessaire";
@@ -99,8 +100,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         Set<String> parkAndRideFavoris = sharedPref.getStringSet("prf", new HashSet<>());
         Set<String> undergroundFavoris = sharedPref.getStringSet("upf", new HashSet<>());
 
-        undergroundParkingAdapter = new UndergroundParkingAdapter(this.getContext(), undergroundFavoris);
-        parkAndRideAdapter = new ParkAndRideAdapter(this.getContext(), parkAndRideFavoris);
+        undergroundParkingAdapter = new UndergroundParkingAdapter(this.getContext(), undergroundFavoris, this);
+        parkAndRideAdapter = new ParkAndRideAdapter(this.getContext(), parkAndRideFavoris, this);
 
         listViewModel = new ViewModelProvider(requireActivity()).get(ListViewModel.class);
         getLocation();
@@ -118,7 +119,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
                 undergroundParkingAdapter.setParkings(undergroundParkingDetails);
                 listViewModel.computeUserDistancesUnderground();
                 sortByDistance();
-                sortByFavoris();
+                //sortByFavoris();
                 sortByDispo();
                 undergroundParkingAdapter.notifyDataSetChanged();
                 swipeContainer.setRefreshing(false);
@@ -132,7 +133,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
                 listViewModel.computeUserDistancesPr();
                 sortByDistance();
                 sortByDispo();
-                sortByFavoris();
+                //sortByFavoris();
                 parkAndRideAdapter.notifyDataSetChanged();
 
                 swipeContainer.setRefreshing(false);
@@ -367,4 +368,20 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+
+    public void onClickFavoris(String id, String key){
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        Set<String> parkingsFavoris = sharedPref.getStringSet(key, new HashSet<>());
+        SharedPreferences.Editor editor = sharedPref.edit();
+        if(parkingsFavoris.contains(id)){
+            parkingsFavoris.remove(id);
+        }
+        else {
+            parkingsFavoris.add(id);
+        }
+        editor.putStringSet(key, parkingsFavoris);
+        boolean res = editor.commit();
+        Log.d(TAG, "onClickFavoris: " + res);
+    }
+
 }

@@ -286,17 +286,13 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
             Set<String> parkingsFavoris = sharedPref.getStringSet(favoris_key, new HashSet<>());
             if(parkingsFavoris.contains(id)){
                 parkingsFavoris.remove(id);
-                editor.putStringSet(favoris_key, parkingsFavoris);
-                editor.apply();
-                favoris.setImageResource(R.drawable.ic_baseline_star_border_24);
             }
             else {
                 parkingsFavoris.add(id);
-                editor.putStringSet(favoris_key, parkingsFavoris);
-                editor.apply();
-                favoris.setImageResource(R.drawable.ic_baseline_star_24);
             }
 
+            editor.putStringSet(favoris_key, parkingsFavoris);
+            editor.commit();
             updateFavorisStar(favoris_key, id);
         });
     }

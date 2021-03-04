@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.roazhone.model.ParkAndRideDetails;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -27,6 +29,12 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
     private View itemView;
     boolean isLoading;
 
+    private OnFavorisClicked listener;
+
+    interface OnFavorisClicked {
+        void onClickFavoris(String id, String key);
+    }
+
     public ParkAndRideAdapter(Context context) {
         this.context = context;
         parkingList = new ArrayList<>();
@@ -37,9 +45,10 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
         this.parkingList = parkingList;
     }
 
-    public ParkAndRideAdapter(Context context, Set<String> parkingsFavoris) {
+    public ParkAndRideAdapter(Context context, Set<String> parkingsFavoris, OnFavorisClicked listener) {
         this.context = context;
         this.parkingsFavoris = parkingsFavoris;
+        this.listener = listener;
         parkingList = new ArrayList<>();
     }
 
@@ -57,23 +66,26 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
     public void onBindViewHolder(@NonNull ParkAndRideViewHolder vh, int i) {
         ParkAndRideDetails upd = parkingList.get(i);
         vh.vName.setText(upd.getNomParking());
+
         if(isLoading) {
             vh.vDistance.setText(itemView.getResources().getString(R.string.calcul_en_cours));
         }
         else if(upd.getUserDistance() == null) {
             vh.vDistance.setText("");
         }
+
         if(upd.getUserDistance() != null) {
             String text = String.format(context.getString(R.string.distance_kilometres), upd.getUserDistance().toString());
             vh.vDistance.setText(text);
             isLoading = false;
         }
-        if(parkingsFavoris!=null && parkingsFavoris.contains(upd.getId())){
-            vh.vFavoris.setVisibility(View.VISIBLE);
-        }
-        else {
-            vh.vFavoris.setVisibility(View.INVISIBLE);
-        }
+
+        updateFavorisStar(parkingsFavoris, upd.getId(), vh.vFavoris);
+
+        vh.vFavoris.setOnClickListener(v -> {
+            listener.onClickFavoris(upd.getId(), "prf");
+            updateFavorisStar(parkingsFavoris, upd.getId(), vh.vFavoris);
+        });
 
         if(upd.getStatus().equals("Fermé")) {
             vh.vRoom.setText(R.string.parking_ferme_short);
@@ -119,5 +131,14 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
 
     public void setIsLoading(boolean isLoading) {
         this.isLoading = isLoading;
+    }
+
+    public void updateFavorisStar(Set<String> parkingsFavoris, String id, ImageView favoris){
+        if(parkingsFavoris.contains(id)){
+            favoris.setImageResource(R.drawable.ic_baseline_star_24);
+        }
+        else {
+            favoris.setImageResource(R.drawable.ic_baseline_star_border_24);
+        }
     }
 }

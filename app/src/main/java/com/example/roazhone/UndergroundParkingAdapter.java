@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,11 @@ public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundP
     private View itemView;
     private boolean isLoading = false;
 
+    private OnFavorisClicked listener;
+
+    interface OnFavorisClicked {
+        void onClickFavoris(String id, String key);
+    }
 
     public UndergroundParkingAdapter(Context context) {
         this.context = context;
@@ -43,9 +49,10 @@ public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundP
         setHasStableIds(true);
     }
 
-    public UndergroundParkingAdapter(Context context, Set<String> parkingsFavoris) {
+    public UndergroundParkingAdapter(Context context, Set<String> parkingsFavoris, OnFavorisClicked listener) {
         this.context = context;
         this.parkingsFavoris = parkingsFavoris;
+        this.listener = listener;
         parkingList = new ArrayList<>();
         setHasStableIds(true);
     }
@@ -64,23 +71,26 @@ public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundP
     public void onBindViewHolder(@NonNull UndergroundParkingViewHolder vh, int i) {
         UndergroundParkingDetails upd = parkingList.get(i);
         vh.vName.setText(upd.getNomParking());
+
         if(isLoading) {
             vh.vDistance.setText(itemView.getResources().getString(R.string.calcul_en_cours));
         }
         else if(upd.getUserDistance() == null) {
             vh.vDistance.setText("");
         }
+
         if(upd.getUserDistance() != null) {
             String text = String.format(context.getString(R.string.distance_kilometres), upd.getUserDistance().toString());
             vh.vDistance.setText(text);
             isLoading = false;
         }
-        if(parkingsFavoris!=null && parkingsFavoris.contains(upd.getId())){
-            vh.vFavoris.setVisibility(View.VISIBLE);
-        }
-        else {
-            vh.vFavoris.setVisibility(View.INVISIBLE);
-        }
+
+        updateFavorisStar(parkingsFavoris, upd.getId(), vh.vFavoris);
+
+        vh.vFavoris.setOnClickListener(v -> {
+            listener.onClickFavoris(upd.getId(), "upf");
+            updateFavorisStar(parkingsFavoris, upd.getId(), vh.vFavoris);
+        });
 
         try {
             parkingStatusCalculation(upd);
@@ -150,5 +160,14 @@ public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundP
     public void setParkings(List<UndergroundParkingDetails> parkingList) {
         this.parkingList = parkingList;
         notifyDataSetChanged();
+    }
+
+    public void updateFavorisStar(Set<String> parkingsFavoris, String id, ImageView favoris){
+        if(parkingsFavoris.contains(id)){
+            favoris.setImageResource(R.drawable.ic_baseline_star_24);
+        }
+        else {
+            favoris.setImageResource(R.drawable.ic_baseline_star_border_24);
+        }
     }
 }

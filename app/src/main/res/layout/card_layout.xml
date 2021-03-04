@@ -73,15 +73,13 @@
         <ImageView
             android:id="@+id/parkingFavoris"
             style="@style/favorite_star"
-            android:layout_width="26dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="8dp"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/parkingName"
-            app:layout_constraintStart_toEndOf="@+id/parkingName"
+            android:layout_width="48dp"
+            android:layout_height="36dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/itinaryButton"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@drawable/ic_baseline_star_24" />
+            app:srcCompat="@drawable/ic_baseline_star_border_24" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
