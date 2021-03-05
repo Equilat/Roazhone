@@ -8,9 +8,5 @@
         <item
             android:id="@+id/sort_menu_distance"
             android:title="@string/sort_distance"/>
-        <item
-            android:id="@+id/sort_menu_favoris"
-            android:title="@string/favoris"
-            android:visible="false" />
     </group>
 </menu>

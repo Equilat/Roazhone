@@ -70,33 +70,18 @@ public class ListViewModel extends AndroidViewModel {
         return lastUpdateTime;
     }
 
-    public void sortParkingByFreePlaces() {
+    public void sortUnderByFreePlaces() {
         Objects.requireNonNull(undergroundParkingDetails.getValue()).sort(UndergroundParkingDetails.undergroundFreePlacesComparator);
+    }
+    public void sortPrByFreePlaces() {
         Objects.requireNonNull(parkAndRideDetails.getValue()).sort(ParkAndRideDetails.parkAndRideFreePlacesComparator);
     }
 
-    public void sortParkingByUserDistance() {
+    public void sortUnderByUserDistance() {
         Objects.requireNonNull(undergroundParkingDetails.getValue()).sort(UndergroundParkingDetails.undergroundUserDistanceComparator);
-        Objects.requireNonNull(parkAndRideDetails.getValue()).sort(ParkAndRideDetails.parkAndRideDetailsUserDistanceComparator);
     }
-
-    public void sortParkingByFavoris(Set<String> upFavoris, Set<String> prFavoris) {
-        Objects.requireNonNull(undergroundParkingDetails.getValue()).sort(new Comparator<UndergroundParkingDetails>() {
-            @Override
-            public int compare(UndergroundParkingDetails o1, UndergroundParkingDetails o2) {
-                Boolean f1 = upFavoris.contains(o1.getId());
-                Boolean f2 = upFavoris.contains(o2.getId());
-                return f2.compareTo(f1);
-            }
-        });
-        Objects.requireNonNull(parkAndRideDetails.getValue()).sort(new Comparator<ParkAndRideDetails>() {
-            @Override
-            public int compare(ParkAndRideDetails o1, ParkAndRideDetails o2) {
-                Boolean f1 = prFavoris.contains(o1.getId());
-                Boolean f2 = prFavoris.contains(o2.getId());
-                return f2.compareTo(f1);
-            }
-        });
+    public void sortPrByUserDistance() {
+        Objects.requireNonNull(parkAndRideDetails.getValue()).sort(ParkAndRideDetails.parkAndRideDetailsUserDistanceComparator);
     }
 
     public void computeUserDistancesUnderground() {

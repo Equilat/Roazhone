@@ -20,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -118,9 +117,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             public void onChanged(@Nullable List<UndergroundParkingDetails> undergroundParkingDetails) {
                 undergroundParkingAdapter.setParkings(undergroundParkingDetails);
                 listViewModel.computeUserDistancesUnderground();
-                sortByDistance();
-                //sortByFavoris();
-                sortByDispo();
+                sortUnderByDistance();
+                sortUnderByDispo();
                 undergroundParkingAdapter.notifyDataSetChanged();
                 swipeContainer.setRefreshing(false);
             }
@@ -131,9 +129,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             public void onChanged(@Nullable List<ParkAndRideDetails> parkAndRideDetails) {
                 parkAndRideAdapter.setParkings(parkAndRideDetails);
                 listViewModel.computeUserDistancesPr();
-                sortByDistance();
-                sortByDispo();
-                //sortByFavoris();
+                sortPrByDistance();
+                sortPrByDispo();
                 parkAndRideAdapter.notifyDataSetChanged();
 
                 swipeContainer.setRefreshing(false);
@@ -190,57 +187,63 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        System.out.println("item selected");
         switch (item.getItemId()) {
             case R.id.sort_menu_dispo:
                 item.setChecked(!item.isChecked());
                 sortByDispo = item.isChecked();
                 sortByDistance = false;
-                sortByDispo();
+                sortUnderByDispo();
+                sortPrByDispo();
                 return true;
             case R.id.sort_menu_distance:
                 item.setChecked(!item.isChecked());
                 sortByDistance = item.isChecked();
                 sortByDispo = false;
-                sortByDistance();
-                return true;
-            case R.id.sort_menu_favoris:
-                item.setChecked(!item.isChecked());
-                sortByFavoris = item.isChecked();
-                sortByFavoris();
+                sortUnderByDistance();
+                sortPrByDistance();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     /**
-     * Sort the parking by number of free places.
+     * Sort the underground parking by number of free places.
      */
-    private void sortByDispo() {
+    private void sortUnderByDispo() {
+        System.out.println("sort by dispo");
         if (sortByDispo) {
-            listViewModel.sortParkingByFreePlaces();
+            listViewModel.sortUnderByFreePlaces();
             undergroundParkingAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * Sort the PR parking by number of free places.
+     */
+    private void sortPrByDispo() {
+        if (sortByDispo) {
+            listViewModel.sortPrByFreePlaces();
             parkAndRideAdapter.notifyDataSetChanged();
         }
     }
 
     /**
-     * Sort the parking by distance to the user.
+     * Sort the underground parking by distance to the user.
      */
-    private void sortByDistance() {
+    private void sortUnderByDistance() {
         if (sortByDistance) {
-            listViewModel.sortParkingByUserDistance();
+            listViewModel.sortUnderByUserDistance();
             undergroundParkingAdapter.notifyDataSetChanged();
-            parkAndRideAdapter.notifyDataSetChanged();
         }
     }
 
-    private void sortByFavoris() {
-        if (sortByFavoris) {
-            SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
-            Set<String> upFavoris = sharedPref.getStringSet("upf", new HashSet<>());
-            Set<String> prFavoris = sharedPref.getStringSet("prf", new HashSet<>());
-            listViewModel.sortParkingByFavoris(upFavoris, prFavoris);
-            undergroundParkingAdapter.notifyDataSetChanged();
+    /**
+     * Sort the underground parking by distance to the user.
+     */
+    private void sortPrByDistance() {
+        if (sortByDistance) {
+            listViewModel.sortPrByUserDistance();
             parkAndRideAdapter.notifyDataSetChanged();
         }
     }
@@ -250,6 +253,9 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         super.onCreateOptionsMenu(menu, inflater);
         menu.setGroupCheckable(0, false, true);
         inflater.inflate(R.menu.sort_menu, menu);
+        MenuItem itemSortDispo = menu.findItem(R.id.sort_menu_dispo);
+        itemSortDispo.setChecked(true);
+        sortByDispo = true;
     }
 
     /**
@@ -369,14 +375,13 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         }
     }
 
-    public void onClickFavoris(String id, String key){
+    public void onClickFavoris(String id, String key) {
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         Set<String> parkingsFavoris = sharedPref.getStringSet(key, new HashSet<>());
         SharedPreferences.Editor editor = sharedPref.edit();
-        if(parkingsFavoris.contains(id)){
+        if (parkingsFavoris.contains(id)) {
             parkingsFavoris.remove(id);
-        }
-        else {
+        } else {
             parkingsFavoris.add(id);
         }
         editor.putStringSet(key, parkingsFavoris);
