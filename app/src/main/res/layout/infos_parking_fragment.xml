@@ -8,7 +8,7 @@
         android:layout_height="match_parent">
 
 
-        <ScrollView
+        <com.example.roazhone.CustomScrollView
             android:id="@+id/scrollView2"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -79,7 +79,7 @@
 
                 <fragment
                     android:id="@+id/ipf_adresse_map"
-                    class="com.google.android.gms.maps.SupportMapFragment"
+                    class="com.example.roazhone.WorkaroundMapFragment"
                     android:layout_width="0dp"
                     android:layout_height="300dp"
                     android:layout_marginStart="24dp"
@@ -163,7 +163,7 @@
                     app:srcCompat="@drawable/ic_baseline_star_border_24" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
+        </com.example.roazhone.CustomScrollView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/ipf_maps_button"

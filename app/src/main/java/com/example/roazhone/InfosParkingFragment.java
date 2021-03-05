@@ -59,6 +59,7 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
     private SupportMapFragment mv;
     private GoogleMap map;
     private ImageView favoris;
+    private CustomScrollView myScrollView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +71,7 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
                              @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View myView = inflater.inflate(R.layout.infos_parking_fragment, container, false);
-
+        myScrollView = (CustomScrollView) myView.findViewById(R.id.scrollView2);
         favoris = myView.findViewById(R.id.ipf_favoris);
 
         Object o = InfosParkingFragmentArgs.fromBundle(getArguments()).getParkAndRideDetails();
@@ -244,10 +245,36 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
                 startActivity(mapIntent);
             }
         });
-        mv = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.ipf_adresse_map));
-        mv.onCreate(savedInstanceState);
-        mv.onResume();
-        mv.getMapAsync(this);
+        if (map == null) {
+            SupportMapFragment mapFragment = (WorkaroundMapFragment) getChildFragmentManager().findFragmentById(R.id.ipf_adresse_map);
+            mapFragment.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap)
+                {
+                    map = googleMap;
+                    map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    map.getUiSettings().setZoomControlsEnabled(true);
+
+                    myScrollView = view.findViewById(R.id.scrollView2); //parent scrollview in xml, give your scrollview id value
+                    ((WorkaroundMapFragment) getChildFragmentManager().findFragmentById(R.id.ipf_adresse_map))
+                            .setListener(new WorkaroundMapFragment.OnTouchListener() {
+                                @Override
+                                public void onTouch()
+                                {
+                                    myScrollView.requestDisallowInterceptTouchEvent(true);
+                                }
+                            });
+                    map = googleMap;
+                    LatLng coords = new LatLng(lat, lon);
+                    map.getUiSettings().setZoomControlsEnabled(true);
+                    googleMap.addMarker(new MarkerOptions()
+                            .position(coords)
+                            .title("nom"));
+                    CameraPosition camPos = new CameraPosition.Builder().target(coords).zoom(15).build();
+                    googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
+                }
+            });
+        }
     }
 
 
@@ -264,17 +291,6 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
             Log.e("tag", e.getMessage());
         }
         return result.toString();
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
-        LatLng coords = new LatLng(lat, lon);
-        googleMap.addMarker(new MarkerOptions()
-                .position(coords)
-                .title("nom"));
-        CameraPosition camPos = new CameraPosition.Builder().target(coords).zoom(15).build();
-        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
     }
 
     public void setOnClickFavoris(String favoris_key, String id){
@@ -306,5 +322,10 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
         else {
             favoris.setImageResource(R.drawable.ic_baseline_star_border_24);
         }
+    }
+
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
     }
 }
