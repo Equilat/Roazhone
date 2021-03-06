@@ -31,7 +31,7 @@ public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundP
     private OnFavorisClicked listener;
 
     interface OnFavorisClicked {
-        void onClickFavoris(String id, String key, ImageView favoris);
+        void onClickFavoris(String id, String key);
     }
 
     public UndergroundParkingAdapter(Context context) {
@@ -84,7 +84,7 @@ public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundP
         updateFavorisStar(parkingsFavoris, upd.getId(), vh.vFavoris);
 
         vh.vFavoris.setOnClickListener(v -> {
-            listener.onClickFavoris(upd.getId(), "upf", vh.vFavoris);
+            listener.onClickFavoris(upd.getId(), "upf");
         });
 
         try {
@@ -160,5 +160,9 @@ public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundP
         else {
             favoris.setImageResource(R.drawable.ic_baseline_star_border_24);
         }
+    }
+
+    public  void setFavoris(Set<String> parkingsFavoris){
+        this.parkingsFavoris = parkingsFavoris;
     }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Class to map details about park and ride parking that come from remote API.
  */
-public class ParkAndRideDetails implements Serializable, Parcelable {
+public class ParkAndRideDetails extends Parking implements Serializable, Parcelable {
 
     public static final Creator<ParkAndRideDetails> CREATOR = new Creator<ParkAndRideDetails>() {
         @Override

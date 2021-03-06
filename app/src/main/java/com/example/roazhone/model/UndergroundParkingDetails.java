@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Class to map details about underground parkings that come from remote API.
  */
-public class UndergroundParkingDetails implements Serializable, Parcelable {
+public class UndergroundParkingDetails extends Parking implements Serializable, Parcelable {
     public static final Creator<UndergroundParkingDetails> CREATOR = new Creator<UndergroundParkingDetails>() {
         @Override
         public UndergroundParkingDetails createFromParcel(Parcel source) {

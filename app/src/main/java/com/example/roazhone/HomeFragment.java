@@ -22,7 +22,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +46,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class HomeFragment extends Fragment implements View.OnLongClickListener, NavigationView.OnNavigationItemSelectedListener, LocationListener, ParkAndRideAdapter.OnFavorisClicked, UndergroundParkingAdapter.OnFavorisClicked {
+public class HomeFragment extends Fragment implements View.OnLongClickListener, NavigationView.OnNavigationItemSelectedListener, LocationListener, ParkAndRideAdapter.OnFavorisClicked, UndergroundParkingAdapter.OnFavorisClicked, FavorisParkingAdapter.OnFavorisClicked {
 
     public static final String permission_location_params = "La permission d'accès à la localisation est désactivée";
     public static final String permission_location_explain = "La permission d'accès à la localisation est nécessaire";
@@ -63,6 +62,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
     private RecyclerView recyclerView;
     private UndergroundParkingAdapter undergroundParkingAdapter;
     private ParkAndRideAdapter parkAndRideAdapter;
+    private FavorisParkingAdapter favorisParkingAdapter;
     private TextView viewUpdateTime;
     private View myView;
     private final Runnable runnableCode = new Runnable() {
@@ -104,6 +104,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
 
         undergroundParkingAdapter = new UndergroundParkingAdapter(this.getContext(), undergroundFavoris, this);
         parkAndRideAdapter = new ParkAndRideAdapter(this.getContext(), parkAndRideFavoris, this);
+        favorisParkingAdapter = new FavorisParkingAdapter(this.getContext(), parkAndRideFavoris, undergroundFavoris, this);
 
 
         //Pull to refresh
@@ -138,6 +139,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
                 }
                 undergroundParkingAdapter.notifyDataSetChanged();
                 swipeContainer.setRefreshing(false);
+
+                favorisParkingAdapter.setUndergroundParking(undergroundParkingDetails);
             }
         });
 
@@ -152,9 +155,10 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
                 }
                 parkAndRideAdapter.notifyDataSetChanged();
                 swipeContainer.setRefreshing(false);
+
+                favorisParkingAdapter.setParkAndRide(parkAndRideDetails);
             }
         });
-
     }
 
     public void onStart() {
@@ -164,6 +168,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             recyclerView.setAdapter(undergroundParkingAdapter);
         } else if (selectedItem.getItemId() == R.id.parkAndRideItem) {
             recyclerView.setAdapter(parkAndRideAdapter);
+        } else if (selectedItem.getItemId() == R.id.favorisItem) {
+            recyclerView.setAdapter(favorisParkingAdapter);
         }
     }
 
@@ -190,6 +196,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             case R.id.parkAndRideItem:
                 recyclerView.setAdapter(parkAndRideAdapter);
                 break;
+            case R.id.favorisItem:
+                recyclerView.setAdapter(favorisParkingAdapter);
         }
         return true;
     }
@@ -293,6 +301,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             if (isLocationEnabled()) {
                 undergroundParkingAdapter.setIsLoading(true);
                 parkAndRideAdapter.setIsLoading(true);
+                favorisParkingAdapter.setIsLoading(true);
                 locationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
             } else {
@@ -321,6 +330,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         listViewModel.computeUserDistancesPr();
         undergroundParkingAdapter.notifyDataSetChanged();
         parkAndRideAdapter.notifyDataSetChanged();
+        favorisParkingAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -384,6 +394,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     undergroundParkingAdapter.setIsLoading(true);
                     parkAndRideAdapter.setIsLoading(true);
+                    favorisParkingAdapter.setIsLoading(true);
                     getLocation();
                     listViewModel.initialize(checkInternetConnexion());
                 } else if (!shouldShowRequestPermissionRationale(permissions[0])) {
@@ -397,22 +408,30 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         }
     }
 
-    public void onClickFavoris(String id, String key, ImageView favoris){
+    public void onClickFavoris(String id, String key){
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         Set<String> parkingsFavoris = new HashSet<>(sharedPref.getStringSet(key, new HashSet<>()));
         SharedPreferences.Editor editor = sharedPref.edit();
         if(parkingsFavoris.contains(id)){
             parkingsFavoris.remove(id);
-            favoris.setImageResource(R.drawable.ic_baseline_star_border_24);
         }
         else {
             parkingsFavoris.add(id);
-            favoris.setImageResource(R.drawable.ic_baseline_star_24);
         }
         editor.putStringSet(key, parkingsFavoris);
-        boolean res = editor.commit();
+        editor.commit();
+
+        if (key.equals("prf")) {
+            parkAndRideAdapter.setFavoris(parkingsFavoris);
+            favorisParkingAdapter.setParkAndRideFavoris(parkingsFavoris);
+        }
+        else {
+            undergroundParkingAdapter.setFavoris(parkingsFavoris);
+            favorisParkingAdapter.setUndergroundFavoris(parkingsFavoris);
+        }
         undergroundParkingAdapter.notifyDataSetChanged();
-        Log.d(TAG, "onClickFavoris: " + res);
+        parkAndRideAdapter.notifyDataSetChanged();
+        favorisParkingAdapter.notifyDataSetChanged();
     }
 
 
