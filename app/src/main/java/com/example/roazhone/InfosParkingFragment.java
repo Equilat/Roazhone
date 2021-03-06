@@ -45,6 +45,7 @@ import java.util.Set;
 
 public class InfosParkingFragment extends Fragment implements OnMapReadyCallback {
 
+    private final String TAG = InfosParkingFragment.class.getName();
     private TextView nom;
     private TextView places;
     private TextView placesPMR;
@@ -288,7 +289,7 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
                 result.append(address.getAddressLine(0));
             }
         } catch (IOException e) {
-            Log.e("tag", e.getMessage());
+            Log.e(TAG, e.getMessage());
         }
         return result.toString();
     }

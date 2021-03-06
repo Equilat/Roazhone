@@ -12,12 +12,10 @@ import com.example.roazhone.model.ParkAndRideDetails;
 import com.example.roazhone.model.UndergroundParkingDetails;
 
 import java.text.SimpleDateFormat;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.Set;
 
 public class ListViewModel extends AndroidViewModel {
 
@@ -30,7 +28,9 @@ public class ListViewModel extends AndroidViewModel {
 
     public ListViewModel(@NonNull Application application) {
         super(application);
-        lastUpdateTime = new MutableLiveData<String>();
+        lastUpdateTime = new MutableLiveData<>();
+        undergroundParkingDetails = new MutableLiveData<>();
+        parkAndRideDetails = new MutableLiveData<>();
     }
 
     public double getLatitude() {
@@ -57,13 +57,17 @@ public class ListViewModel extends AndroidViewModel {
         return parkAndRideDetails;
     }
 
-    public void initialize() {
+    public void initialize(boolean internetConnection) {
         repository = APICalls.getInstance();
-        undergroundParkingDetails = repository.searchUndergroundParkingDetails();
-        parkAndRideDetails = repository.searchParkAndRideDetails();
+        if (internetConnection) {
+            undergroundParkingDetails = repository.searchUndergroundParkingDetails();
+            parkAndRideDetails = repository.searchParkAndRideDetails();
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+            lastUpdateTime.postValue(sdf.format(new Date()));
+        } else {
+            lastUpdateTime.postValue("Pas d'accès Internet");
+        }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
-        lastUpdateTime.setValue(sdf.format(new Date()));
     }
 
     public LiveData<String> getLastUpdateTime() {
@@ -71,28 +75,38 @@ public class ListViewModel extends AndroidViewModel {
     }
 
     public void sortUnderByFreePlaces() {
-        Objects.requireNonNull(undergroundParkingDetails.getValue()).sort(UndergroundParkingDetails.undergroundFreePlacesComparator);
+        if(undergroundParkingDetails.getValue() != null) {
+            undergroundParkingDetails.getValue().sort(UndergroundParkingDetails.undergroundFreePlacesComparator);
+        }
     }
+
     public void sortPrByFreePlaces() {
-        Objects.requireNonNull(parkAndRideDetails.getValue()).sort(ParkAndRideDetails.parkAndRideFreePlacesComparator);
+        if(parkAndRideDetails.getValue() != null) {
+            parkAndRideDetails.getValue().sort(ParkAndRideDetails.parkAndRideFreePlacesComparator);
+        }
     }
 
     public void sortUnderByUserDistance() {
-        Objects.requireNonNull(undergroundParkingDetails.getValue()).sort(UndergroundParkingDetails.undergroundUserDistanceComparator);
+        if(undergroundParkingDetails.getValue() != null) {
+            undergroundParkingDetails.getValue().sort(UndergroundParkingDetails.undergroundUserDistanceComparator);
+        }
     }
+
     public void sortPrByUserDistance() {
-        Objects.requireNonNull(parkAndRideDetails.getValue()).sort(ParkAndRideDetails.parkAndRideDetailsUserDistanceComparator);
+        if(parkAndRideDetails.getValue() != null) {
+            parkAndRideDetails.getValue().sort(ParkAndRideDetails.parkAndRideDetailsUserDistanceComparator);
+        }
     }
 
     public void computeUserDistancesUnderground() {
-        if (latitude != 0 && longitude != 0) {
+        if (latitude != 0 && longitude != 0 && undergroundParkingDetails.getValue() != null) {
             Objects.requireNonNull(undergroundParkingDetails.getValue()).forEach(upd -> upd.computeUserDistance(latitude, longitude));
         }
     }
 
     public void computeUserDistancesPr() {
-        if (latitude != 0 && longitude != 0) {
-            Objects.requireNonNull(parkAndRideDetails.getValue()).forEach(prd -> prd.computeUserDistance(latitude, longitude));
+        if (latitude != 0 && longitude != 0 && parkAndRideDetails.getValue() != null) {
+            parkAndRideDetails.getValue().forEach(prd -> prd.computeUserDistance(latitude, longitude));
         }
     }
 }

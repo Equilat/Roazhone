@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -54,7 +56,6 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
     private SwipeRefreshLayout swipeContainer;
     private boolean sortByDispo;
     private boolean sortByDistance;
-    private boolean sortByFavoris;
     private Handler handler;
     private BottomNavigationView bottomNavigationView;
     private ListViewModel listViewModel;
@@ -68,7 +69,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         public void run() {
             Log.wtf(TAG, "Auto Refresh");
             getLocation();
-            listViewModel.initialize();
+            listViewModel.initialize(checkInternetConnexion());
             // Repeat this the same runnable code block again
             handler.postDelayed(this, 60000);
         }
@@ -79,6 +80,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         myView = inflater.inflate(R.layout.home_fragment, container, false);
+        listViewModel = new ViewModelProvider(requireActivity()).get(ListViewModel.class);
         bottomNavigationView = myView.findViewById(R.id.activity_main_bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
         disableMenuTooltip();
@@ -102,9 +104,21 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         undergroundParkingAdapter = new UndergroundParkingAdapter(this.getContext(), undergroundFavoris, this);
         parkAndRideAdapter = new ParkAndRideAdapter(this.getContext(), parkAndRideFavoris, this);
 
-        listViewModel = new ViewModelProvider(requireActivity()).get(ListViewModel.class);
+
+        //Pull to refresh
+        swipeContainer = view.findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getLocation();
+                listViewModel.initialize(checkInternetConnexion());
+                undergroundParkingAdapter.notifyDataSetChanged();
+            }
+        });
+        swipeContainer.setColorSchemeResources(R.color.roazhone_yellow);
+
         getLocation();
-        listViewModel.initialize();
+        listViewModel.initialize(checkInternetConnexion());
         listViewModel.getLastUpdateTime().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String lastUpdateTime) {
@@ -116,9 +130,11 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             @Override
             public void onChanged(@Nullable List<UndergroundParkingDetails> undergroundParkingDetails) {
                 undergroundParkingAdapter.setParkings(undergroundParkingDetails);
-                listViewModel.computeUserDistancesUnderground();
-                sortUnderByDistance();
-                sortUnderByDispo();
+                if (checkInternetConnexion()) {
+                    listViewModel.computeUserDistancesUnderground();
+                    sortUnderByDistance();
+                    sortUnderByDispo();
+                }
                 undergroundParkingAdapter.notifyDataSetChanged();
                 swipeContainer.setRefreshing(false);
             }
@@ -128,24 +144,16 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             @Override
             public void onChanged(@Nullable List<ParkAndRideDetails> parkAndRideDetails) {
                 parkAndRideAdapter.setParkings(parkAndRideDetails);
-                listViewModel.computeUserDistancesPr();
-                sortPrByDistance();
-                sortPrByDispo();
+                if (checkInternetConnexion()) {
+                    listViewModel.computeUserDistancesPr();
+                    sortPrByDistance();
+                    sortPrByDispo();
+                }
                 parkAndRideAdapter.notifyDataSetChanged();
-
                 swipeContainer.setRefreshing(false);
             }
         });
 
-        swipeContainer = view.findViewById(R.id.swipeContainer);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getLocation();
-                listViewModel.initialize();
-            }
-        });
-        swipeContainer.setColorSchemeResources(R.color.roazhone_yellow);
     }
 
     public void onStart() {
@@ -187,7 +195,6 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        System.out.println("item selected");
         switch (item.getItemId()) {
             case R.id.sort_menu_dispo:
                 item.setChecked(!item.isChecked());
@@ -211,7 +218,6 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
      * Sort the underground parking by number of free places.
      */
     private void sortUnderByDispo() {
-        System.out.println("sort by dispo");
         if (sortByDispo) {
             listViewModel.sortUnderByFreePlaces();
             undergroundParkingAdapter.notifyDataSetChanged();
@@ -259,6 +265,22 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
     }
 
     /**
+     * Check is the phone is connected to internet, if it is, the application proceed as usual,
+     * if not, a message is shown, telling the user that the phone can't access internet.
+     *
+     * @return true if the phone can access internet, false otherwise
+     */
+    private boolean checkInternetConnexion() {
+        boolean result = true;
+        ConnectivityManager cm = (ConnectivityManager) this.requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (activeNetwork == null) {
+            result = false;
+        }
+        return result;
+    }
+
+    /**
      * Get the user's location.
      */
     @SuppressLint("MissingPermission")
@@ -294,7 +316,6 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         locationManager.removeUpdates(this);
         listViewModel.setLatitude(location.getLatitude());
         listViewModel.setLongitude(location.getLongitude());
-        //Toast.makeText(this.getActivity(), "LOCATION CHANGED :" + listViewModel.getLatitude() + " | " + listViewModel.getLongitude(), Toast.LENGTH_SHORT).show();
         listViewModel.computeUserDistancesUnderground();
         listViewModel.computeUserDistancesPr();
         undergroundParkingAdapter.notifyDataSetChanged();
@@ -363,7 +384,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
                     undergroundParkingAdapter.setIsLoading(true);
                     parkAndRideAdapter.setIsLoading(true);
                     getLocation();
-                    listViewModel.initialize();
+                    listViewModel.initialize(checkInternetConnexion());
                 } else if (!shouldShowRequestPermissionRationale(permissions[0])) {
                     this.displayOptions(permission_location_params);
                 } else {
@@ -388,5 +409,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         boolean res = editor.commit();
         Log.d(TAG, "onClickFavoris: " + res);
     }
+
+
 
 }

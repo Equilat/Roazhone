@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -18,24 +17,18 @@ import com.example.roazhone.model.UndergroundParkingDetails;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
-import java.util.TimeZone;
 
 public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundParkingViewHolder> {
 
     private List<UndergroundParkingDetails> parkingList;
-    private Context context;
+    private final Context context;
     private Set<String> parkingsFavoris;
     private View itemView;
     private boolean isLoading = false;
 
     private OnFavorisClicked listener;
-
-    interface OnFavorisClicked {
-        void onClickFavoris(String id, String key);
-    }
 
     public UndergroundParkingAdapter(Context context) {
         this.context = context;
@@ -72,14 +65,13 @@ public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundP
         UndergroundParkingDetails upd = parkingList.get(i);
         vh.vName.setText(upd.getNomParking());
 
-        if(isLoading) {
+        if (isLoading) {
             vh.vDistance.setText(itemView.getResources().getString(R.string.calcul_en_cours));
-        }
-        else if(upd.getUserDistance() == null) {
-            vh.vDistance.setText("");
+        } else if (upd.getUserDistance() == null) {
+            vh.vDistance.setVisibility(View.INVISIBLE);
         }
 
-        if(upd.getUserDistance() != null) {
+        if (upd.getUserDistance() != null) {
             String text = String.format(context.getString(R.string.distance_kilometres), upd.getUserDistance().toString());
             vh.vDistance.setText(text);
             isLoading = false;
@@ -95,23 +87,20 @@ public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundP
         try {
             parkingStatusCalculation(upd);
             OpeningPeriod openingPeriod = new OpeningPeriod(context, upd.getNomParking());
-            if(!openingPeriod.isOpen()) {
+            if (!openingPeriod.isOpen()) {
                 upd.setStatus(context.getString(R.string.parking_ferme_short_no_accents));
             }
-            if(upd.getStatus().equals(context.getString(R.string.parking_ferme_short_no_accents))) {
+            if (upd.getStatus().equals(context.getString(R.string.parking_ferme_short_no_accents))) {
                 vh.vRoom.setText(R.string.parking_ferme_short);
                 vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_red));
-            }
-            else if(upd.getPlacesLibres() == 0) {
+            } else if (upd.getPlacesLibres() == 0) {
                 vh.vRoom.setText(R.string.parking_complet_short);
                 vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_red));
-            }
-            else if(upd.getPlacesLibres() <= upd.getPlacesMax()*0.2) {
-                vh.vRoom.setText(upd.getPlacesLibres().toString()+context.getString(R.string.places_dispos));
+            } else if (upd.getPlacesLibres() <= upd.getPlacesMax() * 0.2) {
+                vh.vRoom.setText(upd.getPlacesLibres().toString() + context.getString(R.string.places_dispos));
                 vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_orange));
-            }
-            else {
-                vh.vRoom.setText(upd.getPlacesLibres().toString()+context.getString(R.string.places_dispos));
+            } else {
+                vh.vRoom.setText(upd.getPlacesLibres().toString() + context.getString(R.string.places_dispos));
                 vh.vRoom.setTextColor(ContextCompat.getColor(this.context, R.color.roazhone_green));
             }
         } catch (ParseException e) {
@@ -132,7 +121,6 @@ public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundP
             }
         });
     }
-
 
     @Override
     public int getItemCount() {
@@ -162,12 +150,15 @@ public class UndergroundParkingAdapter extends RecyclerView.Adapter<UndergroundP
         notifyDataSetChanged();
     }
 
-    public void updateFavorisStar(Set<String> parkingsFavoris, String id, ImageView favoris){
-        if(parkingsFavoris.contains(id)){
+    public void updateFavorisStar(Set<String> parkingsFavoris, String id, ImageView favoris) {
+        if (parkingsFavoris.contains(id)) {
             favoris.setImageResource(R.drawable.ic_baseline_star_24);
-        }
-        else {
+        } else {
             favoris.setImageResource(R.drawable.ic_baseline_star_border_24);
         }
+    }
+
+    interface OnFavorisClicked {
+        void onClickFavoris(String id, String key);
     }
 }

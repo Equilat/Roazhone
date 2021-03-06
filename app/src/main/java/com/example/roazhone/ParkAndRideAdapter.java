@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.roazhone.model.ParkAndRideDetails;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -71,7 +69,7 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
             vh.vDistance.setText(itemView.getResources().getString(R.string.calcul_en_cours));
         }
         else if(upd.getUserDistance() == null) {
-            vh.vDistance.setText("");
+            vh.vDistance.setVisibility(View.INVISIBLE);
         }
 
         if(upd.getUserDistance() != null) {
