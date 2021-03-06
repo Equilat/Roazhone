@@ -32,7 +32,10 @@ public class UndergroundParkingDetails implements Serializable, Parcelable {
     public static Comparator<UndergroundParkingDetails> undergroundFreePlacesComparator = new Comparator<UndergroundParkingDetails>() {
         @Override
         public int compare(UndergroundParkingDetails o1, UndergroundParkingDetails o2) {
-            return o2.placesLibres.compareTo(o1.placesLibres);
+            if (o1.placesLibres != null && o2.placesLibres != null) {
+                return o2.placesLibres.compareTo(o1.placesLibres);
+            }
+            return 0;
         }
     };
     public static Comparator<UndergroundParkingDetails> undergroundUserDistanceComparator = new Comparator<UndergroundParkingDetails>() {

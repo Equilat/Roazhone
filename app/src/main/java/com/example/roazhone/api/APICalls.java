@@ -43,7 +43,7 @@ public class APICalls {
             public void onResponse(Call<List<UndergroundParkingDetails>> call, Response<List<UndergroundParkingDetails>> response) {
                 if (response.body() != null) {
                     List<UndergroundParkingDetails> parkings = response.body();
-                    undergroundParkingLiveData.setValue(parkings);
+                    undergroundParkingLiveData.postValue(parkings);
                 }
             }
 
@@ -51,7 +51,7 @@ public class APICalls {
             public void onFailure(@NonNull Call<List<UndergroundParkingDetails>> call, @NonNull Throwable t) {
                 Log.wtf(TAG, "onResponseFailed : " + call.request().url());
                 t.printStackTrace();
-                undergroundParkingLiveData.setValue(null);
+                undergroundParkingLiveData.postValue(null);
             }
         });
         return undergroundParkingLiveData;
@@ -67,7 +67,7 @@ public class APICalls {
             public void onResponse(Call<List<ParkAndRideDetails>> call, Response<List<ParkAndRideDetails>> response) {
                 if (response.body() != null) {
                     List<ParkAndRideDetails> parkings = response.body();
-                    parkAndRideLiveData.setValue(parkings);
+                    parkAndRideLiveData.postValue(parkings);
                 }
             }
 
@@ -75,7 +75,7 @@ public class APICalls {
             public void onFailure(@NonNull Call<List<ParkAndRideDetails>> call, @NonNull Throwable t) {
                 Log.wtf(TAG, "onResponseFailed : " + call.request().url());
                 t.printStackTrace();
-                parkAndRideLiveData.setValue(null);
+                parkAndRideLiveData.postValue(null);
             }
         });
         return parkAndRideLiveData;
