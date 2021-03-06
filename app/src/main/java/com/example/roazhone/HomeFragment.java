@@ -97,8 +97,8 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         recyclerView.setHasFixedSize(true);
 
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        Set<String> parkAndRideFavoris = sharedPref.getStringSet("prf", new HashSet<>());
-        Set<String> undergroundFavoris = sharedPref.getStringSet("upf", new HashSet<>());
+        Set<String> parkAndRideFavoris = new HashSet<>(sharedPref.getStringSet("prf", new HashSet<>()));
+        Set<String> undergroundFavoris = new HashSet<>(sharedPref.getStringSet("upf", new HashSet<>()));
 
         undergroundParkingAdapter = new UndergroundParkingAdapter(this.getContext(), undergroundFavoris, this);
         parkAndRideAdapter = new ParkAndRideAdapter(this.getContext(), parkAndRideFavoris, this);
@@ -371,7 +371,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
 
     public void onClickFavoris(String id, String key, ImageView favoris){
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        Set<String> parkingsFavoris = sharedPref.getStringSet(key, new HashSet<>());
+        Set<String> parkingsFavoris = new HashSet<>(sharedPref.getStringSet(key, new HashSet<>()));
         SharedPreferences.Editor editor = sharedPref.edit();
         if(parkingsFavoris.contains(id)){
             parkingsFavoris.remove(id);

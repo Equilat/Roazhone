@@ -283,7 +283,7 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
 
         favoris.setOnClickListener(v -> {
             SharedPreferences.Editor editor = sharedPref.edit();
-            Set<String> parkingsFavoris = sharedPref.getStringSet(favoris_key, new HashSet<>());
+            Set<String> parkingsFavoris = new HashSet<>(sharedPref.getStringSet(favoris_key, new HashSet<>()));
             if(parkingsFavoris.contains(id)){
                 parkingsFavoris.remove(id);
             }
@@ -299,7 +299,7 @@ public class InfosParkingFragment extends Fragment implements OnMapReadyCallback
 
     public void updateFavorisStar(String favoris_key, String id){
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        Set<String> parkingsFavoris = sharedPref.getStringSet(favoris_key, new HashSet<>());
+        Set<String> parkingsFavoris = new HashSet<>(sharedPref.getStringSet(favoris_key, new HashSet<>()));
         if(parkingsFavoris.contains(id)){
             favoris.setImageResource(R.drawable.ic_baseline_star_24);
         }
