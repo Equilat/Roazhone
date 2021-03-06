@@ -32,7 +32,7 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
     private OnFavorisClicked listener;
 
     interface OnFavorisClicked {
-        void onClickFavoris(String id, String key);
+        void onClickFavoris(String id, String key, ImageView favoris);
     }
 
     public ParkAndRideAdapter(Context context) {
@@ -83,8 +83,7 @@ public class ParkAndRideAdapter extends  RecyclerView.Adapter<ParkAndRideViewHol
         updateFavorisStar(parkingsFavoris, upd.getId(), vh.vFavoris);
 
         vh.vFavoris.setOnClickListener(v -> {
-            listener.onClickFavoris(upd.getId(), "prf");
-            updateFavorisStar(parkingsFavoris, upd.getId(), vh.vFavoris);
+            listener.onClickFavoris(upd.getId(), "prf", vh.vFavoris);
         });
 
         if(upd.getStatus().equals("Fermé")) {

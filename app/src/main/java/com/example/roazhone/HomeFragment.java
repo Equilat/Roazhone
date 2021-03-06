@@ -369,18 +369,21 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         }
     }
 
-    public void onClickFavoris(String id, String key){
+    public void onClickFavoris(String id, String key, ImageView favoris){
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         Set<String> parkingsFavoris = sharedPref.getStringSet(key, new HashSet<>());
         SharedPreferences.Editor editor = sharedPref.edit();
         if(parkingsFavoris.contains(id)){
             parkingsFavoris.remove(id);
+            favoris.setImageResource(R.drawable.ic_baseline_star_border_24);
         }
         else {
             parkingsFavoris.add(id);
+            favoris.setImageResource(R.drawable.ic_baseline_star_24);
         }
         editor.putStringSet(key, parkingsFavoris);
         boolean res = editor.commit();
+        undergroundParkingAdapter.notifyDataSetChanged();
         Log.d(TAG, "onClickFavoris: " + res);
     }
 
