@@ -104,7 +104,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
 
         undergroundParkingAdapter = new UndergroundParkingAdapter(this.getContext(), undergroundFavoris, this);
         parkAndRideAdapter = new ParkAndRideAdapter(this.getContext(), parkAndRideFavoris, this);
-        favorisParkingAdapter = new FavorisParkingAdapter(this.getContext(), parkAndRideFavoris, undergroundFavoris, this);
+        favorisParkingAdapter = new FavorisParkingAdapter(this.getContext(), undergroundFavoris, parkAndRideFavoris, this);
 
 
         //Pull to refresh
