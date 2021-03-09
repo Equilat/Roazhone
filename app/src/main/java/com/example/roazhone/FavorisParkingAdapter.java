@@ -236,22 +236,27 @@ public class FavorisParkingAdapter extends RecyclerView.Adapter<FavorisParkingAd
         protected TextView vDistance;
         private final List<? extends Parking> parkingList;
 
-        public ParkingViewHolder(View v, List<? extends Parking> parkAndRideDetailsList) {
+        public ParkingViewHolder(View v, List<? extends Parking> parkings) {
             super(v);
             v.setOnClickListener(this);
             vName = v.findViewById(R.id.parkingName);
             vRoom = v.findViewById(R.id.parkingRoom);
             vFavoris = v.findViewById(R.id.parkingFavoris);
             vDistance = v.findViewById(R.id.parkingDistance);
-            this.parkingList = parkAndRideDetailsList;
+            this.parkingList = parkings;
         }
 
         @Override
         public void onClick(View v) {
             int itemPosition = this.getAdapterPosition();
-            ParkAndRideDetails parkAndRideDetails = parkAndRideDetailsList.get(itemPosition);
+            Parking parkingDetails = this.parkingList.get(itemPosition);
             HomeFragmentDirections.ActionHomeFragmentToInfosParkingFragment action = HomeFragmentDirections.actionHomeFragmentToInfosParkingFragment();
-            action.setParkAndRideDetails(parkAndRideDetails);
+            if (parkingDetails instanceof ParkAndRideDetails){
+                action.setParkAndRideDetails((ParkAndRideDetails) parkingDetails);
+            }
+            else if (parkingDetails instanceof UndergroundParkingDetails){
+                action.setUndergroundParkingDetails((UndergroundParkingDetails) parkingDetails);
+            }
             Navigation.findNavController(v).navigate(action);
         }
     }
