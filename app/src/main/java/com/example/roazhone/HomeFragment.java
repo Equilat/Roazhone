@@ -75,6 +75,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
             handler.postDelayed(this, 60000);
         }
     };
+    private Menu menuSort;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -191,12 +192,15 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
         int id = item.getItemId();
         switch (id) {
             case R.id.parkingItem:
+                menuSort.setGroupVisible(0, true);
                 recyclerView.setAdapter(undergroundParkingAdapter);
                 break;
             case R.id.parkAndRideItem:
+                menuSort.setGroupVisible(0, true);
                 recyclerView.setAdapter(parkAndRideAdapter);
                 break;
             case R.id.favorisItem:
+                menuSort.setGroupVisible(0, false);
                 recyclerView.setAdapter(favorisParkingAdapter);
         }
         return true;
@@ -267,6 +271,7 @@ public class HomeFragment extends Fragment implements View.OnLongClickListener, 
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.setGroupCheckable(0, false, true);
+        menuSort = menu;
         inflater.inflate(R.menu.sort_menu, menu);
         MenuItem itemSortDispo = menu.findItem(R.id.sort_menu_dispo);
         itemSortDispo.setChecked(true);
